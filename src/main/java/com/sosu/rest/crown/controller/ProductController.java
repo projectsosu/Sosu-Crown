@@ -27,7 +27,7 @@ public interface ProductController {
             @ApiResponse(responseCode = "404", description = "Products not found", content = @Content)})
     @GetMapping(value = "/getProduct", produces = MediaType.APPLICATION_JSON_VALUE)
     Product getProducts(@Parameter(description = "Name of the product", required = true, example = "Valentine") @RequestParam String name,
-                        @Parameter(description = "Release date of the product", required = true, example = "2023") @RequestParam int year);
+                        @Parameter(description = "Release date of the product", required = true, example = "2023") @RequestParam Integer year);
 
     @Operation(summary = "Get product from category")
     @ApiResponses(value = {

@@ -15,7 +15,7 @@ public class ProductByCategorySearchRequest {
 
     @NotBlank
     @Schema(description = "Return limit", example = "10", required = true)
-    private int pageSize;
+    private Integer pageSize;
 
     @NotBlank
     @Schema(description = "Sort field", example = "NAME", required = true, implementation = ProductField.class)
@@ -23,6 +23,6 @@ public class ProductByCategorySearchRequest {
 
     @NotBlank
     @Schema(description = "Sort type", example = "true", required = true)
-    private boolean desc;
+    private Boolean desc;
 
 }

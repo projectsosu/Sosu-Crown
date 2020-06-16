@@ -22,13 +22,13 @@ public class ProductControllerImpl implements ProductController {
     private ProductService productService;
 
     @Override
-    public Product getProducts(String name, int year) {
+    public Product getProducts(String name, Integer year) {
         return productService.getProductByNameAndYear(name, year);
     }
 
     @Override
     public List<Product> getProductByCategory(ProductByCategorySearchRequest request) {
         logger.info("Request for getting product: {}", request);
-        return productService.getProductByCategory(request.getCategory_id(), request.getPageSize(), request.getSortBy().label, request.isDesc());
+        return productService.getProductByCategory(request.getCategory_id(), request.getPageSize(), request.getSortBy().label, request.getDesc());
     }
 }
