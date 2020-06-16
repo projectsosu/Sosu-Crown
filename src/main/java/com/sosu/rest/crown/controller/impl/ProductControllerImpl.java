@@ -29,6 +29,6 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public List<Product> getProductByCategory(ProductByCategorySearchRequest request) {
         logger.info("Request for getting product: {}", request);
-        return productService.getProductByCategory(request.getCategory_id(), request.getPageSize(), request.getSortBy(), request.isDesc());
+        return productService.getProductByCategory(request.getCategory_id(), request.getPageSize(), request.getSortBy().label, request.isDesc());
     }
 }
