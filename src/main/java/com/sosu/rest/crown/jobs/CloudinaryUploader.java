@@ -41,7 +41,7 @@ public class CloudinaryUploader {
         optionsMap.put("folder", "sosu/");
     }
 
-    @Scheduled(cron = "0 35 19 16 * ?")
+//    @Scheduled(cron = "0 35 19 16 * ?")
     private void uploadImages() {
         logger.info("Cloudinary job started");
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
