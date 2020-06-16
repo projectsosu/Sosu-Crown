@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -32,8 +33,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public void saveOrUpdate(Product product) {
         repository.save(product);
+    }
+
+    @Override
+    public List<Product> getAll() {
+        return (List<Product>) repository.findAll();
+    }
+
+    @Override
+    public List<Product> getNotUploaded() {
+        return repository.getNotUploaded();
     }
 }

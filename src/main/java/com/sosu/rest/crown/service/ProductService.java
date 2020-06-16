@@ -12,4 +12,8 @@ public interface ProductService {
 
     void saveOrUpdate(Product product);
 
+    List<Product> getAll();
+
+    List<Product> getNotUploaded();
+
 }

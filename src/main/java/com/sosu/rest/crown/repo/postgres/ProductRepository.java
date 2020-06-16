@@ -22,4 +22,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
             @Param("category") String category,
             Pageable pageable);
 
+    @Query("SELECT p FROM Product p WHERE p.image not like '%cloudinary%' ")
+    List<Product> getNotUploaded();
+
 }
