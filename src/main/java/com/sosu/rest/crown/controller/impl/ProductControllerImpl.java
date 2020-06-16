@@ -2,6 +2,7 @@ package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.ProductController;
 import com.sosu.rest.crown.entity.postgres.Product;
+import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,9 +27,8 @@ public class ProductControllerImpl implements ProductController {
     }
 
     @Override
-    public List<Product> getProductByCategory(String category_id, int pageSize, String sortBy, boolean desc) {
-        logger.info("Request: {} {} {} {}", category_id, pageSize, sortBy, desc);
-        logger.info(productService.getProductByCategory(category_id, pageSize, sortBy, desc));
-        return productService.getProductByCategory(category_id, pageSize, sortBy, desc);
+    public List<Product> getProductByCategory(ProductByCategorySearchRequest request) {
+        logger.info("Request for getting product: {}", request);
+        return productService.getProductByCategory(request.getCategory_id(), request.getPageSize(), request.getSortBy(), request.isDesc());
     }
 }
