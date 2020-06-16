@@ -1,6 +1,6 @@
 package com.sosu.rest.crown.repo.postgres;
 
-import com.sosu.rest.crown.entitiy.Product;
+import com.sosu.rest.crown.entity.postgres.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

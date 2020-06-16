@@ -1,4 +1,4 @@
-package com.sosu.rest.crown.entitiy;
+package com.sosu.rest.crown.entity.postgres;
 
 import lombok.Data;
 

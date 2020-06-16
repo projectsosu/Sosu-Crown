@@ -1,6 +1,6 @@
 package com.sosu.rest.crown.service.impl;
 
-import com.sosu.rest.crown.entitiy.Product;
+import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

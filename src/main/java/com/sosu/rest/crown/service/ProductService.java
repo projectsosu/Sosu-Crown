@@ -1,6 +1,6 @@
 package com.sosu.rest.crown.service;
 
-import com.sosu.rest.crown.entitiy.Product;
+import com.sosu.rest.crown.entity.postgres.Product;
 
 import java.util.List;
 

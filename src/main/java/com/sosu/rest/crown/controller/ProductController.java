@@ -1,6 +1,6 @@
 package com.sosu.rest.crown.controller;
 
-import com.sosu.rest.crown.entitiy.Product;
+import com.sosu.rest.crown.entity.postgres.Product;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
