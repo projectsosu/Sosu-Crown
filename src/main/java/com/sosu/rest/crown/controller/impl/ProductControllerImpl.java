@@ -28,6 +28,7 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public List<Product> getProductByCategory(String category_id, int pageSize, String sortBy, boolean desc) {
         logger.info("Request: {} {} {} {}", category_id, pageSize, sortBy, desc);
+        logger.info(productService.getProductByCategory(category_id, pageSize, sortBy, desc));
         return productService.getProductByCategory(category_id, pageSize, sortBy, desc);
     }
 }
