@@ -8,5 +8,7 @@ public interface CategoryService {
 
     List<Category> getProductByNameAndYear();
 
+    Category saveOrUpdate(Category category);
+
 
 }
