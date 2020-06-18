@@ -24,6 +24,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product getProductByImdbId(String imdbId) {
+        return repository.getProductByImdbId(imdbId);
+    }
+
+    @Override
     public List<Product> getProductByCategory(String category, int limit, String sortBy, boolean desc) {
         if (desc) {
             return repository.getProductByCategory(category, PageRequest.of(0, limit, Sort.by(sortBy).descending()));

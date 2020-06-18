@@ -18,7 +18,6 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "year"})})
 public class Product {
 
     @Id
@@ -46,7 +45,6 @@ public class Product {
     @Column(name = "imdb_id")
     private String imdbId;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     private List<ProductFeature> productFeatures;
 }

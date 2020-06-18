@@ -17,6 +17,10 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
             @Param("name") String name,
             @Param("year") int year);
 
+    @Query("SELECT p FROM Product p WHERE p.imdbId = :imdbId")
+    Product getProductByImdbId(
+            @Param("imdbId") String imdbId);
+
     @Query("SELECT p FROM Product p WHERE p.categoryId like %:category% ")
     List<Product> getProductByCategory(
             @Param("category") String category,

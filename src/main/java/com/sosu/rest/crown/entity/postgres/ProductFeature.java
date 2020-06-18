@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -24,13 +26,14 @@ public class ProductFeature {
 
     private String feature;
 
-    @Column(name = "produt_id")
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name="product_id")
+    private Product product;
 
-    public ProductFeature(String value, String feature, Long productId) {
+    public ProductFeature(String value, String feature, Product product) {
         this.value = value;
         this.feature = feature;
-        this.productId = productId;
+        this.product = product;
     }
 
 }
