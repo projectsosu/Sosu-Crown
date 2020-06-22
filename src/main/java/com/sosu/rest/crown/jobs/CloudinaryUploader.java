@@ -4,8 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.service.ProductService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,9 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class CloudinaryUploader {
-
-    Logger logger = LogManager.getLogger(CloudinaryUploader.class);
 
     @Autowired
     private ProductService productService;
@@ -38,10 +36,10 @@ public class CloudinaryUploader {
         optionsMap.put("folder", "sosu/");
     }
 
-//    @Scheduled(cron = "0 3 0 16 * ?")
+    //    @Scheduled(cron = "0 3 0 16 * ?")
 //    @PostConstruct
     private void uploadImages() {
-        logger.info("Cloudinary job started");
+        log.info("Cloudinary job started");
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", CLOUD_NAME,
                 "api_key", API_KEY,
@@ -53,7 +51,7 @@ public class CloudinaryUploader {
                 item.setImage((String) result.get("secure_url"));
                 productService.saveOrUpdate(item);
             } catch (IOException e) {
-                logger.info("Cloudinary job error: {}", e.getMessage());
+                log.error("Cloudinary job error: {}", e.getMessage());
             }
         });
     }

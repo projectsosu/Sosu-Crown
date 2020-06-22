@@ -27,13 +27,7 @@ public class ProductFeature {
     private String feature;
 
     @ManyToOne
-    @JoinColumn(name="product_id")
+    @JoinColumn(name = "product_id")
     private Product product;
-
-    public ProductFeature(String value, String feature, Product product) {
-        this.value = value;
-        this.feature = feature;
-        this.product = product;
-    }
 
 }

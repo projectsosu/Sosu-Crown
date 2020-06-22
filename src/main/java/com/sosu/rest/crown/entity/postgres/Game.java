@@ -30,6 +30,9 @@ public class Game {
     @Column(name = "console_category_id")
     private String consoleCategoryId;
 
+    @Column(name = "main_category_id")
+    private String mainCategoryId;
+
     @Column(name = "publish_date")
     private LocalDate publishDate;
 

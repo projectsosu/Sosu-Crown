@@ -7,19 +7,18 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import javax.persistence.Id;
 
 @Data
-@Document(collection = "categories")
-public class Category {
+@Document(collection = "securities")
+public class Security {
 
     @Id
     private String id;
 
-    private String lang;
+    private String username;
 
-    private String name;
+    private String token;
 
-    @Field(name = "parent_id")
-    private String parentId;
+    @Field(name = "token_date")
+    private String tokenDate;
 
-    @Field(name = "default_category")
-    private String defaultCategory;
+    private Integer ttl;
 }

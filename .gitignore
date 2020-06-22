@@ -33,3 +33,5 @@ build/
 SosuCrown.iml
 .mvn
 /.mvn
+/src/main/java/com/sosu/rest/crown/consumers/
+/logs

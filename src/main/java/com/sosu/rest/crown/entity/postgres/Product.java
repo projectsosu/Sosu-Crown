@@ -36,6 +36,9 @@ public class Product {
     @Column(name = "category_id")
     private String categoryId;
 
+    @Column(name = "main_category_id")
+    private String mainCategoryId;
+
     private String status;
 
     private String cert;

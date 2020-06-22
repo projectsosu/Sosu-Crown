@@ -6,8 +6,6 @@ import com.sosu.rest.crown.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -15,12 +13,13 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getProductByNameAndYear() {
-        return categoryRepository.findAll();
-    }
-
-    @Override
     public Category saveOrUpdate(Category category) {
         return categoryRepository.save(category);
     }
+
+    @Override
+    public Category findByNameAndLang(String name, String lang) {
+        return categoryRepository.findByNameAndLang(name, lang);
+    }
+
 }
