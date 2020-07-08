@@ -38,6 +38,9 @@ public class SearchServiceImpl implements SearchService {
         searchResponseModels.addAll(gamesMapper.entityToModel(games));
         searchResponseModels.addAll(productMapper.entityToModel(products));
         searchResponseModels.sort(Comparator.comparing(SearchResponseModel::getName));
+        if (searchResponseModels.size() > 10) {
+            return searchResponseModels.subList(0, 10);
+        }
         return searchResponseModels;
     }
 }
