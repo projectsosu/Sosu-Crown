@@ -1,6 +1,7 @@
 package com.sosu.rest.crown.service.impl;
 
 import com.sosu.rest.crown.entity.postgres.Product;
+import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductByCategory(String category, int limit, String sortBy, boolean desc) {
-        if (desc) {
-            return repository.getProductByCategory(category, PageRequest.of(0, limit, Sort.by(sortBy).descending()));
+    public List<Product> getProductByCategory(ProductByCategorySearchRequest request) {
+        if (request.getDesc()) {
+            return repository.getProductByCategory(request.getCategoryId(), PageRequest.of(request.getPage() - 1, request.getPageSize(),
+                    Sort.by(request.getSortBy().label).descending()));
         } else {
-            return repository.getProductByCategory(category, PageRequest.of(0, limit, Sort.by(sortBy).ascending()));
+            return repository.getProductByCategory(request.getCategoryId(), PageRequest.of(request.getPage() - 1, request.getPageSize(),
+                    Sort.by(request.getSortBy().label).ascending()));
         }
     }
 

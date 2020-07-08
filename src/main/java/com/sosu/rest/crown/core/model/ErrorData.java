@@ -1,15 +1,13 @@
 package com.sosu.rest.crown.core.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.Data;
 
 @AllArgsConstructor
-@Getter
+@Data
 public class ErrorData {
 
-    private LocalDateTime timestamp;
+    private String timestamp;
 
     private int status;
 

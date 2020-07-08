@@ -29,4 +29,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
     @Query("SELECT p FROM Product p WHERE p.image not like '%cloudinary%' ")
     List<Product> getNotUploaded();
 
+    List<Product> findTop10ByAndNameContains(@Param("name") String name);
+
 }

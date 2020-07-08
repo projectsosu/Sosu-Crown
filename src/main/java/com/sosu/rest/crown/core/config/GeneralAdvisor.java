@@ -1,5 +1,6 @@
 package com.sosu.rest.crown.core.config;
 
+import com.sosu.rest.crown.core.exception.SoSuSecurityException;
 import com.sosu.rest.crown.core.model.ErrorData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,21 @@ public class GeneralAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     protected ResponseEntity<Object> handle(ResponseStatusException ex, WebRequest request) {
         try {
-            return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now(), ex.getStatus().value(),
+            return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
                     ex.getCause().getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorData(LocalDateTime.now(), ex.getStatus().value(),
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
+                    e.getCause().getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
+        }
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<Object> handleSecurity(SoSuSecurityException ex, WebRequest request) {
+        try {
+            return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
+                    ex.getCause().getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
                     e.getCause().getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
         }
     }

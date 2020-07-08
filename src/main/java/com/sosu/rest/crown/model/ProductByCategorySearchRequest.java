@@ -11,7 +11,11 @@ public class ProductByCategorySearchRequest {
 
     @NotBlank
     @Schema(description = "Id of category", example = "5ee73fdb2ace0520f01af3dc", required = true)
-    private String category_id;
+    private String categoryId;
+
+    @NotBlank
+    @Schema(description = "Return limit", example = "1", required = true)
+    private Integer page;
 
     @NotBlank
     @Schema(description = "Return limit", example = "10", required = true)

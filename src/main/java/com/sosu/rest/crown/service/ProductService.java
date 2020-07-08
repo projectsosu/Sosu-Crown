@@ -1,6 +1,7 @@
 package com.sosu.rest.crown.service;
 
 import com.sosu.rest.crown.entity.postgres.Product;
+import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface ProductService {
 
     Product getProductByImdbId(String imdbId);
 
-    List<Product> getProductByCategory(String category, int limit, String sortBy, boolean desc);
+    List<Product> getProductByCategory(ProductByCategorySearchRequest request);
 
     void saveOrUpdate(Product product);
 

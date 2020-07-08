@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -39,12 +39,12 @@ class ProductControllerImplTest {
     @Test
     void testGetProductByCategory() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
-        productByCategorySearchRequest.setCategory_id("");
+        productByCategorySearchRequest.setCategoryId("");
         productByCategorySearchRequest.setPageSize(0);
         productByCategorySearchRequest.setSortBy(ProductField.ID);
         productByCategorySearchRequest.setDesc(false);
 
-        when(productService.getProductByCategory(anyString(), anyInt(), anyString(), anyBoolean())).thenReturn(new ArrayList<>());
+        when(productService.getProductByCategory(any())).thenReturn(new ArrayList<>());
         assertNotNull(productController.getProductByCategory(productByCategorySearchRequest));
     }
 

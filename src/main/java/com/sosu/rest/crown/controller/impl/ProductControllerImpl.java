@@ -1,7 +1,6 @@
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.ProductController;
-import com.sosu.rest.crown.core.annotations.Security;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.service.ProductService;
@@ -13,9 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/java")
 @Slf4j
-@Security
+@RequestMapping("/product")
 public class ProductControllerImpl implements ProductController {
 
     @Autowired
@@ -29,6 +27,6 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public List<Product> getProductByCategory(ProductByCategorySearchRequest request) {
         log.info("Request for getting product: {}", request);
-        return productService.getProductByCategory(request.getCategory_id(), request.getPageSize(), request.getSortBy().label, request.getDesc());
+        return productService.getProductByCategory(request);
     }
 }
