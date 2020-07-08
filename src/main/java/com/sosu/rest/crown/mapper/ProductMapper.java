@@ -1,7 +1,7 @@
 package com.sosu.rest.crown.mapper;
 
 import com.sosu.rest.crown.entity.postgres.Product;
-import com.sosu.rest.crown.enums.ProductTypeEnum;
+import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.model.SearchResponseModel;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -16,7 +16,7 @@ public interface ProductMapper {
 
     @AfterMapping
     default void afterMap(@MappingTarget SearchResponseModel searchResponseModel) {
-        searchResponseModel.setProductTypeEnum(ProductTypeEnum.PRODUCT);
+        searchResponseModel.setProductType(ProductType.PRODUCT);
     }
 
 }

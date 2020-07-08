@@ -1,6 +1,6 @@
 package com.sosu.rest.crown.enums;
 
-public enum ProductTypeEnum {
+public enum ProductType {
 
     GAME,
     PRODUCT

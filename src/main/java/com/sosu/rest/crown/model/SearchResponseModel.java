@@ -1,6 +1,6 @@
 package com.sosu.rest.crown.model;
 
-import com.sosu.rest.crown.enums.ProductTypeEnum;
+import com.sosu.rest.crown.enums.ProductType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,5 +14,5 @@ public class SearchResponseModel {
     private Long id;
 
     @Schema(description = "Type of product", example = "GAME")
-    private ProductTypeEnum productTypeEnum;
+    private ProductType productType;
 }

@@ -1,9 +1,12 @@
 package com.sosu.rest.crown.entity.mongo;
 
+import com.sosu.rest.crown.enums.ProductType;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
 @Data
@@ -16,6 +19,11 @@ public class Category {
     private String lang;
 
     private String name;
+
+    private Boolean active;
+
+    @Enumerated(EnumType.STRING)
+    private ProductType type;
 
     @Field(name = "parent_id")
     private String parentId;
