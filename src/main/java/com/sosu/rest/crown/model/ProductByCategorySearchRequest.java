@@ -16,7 +16,7 @@ public class ProductByCategorySearchRequest {
     private String categoryId;
 
     @NotNull
-    @Schema(description = "Type of search category", example = "GAME", required = true)
+    @Schema(description = "Type of search category", example = "PRODUCT", required = true)
     private ProductType productType;
 
     @Schema(description = "Return limit", example = "1")
