@@ -35,5 +35,5 @@ public interface ProductController {
             @ApiResponse(responseCode = "200", description = "Found the products",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CommonProductModel.class))})})
     @GetMapping(value = "/getRandomProducts", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<CommonProductModel> getRandomProducts(@Parameter(description = "Name of the product", example = "1") @RequestParam(required = false) Integer page);
+    List<CommonProductModel> getRandomProducts(@Parameter(description = "Page number of products", example = "1") @RequestParam(required = false) Integer page);
 }
