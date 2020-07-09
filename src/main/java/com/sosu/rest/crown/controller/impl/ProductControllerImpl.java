@@ -29,9 +29,9 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getProductType() == ProductType.GAME) {
-            return productService.getProductByCategory(request);
-        } else {
             return gamesService.getProductByCategory(request);
+        } else {
+            return productService.getProductByCategory(request);
         }
     }
 
