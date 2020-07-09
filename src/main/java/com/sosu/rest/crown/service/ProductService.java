@@ -1,6 +1,7 @@
 package com.sosu.rest.crown.service;
 
 import com.sosu.rest.crown.entity.postgres.Product;
+import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface ProductService {
 
     Product getProductByImdbId(String imdbId);
 
-    List<Product> getProductByCategory(ProductByCategorySearchRequest request);
+    List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request);
 
     void saveOrUpdate(Product product);
 
@@ -19,4 +20,5 @@ public interface ProductService {
 
     List<Product> getNotUploaded();
 
+    List<CommonProductModel> findRandomProduct(Integer page);
 }

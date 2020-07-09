@@ -1,14 +1,18 @@
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.ProductController;
-import com.sosu.rest.crown.entity.postgres.Product;
+import com.sosu.rest.crown.enums.ProductType;
+import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
+import com.sosu.rest.crown.service.GamesService;
 import com.sosu.rest.crown.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -19,14 +23,27 @@ public class ProductControllerImpl implements ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private GamesService gamesService;
+
     @Override
-    public Product getProducts(String name, Integer year) {
-        return productService.getProductByNameAndYear(name, year);
+    public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
+        if (request.getProductType() == ProductType.GAME) {
+            return productService.getProductByCategory(request);
+        } else {
+            return gamesService.getProductByCategory(request);
+        }
     }
 
     @Override
-    public List<Product> getProductByCategory(ProductByCategorySearchRequest request) {
-        log.info("Request for getting product: {}", request);
-        return productService.getProductByCategory(request);
+    public List<CommonProductModel> getRandomProducts(Integer page) {
+        List<CommonProductModel> commonProductModels = new ArrayList<>();
+        commonProductModels.addAll(productService.findRandomProduct(page == null || page < 0 ? 0 : page));
+        commonProductModels.addAll(gamesService.findRandomGame(page == null || page < 0 ? 0 : page));
+        commonProductModels.sort(Comparator.comparing(CommonProductModel::getName));
+        if (commonProductModels.size() > 10) {
+            return commonProductModels.subList(0, 10);
+        }
+        return commonProductModels;
     }
 }

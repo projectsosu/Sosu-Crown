@@ -1,6 +1,8 @@
 package com.sosu.rest.crown.service.impl;
 
 import com.sosu.rest.crown.entity.postgres.Product;
+import com.sosu.rest.crown.mapper.CommonProductMapper;
+import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.ProductService;
@@ -19,6 +21,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private CommonProductMapper commonProductMapper;
+
     @Override
     public Product getProductByNameAndYear(String name, int year) {
         return repository.getProductByNameAndYear(name, year);
@@ -30,13 +35,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductByCategory(ProductByCategorySearchRequest request) {
+    public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getDesc()) {
-            return repository.getProductByCategory(request.getCategoryId(), PageRequest.of(request.getPage() - 1, request.getPageSize(),
-                    Sort.by(request.getSortBy().label).descending()));
+            return commonProductMapper.productsToCommon(repository.getProductByCategory(request.getCategoryId(),
+                    PageRequest.of(request.getPage() - 1, request.getPageSize(), Sort.by(request.getSortBy().label).descending())));
         } else {
-            return repository.getProductByCategory(request.getCategoryId(), PageRequest.of(request.getPage() - 1, request.getPageSize(),
-                    Sort.by(request.getSortBy().label).ascending()));
+            return commonProductMapper.productsToCommon(repository.getProductByCategory(request.getCategoryId(),
+                    PageRequest.of(request.getPage() - 1, request.getPageSize(), Sort.by(request.getSortBy().label).ascending())));
         }
     }
 
@@ -53,5 +58,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getNotUploaded() {
         return repository.getNotUploaded();
+    }
+
+    @Override
+    public List<CommonProductModel> findRandomProduct(Integer page) {
+        return commonProductMapper.productsToCommon(repository.findRandomProduct(PageRequest.of(page, 10, Sort.by("name"))));
     }
 }

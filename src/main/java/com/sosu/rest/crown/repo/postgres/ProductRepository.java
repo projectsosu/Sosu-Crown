@@ -21,7 +21,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
     Product getProductByImdbId(
             @Param("imdbId") String imdbId);
 
-    @Query("SELECT p FROM Product p WHERE p.categoryId like %:category% ")
+    @Query("SELECT p FROM Product p WHERE p.categoryId like %:category% or p.mainCategoryId like %:category% ")
     List<Product> getProductByCategory(
             @Param("category") String category,
             Pageable pageable);
@@ -31,4 +31,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 
     List<Product> findTop10ByAndNameContains(@Param("name") String name);
 
+    @Query("SELECT p FROM Product p order by function('RAND')")
+    List<Product> findRandomProduct(Pageable pageable);
 }
