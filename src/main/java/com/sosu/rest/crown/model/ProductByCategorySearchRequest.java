@@ -3,12 +3,14 @@ package com.sosu.rest.crown.model;
 import com.sosu.rest.crown.enums.ProductField;
 import com.sosu.rest.crown.enums.ProductType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
+@Tag(name = "Product Search Request", description = "Request object for product searching")
 public class ProductByCategorySearchRequest {
 
     @NotBlank
