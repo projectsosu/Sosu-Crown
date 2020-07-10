@@ -1,8 +1,12 @@
 package com.sosu.rest.crown.core.config;
 
+import com.mongodb.lang.Nullable;
 import com.sosu.rest.crown.core.exception.SoSuSecurityException;
 import com.sosu.rest.crown.core.model.ErrorData;
+import com.sosu.rest.crown.service.core.MailService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -26,16 +30,19 @@ import java.time.LocalDateTime;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @Autowired
+    private MailService mailService;
+
     @ExceptionHandler
     protected ResponseEntity<Object> handle(ResponseStatusException ex, WebRequest request) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
-                ex.getCause().getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
+                ex.getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @ExceptionHandler
     protected ResponseEntity<Object> handleSecurity(SoSuSecurityException ex, WebRequest request) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
-                ex.getCause().getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
+                ex.getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @Override
@@ -54,8 +61,34 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
             MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), status.value(),
-                ex.getCause().getMessage(), "NOT_VALID", ((ServletWebRequest) request).getRequest().getRequestURI()));
+                ex.getMessage(), "NOT_VALID", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
+
+    @ExceptionHandler
+    protected ResponseEntity<Object> handle(Exception ex, WebRequest request) {
+        try {
+            log.error("Unexpected error: {}", ex.getMessage());
+            log.error("Unexpected trace: {}", ExceptionUtils.getStackTrace(ex));
+            mailService.exceptionMailSender(ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.",
+                    "UNKNOWN_ERR", ((ServletWebRequest) request).getRequest().getRequestURI()));
+        } catch (Exception e) {
+            return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        }
+    }
+
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("Unexpected IS error: {}", ex.getMessage());
+        log.error("Unexpected IS trace: {}", ExceptionUtils.getStackTrace(ex));
+        mailService.exceptionMailSender(ex);
+        return ResponseEntity.status(status.value()).body(new ErrorData(LocalDateTime.now().toString(), status.value(),
+                "Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.",
+                "UNKNOWN_ERR", ((ServletWebRequest) request).getRequest().getRequestURI()));
+    }
+
 
     private ResponseEntity<Object> validationExceptionMessageCreator(ServletWebRequest request, BindingResult bindingResult) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.BAD_REQUEST.value(),
