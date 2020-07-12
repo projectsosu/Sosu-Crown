@@ -47,6 +47,7 @@ public class KeyChecker {
     @PostConstruct
     private void readKeyFromFile() {
         try {
+            log.info("File resource: {}", new ClassPathResource(privateKeyFile).getPath());
             privateKey = readPrivateKey(Files.readAllBytes(new ClassPathResource(privateKeyFile).getFile().toPath()));
         } catch (Exception e) {
             log.error("Read private key error", e);
