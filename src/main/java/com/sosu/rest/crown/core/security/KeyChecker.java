@@ -44,16 +44,16 @@ public class KeyChecker {
         return new String(cipher.doFinal(data));
     }
 
-    @PostConstruct
-    private void readKeyFromFile() {
-        try {
-            log.info("File resource: {}", new ClassPathResource(privateKeyFile).getPath());
-            privateKey = readPrivateKey(Files.readAllBytes(new ClassPathResource(privateKeyFile).getFile().toPath()));
-        } catch (Exception e) {
-            log.error("Read private key error", e);
-            throw new SecurityException(e);
-        }
-    }
+//    @PostConstruct
+//    private void readKeyFromFile() {
+//        try {
+//            log.info("File resource: {}", new ClassPathResource(privateKeyFile).getPath());
+//            privateKey = readPrivateKey(Files.readAllBytes(new ClassPathResource(privateKeyFile).getFile().toPath()));
+//        } catch (Exception e) {
+//            log.error("Read private key error", e);
+//            throw new SecurityException(e);
+//        }
+//    }
 
     public static PrivateKey readPrivateKey(final byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] data = bytes;
