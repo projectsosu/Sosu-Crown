@@ -25,4 +25,7 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long> {
     @Query("SELECT g FROM Game g order by function('RAND')")
     List<Game> findRandomGame(Pageable pageable);
 
+    @Query("SELECT p FROM Game p WHERE p.image not like '%ik.imagekit.io%' ")
+    List<Game> getNotUploaded();
+
 }
