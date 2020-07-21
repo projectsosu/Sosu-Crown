@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "securities")
@@ -18,7 +19,7 @@ public class Security {
     private String token;
 
     @Field(name = "token_date")
-    private String tokenDate;
+    private LocalDateTime tokenDate;
 
-    private Integer ttl;
+    private Long ttl;
 }

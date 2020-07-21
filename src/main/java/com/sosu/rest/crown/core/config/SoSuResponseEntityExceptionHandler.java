@@ -1,6 +1,7 @@
 package com.sosu.rest.crown.core.config;
 
 import com.mongodb.lang.Nullable;
+import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.exception.SoSuSecurityException;
 import com.sosu.rest.crown.core.model.ErrorData;
 import com.sosu.rest.crown.service.core.MailService;
@@ -12,6 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,7 +44,19 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler
     protected ResponseEntity<Object> handleSecurity(SoSuSecurityException ex, WebRequest request) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
-                ex.getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
+                ex.getReason(), ex.getCause().getMessage(), ((ServletWebRequest) request).getRequest().getRequestURI()));
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<Object> handleSecurity(SoSuException ex, WebRequest request) {
+        return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
+                ex.getReason(), ex.getCause().getMessage(), ((ServletWebRequest) request).getRequest().getRequestURI()));
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<Object> handleBadCredential(BadCredentialsException ex, WebRequest request) {
+        return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage(), "BAD_CREDENTIAL", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @Override
@@ -78,7 +92,6 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
         }
     }
 
-
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error("Unexpected IS error: {}", ex.getMessage());
@@ -88,7 +101,6 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 "Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.",
                 "UNKNOWN_ERR", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
-
 
     private ResponseEntity<Object> validationExceptionMessageCreator(ServletWebRequest request, BindingResult bindingResult) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.BAD_REQUEST.value(),

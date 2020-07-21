@@ -20,10 +20,27 @@ public class MailServiceImpl implements MailService {
     public void exceptionMailSender(Exception ex) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("info@sosu.com");
-            message.setTo("oguzkahraman52@gmail.com");
+            message.setFrom("alert@suggestter.com");
+            message.setTo("developer@suggestter.com");
             message.setSubject("Unhandled exception");
-            message.setText(ex.getMessage() + "\n" + ExceptionUtils.getStackTrace(ex));
+            message.setText("Unhandled exception detected. \n Details:\n" +
+                    ex.getMessage() + "\n" + ExceptionUtils.getStackTrace(ex));
+//            emailSender.send(message);
+        } catch (Exception e) {
+            log.error("Mail sending error: {}", e.getMessage());
+        }
+    }
+
+    @Override
+    @Async
+    public void sendRegisterMail(String mail, String token) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("info@suggestter.com");
+            message.setTo(mail);
+            message.setSubject("Please confirm mail address");
+            message.setText("Hello, \n\n Just one steps left. Please click link and confirm your mail\n\n" +
+                    "https://www.suggester.com/confirm/" + token);
             emailSender.send(message);
         } catch (Exception e) {
             log.error("Mail sending error: {}", e.getMessage());

@@ -28,4 +28,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/sosu-swagger"
                 ).pathMatcher(new AntPathMatcher());
     }
+
 }
