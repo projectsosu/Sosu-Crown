@@ -8,6 +8,6 @@ YOU HAVE TO BUILD PROJECT WITH MAVEN BEFORE TO START
 
 YOU CAN USE FOLLOWING COMMAND FOR START APP
 
-    mvn spring-boot:run -Dspring.profiles.active=test
+    mvn spring-boot:run -Dspring-boot.run.profiles=test
 
 ## Before start, you should add java 11 to path variables
