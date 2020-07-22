@@ -20,7 +20,7 @@ public class MailServiceImpl implements MailService {
     public void exceptionMailSender(Exception ex) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("alert@suggestter.com");
+            message.setFrom("no-reply@suggestter.com");
             message.setTo("developer@suggestter.com");
             message.setSubject("Unhandled exception");
             message.setText("Unhandled exception detected. \n Details:\n" +
@@ -36,7 +36,7 @@ public class MailServiceImpl implements MailService {
     public void sendRegisterMail(String mail, String token) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("info@suggestter.com");
+            message.setFrom("no-reply@suggestter.com");
             message.setTo(mail);
             message.setSubject("Please confirm mail address");
             message.setText("Hello, \n\n Just one steps left. Please click link and confirm your mail\n\n" +

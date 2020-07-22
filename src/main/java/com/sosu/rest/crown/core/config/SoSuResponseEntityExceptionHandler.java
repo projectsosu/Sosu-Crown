@@ -1,5 +1,6 @@
 package com.sosu.rest.crown.core.config;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.mongodb.lang.Nullable;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.exception.SoSuSecurityException;
@@ -59,6 +60,12 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 ex.getMessage(), "BAD_CREDENTIAL", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
+    @ExceptionHandler
+    protected ResponseEntity<Object> handleJsonException(JsonParseException ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return ResponseEntity.status(status.value()).body(new ErrorData(LocalDateTime.now().toString(), status.value(),
+                "Json parse exception: " + ex.getMessage(), "JSON_EXCEPTION", ((ServletWebRequest) request).getRequest().getRequestURI()));
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
@@ -101,6 +108,7 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 "Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.",
                 "UNKNOWN_ERR", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
+
 
     private ResponseEntity<Object> validationExceptionMessageCreator(ServletWebRequest request, BindingResult bindingResult) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.BAD_REQUEST.value(),
