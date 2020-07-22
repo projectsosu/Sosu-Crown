@@ -18,7 +18,7 @@ public class SoSuSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().csrf().disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests().antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
