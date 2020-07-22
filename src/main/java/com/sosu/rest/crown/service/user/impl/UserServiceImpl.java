@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel getUserDetails(String username) {
-        User user = userRepository.findByUsernameOrEmail(username, username);
+        User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
         if (user == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User name can not find", "USR_NOT_FOUND");
         }
@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signUpUser(UserRegisterRequest userRegisterRequest) {
-        if (userRepository.findByUsername(userRegisterRequest.getUsername()) != null) {
+        if (userRepository.findByUsername(userRegisterRequest.getUsername().toLowerCase()) != null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User already signed up", "USER_FOUND");
         }
-        if (userRepository.findByEmail(userRegisterRequest.getEmail()) != null) {
+        if (userRepository.findByEmail(userRegisterRequest.getEmail().toLowerCase()) != null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User already signed up", "EMAIL_FOUND");
         }
 
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         Security security = new Security();
-        security.setUsername(userRegisterRequest.getUsername());
+        security.setUsername(userRegisterRequest.getUsername().toLowerCase());
         security.setTokenDate(LocalDateTime.now());
         security.setTtl(604800L);
         security.setToken(UUID.randomUUID().toString());
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void validate(String username, String token) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username.toLowerCase());
         if (user == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User not found", "USER_NOT_FOUND");
         }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User already validated", "ALREADY_VALIDATED");
         }
 
-        Security security = securityRepository.findByUsernameAndToken(username, token);
+        Security security = securityRepository.findByUsernameAndToken(username.toLowerCase(), token);
         if (security == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "Fields not valid", "USR_VALIDATION_ERROR");
         }

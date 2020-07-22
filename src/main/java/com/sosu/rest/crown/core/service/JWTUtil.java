@@ -39,7 +39,7 @@ public class JWTUtil {
 
     public void generateToken(UserModel userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        userDetails.setJwtToken(createToken(claims, userDetails.getUsername()));
+        userDetails.setJwtToken(createToken(claims, userDetails.getUsername().toLowerCase()));
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -53,6 +53,6 @@ public class JWTUtil {
 
     public Boolean validateToken(String token, String userName) {
         final String username = extractUsername(token);
-        return (username.equals(userName) && !isTokenExpired(token));
+        return (username.toLowerCase().equals(userName.toLowerCase()) && !isTokenExpired(token));
     }
 }

@@ -23,7 +23,7 @@ public class SosuAuthManager implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        User user = userRepository.findByUsernameOrEmail(authentication.getName(), authentication.getName());
+        User user = userRepository.findByUsernameOrEmail(authentication.getName().toLowerCase(), authentication.getName().toLowerCase());
         if (user == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User name can not find", "USR_NOT_FOUND");
         }

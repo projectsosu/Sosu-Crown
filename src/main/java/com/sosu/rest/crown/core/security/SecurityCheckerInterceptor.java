@@ -37,7 +37,7 @@ public class SecurityCheckerInterceptor implements HandlerInterceptor {
                 throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "User token invalid", "TOKEN_INVALID");
             }
             if (hm.getMethod().getDeclaredAnnotation(SoSuValidated.class) != null) {
-                User user = userRepository.findByUsername(username);
+                User user = userRepository.findByUsername(username.toLowerCase());
                 if (user == null) {
                     throw new SoSuException(HttpStatus.BAD_REQUEST, "User not found", "USER_NOT_FOUND");
                 }
