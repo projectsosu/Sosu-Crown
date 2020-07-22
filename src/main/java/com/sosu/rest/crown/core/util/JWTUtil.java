@@ -1,4 +1,4 @@
-package com.sosu.rest.crown.core.service;
+package com.sosu.rest.crown.core.util;
 
 import com.sosu.rest.crown.model.user.UserModel;
 import io.jsonwebtoken.Claims;

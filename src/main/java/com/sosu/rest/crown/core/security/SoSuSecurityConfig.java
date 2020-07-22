@@ -1,6 +1,5 @@
 package com.sosu.rest.crown.core.security;
 
-import com.sosu.rest.crown.core.service.SosuAuthManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +18,7 @@ public class SoSuSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.cors().csrf().disable()
                 .authorizeRequests().antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()

@@ -1,4 +1,4 @@
-package com.sosu.rest.crown.core.service;
+package com.sosu.rest.crown.core.security;
 
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.mongo.User;

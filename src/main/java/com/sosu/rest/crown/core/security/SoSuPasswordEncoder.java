@@ -1,4 +1,4 @@
-package com.sosu.rest.crown.core.service;
+package com.sosu.rest.crown.core.security;
 
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;

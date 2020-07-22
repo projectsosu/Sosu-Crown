@@ -2,7 +2,7 @@ package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.UserController;
 import com.sosu.rest.crown.core.annotations.SoSuValidated;
-import com.sosu.rest.crown.core.service.JWTUtil;
+import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;

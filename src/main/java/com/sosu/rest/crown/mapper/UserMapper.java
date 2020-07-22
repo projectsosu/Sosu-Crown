@@ -1,6 +1,6 @@
 package com.sosu.rest.crown.mapper;
 
-import com.sosu.rest.crown.core.service.SoSuPasswordEncoder;
+import com.sosu.rest.crown.core.security.SoSuPasswordEncoder;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;

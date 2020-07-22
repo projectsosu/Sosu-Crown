@@ -4,7 +4,7 @@ import com.sosu.rest.crown.core.annotations.Security;
 import com.sosu.rest.crown.core.annotations.SoSuValidated;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.exception.SoSuSecurityException;
-import com.sosu.rest.crown.core.service.JWTUtil;
+import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.repo.mongo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

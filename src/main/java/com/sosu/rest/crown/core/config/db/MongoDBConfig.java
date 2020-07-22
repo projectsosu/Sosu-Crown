@@ -1,4 +1,4 @@
-package com.sosu.rest.crown.core.config;
+package com.sosu.rest.crown.core.config.db;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
