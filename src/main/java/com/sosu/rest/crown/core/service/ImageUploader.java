@@ -1,4 +1,4 @@
-package com.sosu.rest.crown.jobs;
+package com.sosu.rest.crown.core.service;
 
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
@@ -25,8 +25,8 @@ public class ImageUploader {
 
 
     @PostConstruct
-    private void uploadImages() {
-        ImageKit imageKit = ImageKit.getInstance();
+    private void configure() {
+        imageKit = ImageKit.getInstance();
         Configuration config = new Configuration();
         config.setPrivateKey(privateKey);
         config.setPublicKey(publicKey);
@@ -37,6 +37,14 @@ public class ImageUploader {
     public String uploadImage(byte[] imageBytes, String userName) {
         FileCreateRequest fileCreateRequest = new FileCreateRequest(imageBytes, userName);
         fileCreateRequest.setFolder("sosu/profileImages");
+        Result result = imageKit.upload(fileCreateRequest);
+        return result.getUrl();
+    }
+
+    public String uploadImage(String url, String productName) {
+        FileCreateRequest fileCreateRequest = new FileCreateRequest(url, productName);
+        fileCreateRequest.setFolder("sosu");
+        fileCreateRequest.setUseUniqueFileName(true);
         Result result = imageKit.upload(fileCreateRequest);
         return result.getUrl();
     }

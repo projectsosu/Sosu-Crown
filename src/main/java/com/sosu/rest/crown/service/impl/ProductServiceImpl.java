@@ -25,16 +25,6 @@ public class ProductServiceImpl implements ProductService {
     private CommonProductMapper commonProductMapper;
 
     @Override
-    public Product getProductByNameAndYear(String name, int year) {
-        return repository.getProductByNameAndYear(name, year);
-    }
-
-    @Override
-    public Product getProductByImdbId(String imdbId) {
-        return repository.getProductByImdbId(imdbId);
-    }
-
-    @Override
     public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getDesc()) {
             return commonProductMapper.productsToCommon(repository.getProductByCategory(request.getCategoryId(),
@@ -48,16 +38,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void saveOrUpdate(Product product) {
         repository.save(product);
-    }
-
-    @Override
-    public List<Product> getAll() {
-        return (List<Product>) repository.findAll();
-    }
-
-    @Override
-    public List<Product> getNotUploaded() {
-        return repository.getNotUploaded();
     }
 
     @Override

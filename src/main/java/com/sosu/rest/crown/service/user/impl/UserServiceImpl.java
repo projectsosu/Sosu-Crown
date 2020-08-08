@@ -78,6 +78,9 @@ public class UserServiceImpl implements UserService {
         if (security == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "Fields not valid", "USR_VALIDATION_ERROR");
         }
+        if (LocalDateTime.now().minusDays(7).compareTo(security.getTokenDate()) > 0) {
+            throw new SoSuException(HttpStatus.BAD_REQUEST, "Token out of date.", "TOKEN_OUT_OF_DATE");
+        }
         user.setValidated(Boolean.TRUE);
         userRepository.save(user);
         securityRepository.delete(security);

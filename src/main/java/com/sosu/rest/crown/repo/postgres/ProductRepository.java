@@ -12,25 +12,25 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE p.name = :name and p.year = :year")
-    Product getProductByNameAndYear(
-            @Param("name") String name,
-            @Param("year") int year);
+    List<Product> findByImdbId(String imdbId);
 
-    @Query("SELECT p FROM Product p WHERE p.imdbId = :imdbId")
-    Product getProductByImdbId(
-            @Param("imdbId") String imdbId);
+    List<Product> findByYear(Integer year);
 
     @Query("SELECT p FROM Product p WHERE p.categoryId like %:category% or p.mainCategoryId like %:category% ")
     List<Product> getProductByCategory(
             @Param("category") String category,
             Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.image not like '%ik.imagekit.io%' ")
-    List<Product> getNotUploaded();
-
     List<Product> findTop10ByAndNameContains(@Param("name") String name);
 
     @Query("SELECT p FROM Product p order by function('RAND')")
     List<Product> findRandomProduct(Pageable pageable);
+
+    List<Product> findByTmdbId(Integer imdbId);
+
+    List<Product> findByCategoryId(String categoryId);
+
+    Integer countByCategoryIdContaining(String categoryId);
+
+    Integer countByMainCategoryIdContaining(String categoryId);
 }

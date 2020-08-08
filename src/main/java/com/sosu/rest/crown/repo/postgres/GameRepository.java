@@ -12,8 +12,7 @@ import java.util.List;
 @Repository
 public interface GameRepository extends PagingAndSortingRepository<Game, Long> {
 
-    @Query("SELECT g FROM Game g WHERE g.name= :name ")
-    Game getFromName(@Param("name") String name);
+    Game findByName(@Param("name") String name);
 
     @Query("SELECT g FROM Game g WHERE g.categoryId like %:categoryId% or g.mainCategoryId like %:categoryId% or " +
             "g.consoleCategoryId like %:categoryId%")
@@ -27,5 +26,12 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long> {
 
     @Query("SELECT p FROM Game p WHERE p.image not like '%ik.imagekit.io%' ")
     List<Game> getNotUploaded();
+
+    Integer countByCategoryIdContaining(String categoryId);
+
+    Integer countByConsoleCategoryIdContaining(String consoleCategoryId);
+
+    Integer countByMainCategoryIdContaining(String categoryId);
+
 
 }

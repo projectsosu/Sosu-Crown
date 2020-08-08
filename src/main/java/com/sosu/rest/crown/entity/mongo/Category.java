@@ -30,4 +30,6 @@ public class Category {
 
     @Field(name = "default_category")
     private String defaultCategory;
+
+    private Boolean console;
 }

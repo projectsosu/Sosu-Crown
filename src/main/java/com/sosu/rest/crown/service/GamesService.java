@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface GamesService {
 
-    Game getFromName(String name);
-
     void saveOrUpdate(Game game);
 
     List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request);

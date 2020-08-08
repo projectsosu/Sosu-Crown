@@ -25,11 +25,6 @@ public class GamesServiceImpl implements GamesService {
     private CommonProductMapper commonProductMapper;
 
     @Override
-    public Game getFromName(String name) {
-        return gameRepository.getFromName(name);
-    }
-
-    @Override
     public void saveOrUpdate(Game game) {
         gameRepository.save(game);
     }
