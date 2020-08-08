@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +84,6 @@ public class GameGetter {
     };
 
     @Scheduled(cron = " 0 0 0 ? * * ")
-    @PostConstruct
     private void startTask() {
         log.info("Started game update service");
         for (int i = 0; i < LINKS.size(); i++) {
