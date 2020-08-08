@@ -29,20 +29,20 @@ public interface UserController {
             @ApiResponse(responseCode = "401", description = "Bad credential", content = @Content),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity creteToken(@RequestBody @Valid AuthRequest authRequest);
+    ResponseEntity<UserModel> creteToken(@RequestBody @Valid AuthRequest authRequest);
 
     @Operation(summary = "Register user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Register success", content = {@Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity register(@RequestBody @Valid UserRegisterRequest registerRequest);
+    ResponseEntity<Void> register(@RequestBody @Valid UserRegisterRequest registerRequest);
 
     @Operation(summary = "Validate user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Validate success", content = {@Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @GetMapping(value = "/validate/{username}/{token}")
-    ResponseEntity validate(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username,
-                            @Parameter(description = "Toke for validation", required = true, example = "example") @PathVariable String token);
+    ResponseEntity<Void> validate(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username,
+                                  @Parameter(description = "Toke for validation", required = true, example = "example") @PathVariable String token);
 }

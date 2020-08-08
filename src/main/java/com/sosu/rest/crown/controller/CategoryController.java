@@ -12,15 +12,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Tag(name = "Category", description = "Category getting API")
 public interface CategoryController {
 
     @Operation(summary = "Get categories")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Category list", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = CategoryDTO.class))}),
+                    schema = @Schema(implementation = CategoryDTO[].class))}),
             @ApiResponse(responseCode = "400", description = "Request Error", content = @Content),
             @ApiResponse(responseCode = "404", description = "Category getting error", content = @Content)})
-    @GetMapping(value = "/getProductByCategory", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity getCategoryList(@RequestParam(required = false) String lang);
+    @GetMapping(value = "/getCategoryList", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<CategoryDTO>> getCategoryList(@RequestParam(required = false) String lang);
+
+    @Operation(summary = "Get categories by parent id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Category list", content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = CategoryDTO[].class))}),
+            @ApiResponse(responseCode = "400", description = "Request Error", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Category getting  by parent id error", content = @Content)})
+    @GetMapping(value = "/findByParentId", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<CategoryDTO>> findByParentId(String categoryId);
 }

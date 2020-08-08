@@ -30,7 +30,7 @@ public class UserControllerImpl implements UserController {
     private UserService userService;
 
     @Override
-    public ResponseEntity creteToken(AuthRequest authRequest) {
+    public ResponseEntity<UserModel> creteToken(AuthRequest authRequest) {
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         UserModel userDetails = userService.getUserDetails(authRequest.getUsername());
         jwtUtil.generateToken(userDetails);
@@ -38,14 +38,14 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity register(UserRegisterRequest registerRequest) {
+    public ResponseEntity<Void> register(UserRegisterRequest registerRequest) {
         userService.signUpUser(registerRequest);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @SoSuValidated
-    public ResponseEntity validate(String username, String token) {
+    public ResponseEntity<Void> validate(String username, String token) {
         userService.validate(username, token);
         return ResponseEntity.noContent().build();
     }

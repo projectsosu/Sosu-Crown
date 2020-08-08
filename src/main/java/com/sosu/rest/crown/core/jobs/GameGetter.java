@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,12 +42,12 @@ public class GameGetter {
     @Autowired
     private ImageUploader imageUploader;
 
-    private static final String gameGenre = "5eebb7587ea2d9497f4d7634";
-    private static final String metaCritic = "https://www.metacritic.com";
+    private static final String GAME_GENRE = "5eebb7587ea2d9497f4d7634";
+    private static final String METACRITIC_COM = "https://www.metacritic.com";
 
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH);
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH);
 
-    private static List<String> links = new ArrayList<>() {
+    private static final List<String> LINKS = new ArrayList<>() {
         {
             add("https://www.metacritic.com/browse/games/release-date/new-releases/ps4/date");
             add("https://www.metacritic.com/browse/games/release-date/new-releases/xboxone/date");
@@ -59,7 +60,7 @@ public class GameGetter {
         }
     };
 
-    private static List<String> categoryIds = new ArrayList<>() {
+    private static final List<String> CATEGORY_IDS = new ArrayList<>() {
         {
             add("5eebb7587ea2d9497f4d7636");
             add("5eebb75f7ea2d9497f4d7682");
@@ -72,13 +73,17 @@ public class GameGetter {
         }
     };
 
-    private static List<String> categories = new ArrayList<>() {
+    private static final List<String> CATEGORIES = new ArrayList<>() {
         {
+            add("2D");
             add("Action");
             add("Adventure");
+            add("Compilation");
             add("Fighting");
             add("First-Person");
             add("Flight");
+            add("General");
+            add("Miscellaneous");
             add("Party");
             add("Platformer");
             add("Puzzle");
@@ -92,18 +97,15 @@ public class GameGetter {
             add("Turn-Based");
             add("War");
             add("Wrestling");
-            add("Miscellaneous");
-            add("Compilation");
-            add("General");
         }
     };
 
     @Scheduled(cron = " 0 0 0 ? * * ")
     private void startTask() {
         log.info("Started game update service");
-        for (int i = 0; i < links.size(); i++) {
-            String consoleLink = links.get(i);
-            String category = categoryIds.get(i);
+        for (int i = 0; i < LINKS.size(); i++) {
+            String consoleLink = LINKS.get(i);
+            String category = CATEGORY_IDS.get(i);
             run(consoleLink, generateMap(i), category);
         }
         log.info("Finished game update service");
@@ -111,15 +113,15 @@ public class GameGetter {
 
     private Map<String, String> generateMap(Integer index) {
         HashMap<String, String> genres = new HashMap<>();
-        String parentId = categoryIds.get(index);
-        List<Category> categoryList = categoryRepository.findByParentId(parentId, Sort.by(Sort.Direction.ASC, "id"));
+        String parentId = CATEGORY_IDS.get(index);
+        List<Category> categoryList = categoryRepository.findByParentId(parentId, Sort.by(Sort.Direction.ASC, "name"));
         for (int i = 0; i < categoryList.size(); i++) {
-            genres.put(categories.get(i), categoryList.get(i).getDefaultCategory());
+            genres.put(CATEGORIES.get(i), categoryList.get(i).getDefaultCategory());
         }
         return genres;
     }
 
-    public void run(String consoleLink, Map genre, String category) {
+    public void run(String consoleLink, Map<String, String> genre, String category) {
         String selected = consoleLink;
         boolean error = false;
         while (!error) {
@@ -138,7 +140,7 @@ public class GameGetter {
                             String linkOfGame = detail.get(1).attr("href");
                             String summary = gameItem.getElementsByClass("summary").get(0).html();
                             String gameName = detail.get(1).getElementsByTag("h3").html();
-                            Document documentGame = Jsoup.connect(metaCritic + linkOfGame).get();
+                            Document documentGame = Jsoup.connect(METACRITIC_COM + linkOfGame).get();
                             if (gameRepository.findByName(gameName) != null) {
                                 Game game = gameRepository.findByName(gameName);
                                 if (!game.getCategoryId().contains(category)) {
@@ -148,7 +150,7 @@ public class GameGetter {
                             } else {
                                 Game game = new Game();
                                 game.setName(gameName);
-                                game.setMainCategoryId(gameGenre);
+                                game.setMainCategoryId(GAME_GENRE);
                                 game.setConsoleCategoryId(category);
                                 game.setDescription(summary);
                                 gameDetail(documentGame, genre, game, imageUrl);
@@ -159,7 +161,7 @@ public class GameGetter {
                 Element next = document.getElementsByClass("flipper next").get(0);
                 Elements actions = next.getElementsByClass("action");
                 if (CollectionUtils.isNotEmpty(actions) && StringUtils.isNotBlank(actions.get(0).attr("href"))) {
-                    selected = metaCritic + actions.get(0).attr("href");
+                    selected = METACRITIC_COM + actions.get(0).attr("href");
                 } else {
                     error = true;
                 }
@@ -169,7 +171,7 @@ public class GameGetter {
         }
     }
 
-    public void gameDetail(Document documentGame, Map genres, Game game, String imageUrl) {
+    public void gameDetail(Document documentGame, Map<String, String> genres, Game game, String imageUrl) {
         StringBuilder platforms = new StringBuilder();
         String publisher = null;
         if (CollectionUtils.isNotEmpty(documentGame.getElementsByClass("summary_detail publisher"))) {
@@ -177,7 +179,6 @@ public class GameGetter {
                     .get(0).getElementsByTag("a").html();
         }
         documentGame.getElementsByClass("summary_details");
-        Elements details = documentGame.getElementsByClass("summary_details").select("li");
         String developer = null;
         if (CollectionUtils.isNotEmpty(documentGame.getElementsByClass("summary_detail developer"))) {
             developer = documentGame.getElementsByClass("summary_detail developer").get(0).getElementsByClass("data")
@@ -191,7 +192,7 @@ public class GameGetter {
         }
         String releaseDate = documentGame.getElementsByClass("summary_detail release_data").get(0).getElementsByClass("data")
                 .html();
-        LocalDate formattedDate = LocalDate.parse(releaseDate, formatter);
+        LocalDate formattedDate = LocalDate.parse(releaseDate, FORMATTER);
 
         for (Element element : documentGame.getElementsByClass("summary_detail product_genre").get(0).getElementsByClass("data")) {
             if (genres.containsKey(element.html())) {

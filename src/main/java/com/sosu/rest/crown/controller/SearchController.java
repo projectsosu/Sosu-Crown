@@ -13,16 +13,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Tag(name = "Product Search", description = "Product searching API")
 public interface SearchController {
 
     @Operation(summary = "Search product from name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the products", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SearchResponseModel.class))}),
+                    schema = @Schema(implementation = SearchResponseModel[].class))}),
             @ApiResponse(responseCode = "404", description = "Products not found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @GetMapping(value = "/searchByName", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity searchByName(@Parameter(description = "Name of the product", required = true, example = "Valentine") @RequestParam String name);
+    ResponseEntity<List<SearchResponseModel>> searchByName(@Parameter(description = "Name of the product", required = true, example = "Valentine") @RequestParam String name);
 
 }
