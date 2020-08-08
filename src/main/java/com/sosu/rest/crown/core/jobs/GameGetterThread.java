@@ -60,21 +60,26 @@ public class GameGetterThread extends Thread {
                             String linkOfGame = detail.get(1).attr("href");
                             String summary = gameItem.getElementsByClass("summary").get(0).html();
                             String gameName = detail.get(1).getElementsByTag("h3").html();
-                            Document documentGame = Jsoup.connect(METACRITIC_COM + linkOfGame).get();
-                            if (gameRepository.findByName(gameName) != null) {
-                                Game game = gameRepository.findByName(gameName);
-                                if (!game.getCategoryId().contains(category)) {
-                                    game.setCategoryId(game.getCategoryId() + ";" + category);
-                                    gameRepository.save(game);
+                            try {
+                                Document documentGame = Jsoup.connect(METACRITIC_COM + linkOfGame).get();
+                                if (gameRepository.findByName(gameName) != null) {
+                                    Game game = gameRepository.findByName(gameName);
+                                    if (!game.getCategoryId().contains(category)) {
+                                        game.setCategoryId(game.getCategoryId() + ";" + category);
+                                        gameRepository.save(game);
+                                    }
+                                } else {
+                                    Game game = new Game();
+                                    game.setName(gameName);
+                                    game.setMainCategoryId(GAME_GENRE);
+                                    game.setConsoleCategoryId(category);
+                                    game.setDescription(summary);
+                                    gameDetail(documentGame, genre, game, imageUrl);
                                 }
-                            } else {
-                                Game game = new Game();
-                                game.setName(gameName);
-                                game.setMainCategoryId(GAME_GENRE);
-                                game.setConsoleCategoryId(category);
-                                game.setDescription(summary);
-                                gameDetail(documentGame, genre, game, imageUrl);
+                            } catch (Exception e) {
+                                log.error("Error getting game: {} {}", METACRITIC_COM + linkOfGame, ExceptionUtils.getStackTrace(e));
                             }
+
                         }
                     }
                 }
@@ -90,7 +95,7 @@ public class GameGetterThread extends Thread {
                     error = true;
                 }
             } catch (Exception e) {
-                log.error("Error getting game: {} {}", consoleLink, ExceptionUtils.getStackTrace(e));
+                log.error("Error getting category of game: {} {}", consoleLink, ExceptionUtils.getStackTrace(e));
             }
         }
         log.info("Finished game update service for {}", consoleLink);

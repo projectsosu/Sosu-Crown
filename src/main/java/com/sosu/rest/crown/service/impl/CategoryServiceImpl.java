@@ -10,6 +10,7 @@ import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +42,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable("categoriesById")
     public List<CategoryDTO> findByParentId(String categoryId) {
         List<Category> categories = categoryRepository.findByParentId(categoryId, Sort.by(Sort.Direction.ASC, "id"));
         return getCategoryDTOS(categories);
     }
 
     @Override
+    @Cacheable("categories")
     public List<CategoryDTO> getCategoryList(String lang) {
         List<Category> categories = categoryRepository.findByLang(StringUtils.isEmpty(lang) ? "en_US" : lang);
         return getCategoryDTOS(categories);

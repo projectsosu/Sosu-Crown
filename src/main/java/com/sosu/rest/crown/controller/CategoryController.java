@@ -25,7 +25,7 @@ public interface CategoryController {
             @ApiResponse(responseCode = "400", description = "Request Error", content = @Content),
             @ApiResponse(responseCode = "404", description = "Category getting error", content = @Content)})
     @GetMapping(value = "/getCategoryList", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<CategoryDTO>> getCategoryList(@Parameter(description = "Lang", example = "en_us")
+    ResponseEntity<List<CategoryDTO>> getCategoryList(@Parameter(description = "Lang", example = "en_US")
                                                       @RequestParam(required = false) String lang);
 
     @Operation(summary = "Get categories by parent id")
