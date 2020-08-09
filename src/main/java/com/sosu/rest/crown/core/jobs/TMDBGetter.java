@@ -123,7 +123,7 @@ public class TMDBGetter {
                     item.setCategoryId(genreList);
                     productRepository.save(item);
                 } catch (Exception e) {
-                    log.error("Error link: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
+                    log.error("Error link genre: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
                 }
             });
             log.info("Getting Genres finished");
@@ -149,7 +149,7 @@ public class TMDBGetter {
                     item.setImdbId(productDetail.getImdb_id() == null ? "" : productDetail.getImdb_id());
                     productRepository.save(item);
                 } catch (Exception e) {
-                    log.error("Error link: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
+                    log.error("Error link imdb: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
                 }
             });
             log.info("Getting imdb finished");
@@ -179,7 +179,7 @@ public class TMDBGetter {
                     }
                     productRepository.save(item);
                 } catch (Exception e) {
-                    log.error("Error link: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
+                    log.error("Error link release date: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
                 }
             });
             log.info("Getting year finished");
