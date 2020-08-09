@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class CacheThread {
+public class SoSuCacheManager {
 
     @Autowired
     private CacheRepository cacheRepository;
