@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="LOGS" value="/home/okahraman/builds/logs" />
+    <property name="LOGS" value="./logs" />
     <timestamp key="timestamp" datePattern="yyyy-MM-dd'_'HH-mm"/>
 
     <appender name="Console"
