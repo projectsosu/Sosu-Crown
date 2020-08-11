@@ -139,4 +139,12 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>tc-test</id>
+            <build>
+                <directory>/home/okahraman/builds</directory>
+            </build>
+        </profile>
+    </profiles>
 </project>
