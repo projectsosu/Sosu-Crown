@@ -37,7 +37,7 @@ public interface UserMapper {
     default void afterMap(@MappingTarget User user, UserRegisterRequest registerRequest) {
         user.setUsername(registerRequest.getUsername().toLowerCase());
         user.setEmail(registerRequest.getEmail().toLowerCase());
-        user.setName(StringUtils.capitalize(registerRequest.getName().toUpperCase()));
-        user.setSurname(registerRequest.getName().toUpperCase());
+        user.setName(StringUtils.capitalize(registerRequest.getName().toLowerCase()));
+        user.setSurname(StringUtils.capitalize(registerRequest.getSurname().toLowerCase()));
     }
 }

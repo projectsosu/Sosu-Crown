@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 13.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.util;
 
 import com.sosu.rest.crown.model.user.UserModel;
@@ -14,7 +20,7 @@ import java.util.function.Function;
 @Service
 public class JWTUtil {
 
-    private String SECRET_KEY = "sosu123iadsyuasuy";
+    private static final String SECRET_KEY = "sosu123iadsyuasuy";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
