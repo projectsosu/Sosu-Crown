@@ -1,5 +1,10 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.jobs;
-
 
 import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Category;
@@ -16,6 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Gets new games and adds to db
+ */
 @Component
 @DependsOn("imageUploader")
 @Slf4j

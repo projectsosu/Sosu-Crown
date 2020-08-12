@@ -1,5 +1,10 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.jobs;
-
 
 import com.sosu.rest.crown.core.model.Genre;
 import com.sosu.rest.crown.core.model.NewMovies;
@@ -27,6 +32,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Add new products, checks for invalid products
+ */
 @Component
 @Slf4j
 public class TMDBGetter {

@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.controller;
 
 import com.sosu.rest.crown.controller.impl.ProductControllerImpl;
@@ -58,6 +64,24 @@ class ProductControllerTest {
         ResponseEntity<List<CommonProductModel>> responseEntity = productController.getProductByCategory(createMockRequestObject());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, Objects.requireNonNull(responseEntity.getBody()).size());
+    }
+
+    @Test
+    void getRandomProducts() {
+        when(productService.findRandomProduct(any())).thenReturn(Collections.singletonList(new CommonProductModel("")));
+        when(gamesService.findRandomGame(any())).thenReturn(Collections.singletonList(new CommonProductModel("")));
+        ResponseEntity<List<CommonProductModel>> responseEntity = productController.getRandomProducts(1);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(2, Objects.requireNonNull(responseEntity.getBody()).size());
+    }
+
+    @Test
+    void getRandomProducts_many() {
+        when(productService.findRandomProduct(any())).thenReturn(Collections.nCopies(10, new CommonProductModel("")));
+        when(gamesService.findRandomGame(any())).thenReturn(Collections.nCopies(10, new CommonProductModel("")));
+        ResponseEntity<List<CommonProductModel>> responseEntity = productController.getRandomProducts(1);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(10, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
     ProductByCategorySearchRequest createMockRequestObject() {

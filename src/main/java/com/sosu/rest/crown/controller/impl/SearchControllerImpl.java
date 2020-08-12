@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.SearchController;
@@ -19,6 +25,12 @@ public class SearchControllerImpl implements SearchController {
     @Autowired
     private SearchService searchService;
 
+    /**
+     * Search product by name
+     *
+     * @param name of product or game
+     * @return foundsss products
+     */
     @Override
     public ResponseEntity<List<SearchResponseModel>> searchByName(String name) {
         return ResponseEntity.ok(searchService.searchByName(name));

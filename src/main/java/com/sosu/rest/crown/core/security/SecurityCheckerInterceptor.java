@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.security;
 
 import com.sosu.rest.crown.core.annotations.Security;
@@ -23,20 +29,28 @@ public class SecurityCheckerInterceptor implements HandlerInterceptor {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * This method checks if request is secure or not
+     *
+     * @param request  request object
+     * @param response response object
+     * @param handler  handler of method
+     * @return is filter success or not
+     */
     @Override
     public boolean preHandle(
             HttpServletRequest request, HttpServletResponse response, Object handler) {
         HandlerMethod hm = (HandlerMethod) handler;
         if (hm.getMethod().getDeclaredAnnotation(SoSuValidated.class) != null || hm.getMethod().getDeclaredAnnotation(Security.class) != null) {
             String token = request.getHeader("Bearer-Token");
-            String username = request.getHeader("Username");
             if (token == null) {
                 throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "Token can not be null", "TOKEN_NULL");
             }
-            if (jwtUtil.validateToken(token, username)) {
+            if (!jwtUtil.validateToken(token)) {
                 throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "User token invalid", "TOKEN_INVALID");
             }
             if (hm.getMethod().getDeclaredAnnotation(SoSuValidated.class) != null) {
+                String username = jwtUtil.extractUsername(token);
                 User user = userRepository.findByUsername(username.toLowerCase());
                 if (user == null) {
                     throw new SoSuException(HttpStatus.BAD_REQUEST, "User not found", "USER_NOT_FOUND");

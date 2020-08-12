@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.ProductController;
@@ -27,6 +33,12 @@ public class ProductControllerImpl implements ProductController {
     @Autowired
     private GamesService gamesService;
 
+    /**
+     * Getting products
+     *
+     * @param request of product
+     * @return selected product list with condition
+     */
     @Override
     public ResponseEntity<List<CommonProductModel>> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getProductType() == ProductType.GAME) {
@@ -36,6 +48,12 @@ public class ProductControllerImpl implements ProductController {
         }
     }
 
+    /**
+     * Random game and products for initial page
+     *
+     * @param page page number
+     * @return max 10 random products and games
+     */
     @Override
     public ResponseEntity<List<CommonProductModel>> getRandomProducts(Integer page) {
         List<CommonProductModel> commonProductModels = new ArrayList<>();

@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.UserController;
@@ -29,6 +35,12 @@ public class UserControllerImpl implements UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Login request
+     *
+     * @param authRequest user auth information
+     * @return user model if success
+     */
     @Override
     public ResponseEntity<UserModel> login(AuthRequest authRequest) {
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -37,12 +49,25 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(userDetails);
     }
 
+    /**
+     * Register new user
+     *
+     * @param registerRequest
+     * @return void
+     */
     @Override
     public ResponseEntity<Void> register(UserRegisterRequest registerRequest) {
         userService.signUpUser(registerRequest);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Validate user email
+     *
+     * @param username
+     * @param token    of mail
+     * @return void
+     */
     @Override
     @SoSuValidated
     public ResponseEntity<Void> validate(String username, String token) {

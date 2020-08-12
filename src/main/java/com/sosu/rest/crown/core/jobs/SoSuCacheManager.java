@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.jobs;
 
 import com.sosu.rest.crown.repo.postgres.CacheRepository;
@@ -8,6 +14,9 @@ import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * Performs cache opeartions
+ */
 @Component
 @Slf4j
 public class SoSuCacheManager {

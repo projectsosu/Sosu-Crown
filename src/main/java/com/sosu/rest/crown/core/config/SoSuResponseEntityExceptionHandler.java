@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.config;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -37,26 +43,26 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
     private MailService mailService;
 
     @ExceptionHandler
-    protected ResponseEntity<Object> handle(ResponseStatusException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleResponseStatus(ResponseStatusException ex, WebRequest request) {
         return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
                 ex.getMessage(), ex.getReason(), ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @ExceptionHandler
     protected ResponseEntity<Object> handleSecurity(SoSuSecurityException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
+        return ResponseEntity.status(ex.getStatus()).body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
                 ex.getReason(), ex.getCause().getMessage(), ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @ExceptionHandler
-    protected ResponseEntity<Object> handleSecurity(SoSuException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
+    protected ResponseEntity<Object> handleSoSuException(SoSuException ex, WebRequest request) {
+        return ResponseEntity.status(ex.getStatus()).body(new ErrorData(LocalDateTime.now().toString(), ex.getStatus().value(),
                 ex.getReason(), ex.getCause().getMessage(), ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @ExceptionHandler
     protected ResponseEntity<Object> handleBadCredential(BadCredentialsException ex, WebRequest request) {
-        return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.UNAUTHORIZED.value(),
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.UNAUTHORIZED.value(),
                 ex.getMessage(), "BAD_CREDENTIAL", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
@@ -81,22 +87,18 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
             MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return ResponseEntity.badRequest().body(new ErrorData(LocalDateTime.now().toString(), status.value(),
+        return ResponseEntity.status(status).body(new ErrorData(LocalDateTime.now().toString(), status.value(),
                 ex.getMessage(), "NOT_VALID", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @ExceptionHandler
     protected ResponseEntity<Object> handle(Exception ex, WebRequest request) {
-        try {
-            log.error("Unexpected error: {}", ex.getMessage());
-            log.error("Unexpected trace: {}", ExceptionUtils.getStackTrace(ex));
-            mailService.exceptionMailSender(ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.",
-                    "UNKNOWN_ERR", ((ServletWebRequest) request).getRequest().getRequestURI()));
-        } catch (Exception e) {
-            return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-        }
+        log.error("Unexpected error: {}", ex.getMessage());
+        log.error("Unexpected trace: {}", ExceptionUtils.getStackTrace(ex));
+        mailService.exceptionMailSender(ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorData(LocalDateTime.now().toString(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.",
+                "UNKNOWN_ERR", ((ServletWebRequest) request).getRequest().getRequestURI()));
     }
 
     @Override

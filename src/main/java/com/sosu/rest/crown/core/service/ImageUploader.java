@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.service;
 
 import io.imagekit.sdk.ImageKit;
@@ -24,6 +30,9 @@ public class ImageUploader {
     private ImageKit imageKit;
 
 
+    /**
+     * Configuration of imagekit io api
+     */
     @PostConstruct
     private void configure() {
         imageKit = ImageKit.getInstance();
@@ -34,13 +43,27 @@ public class ImageUploader {
         imageKit.setConfig(config);
     }
 
-    public String uploadImage(byte[] imageBytes, String userName) {
+    /**
+     * Profile image uploader
+     *
+     * @param imageBytes byte array of image
+     * @param userName   username of selected user
+     * @return return url path of image
+     */
+    public String uploadProfileImage(byte[] imageBytes, String userName) {
         FileCreateRequest fileCreateRequest = new FileCreateRequest(imageBytes, userName);
         fileCreateRequest.setFolder("sosu/profileImages");
         Result result = imageKit.upload(fileCreateRequest);
         return result.getUrl();
     }
 
+    /**
+     * Product or game image uploader
+     *
+     * @param url         external url of product or image
+     * @param productName name of product or game
+     * @return return url path of product or game
+     */
     public String uploadImage(String url, String productName) {
         FileCreateRequest fileCreateRequest = new FileCreateRequest(url, productName);
         fileCreateRequest.setFolder("sosu");

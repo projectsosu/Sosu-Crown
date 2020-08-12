@@ -1,5 +1,11 @@
 package com.sosu.rest.crown.core.security;
 
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.repo.mongo.UserRepository;

@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.core.jobs;
 
 import com.sosu.rest.crown.core.service.ImageUploader;
@@ -17,6 +23,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Thread for new games
+ */
 @Slf4j
 public class GameGetterThread extends Thread {
 
