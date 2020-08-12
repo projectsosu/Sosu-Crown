@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.repo.postgres;
 
 import com.sosu.rest.crown.entity.postgres.Product;
@@ -17,9 +23,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
     List<Product> findByYear(Integer year);
 
     @Query("SELECT p FROM Product p WHERE p.categoryId like %:category% or p.mainCategoryId like %:category% ")
-    List<Product> getProductByCategory(
-            @Param("category") String category,
-            Pageable pageable);
+    List<Product> getProductByCategory(String category, Pageable pageable);
 
     List<Product> findTop10ByAndNameContains(@Param("name") String name);
 

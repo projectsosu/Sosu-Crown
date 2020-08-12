@@ -1,3 +1,9 @@
+/**
+ * @author : Oguz Kahraman
+ * @since : 12.08.2020
+ * <p>
+ * Copyright - SoSu Backend
+ **/
 package com.sosu.rest.crown.repo.postgres;
 
 import com.sosu.rest.crown.entity.postgres.Game;
@@ -23,9 +29,6 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long> {
 
     @Query("SELECT g FROM Game g order by function('RAND')")
     List<Game> findRandomGame(Pageable pageable);
-
-    @Query("SELECT p FROM Game p WHERE p.image not like '%ik.imagekit.io%' ")
-    List<Game> getNotUploaded();
 
     Integer countByCategoryIdContaining(String categoryId);
 
