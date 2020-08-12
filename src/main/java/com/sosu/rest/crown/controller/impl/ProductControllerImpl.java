@@ -8,6 +8,7 @@ import com.sosu.rest.crown.service.GamesService;
 import com.sosu.rest.crown.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,23 +28,23 @@ public class ProductControllerImpl implements ProductController {
     private GamesService gamesService;
 
     @Override
-    public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
+    public ResponseEntity<List<CommonProductModel>> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getProductType() == ProductType.GAME) {
-            return gamesService.getProductByCategory(request);
+            return ResponseEntity.ok(gamesService.getProductByCategory(request));
         } else {
-            return productService.getProductByCategory(request);
+            return ResponseEntity.ok(productService.getProductByCategory(request));
         }
     }
 
     @Override
-    public List<CommonProductModel> getRandomProducts(Integer page) {
+    public ResponseEntity<List<CommonProductModel>> getRandomProducts(Integer page) {
         List<CommonProductModel> commonProductModels = new ArrayList<>();
         commonProductModels.addAll(productService.findRandomProduct(page == null || page < 0 ? 0 : page));
         commonProductModels.addAll(gamesService.findRandomGame(page == null || page < 0 ? 0 : page));
         commonProductModels.sort(Comparator.comparing(CommonProductModel::getName));
         if (commonProductModels.size() > 10) {
-            return commonProductModels.subList(0, 10);
+            return ResponseEntity.ok(commonProductModels.subList(0, 10));
         }
-        return commonProductModels;
+        return ResponseEntity.ok(commonProductModels);
     }
 }

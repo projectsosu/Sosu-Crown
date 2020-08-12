@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,12 +27,14 @@ public interface ProductController {
             @ApiResponse(responseCode = "400", description = "Request Error", content = @Content),
             @ApiResponse(responseCode = "404", description = "Products not found", content = @Content)})
     @GetMapping(value = "/getProductByCategory", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<CommonProductModel> getProductByCategory(@Parameter(description = "Request object") @Valid ProductByCategorySearchRequest request);
+    ResponseEntity<List<CommonProductModel>> getProductByCategory(@Parameter(description = "Request object")
+                                                                  @Valid ProductByCategorySearchRequest request);
 
     @Operation(summary = "Get random products")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the products",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CommonProductModel.class))})})
     @GetMapping(value = "/getRandomProducts", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<CommonProductModel> getRandomProducts(@Parameter(description = "Page number of products", example = "1") @RequestParam(required = false) Integer page);
+    ResponseEntity<List<CommonProductModel>> getRandomProducts(@Parameter(description = "Page number of products", example = "1")
+                                                               @RequestParam(required = false) Integer page);
 }

@@ -30,7 +30,7 @@ public class UserControllerImpl implements UserController {
     private UserService userService;
 
     @Override
-    public ResponseEntity<UserModel> creteToken(AuthRequest authRequest) {
+    public ResponseEntity<UserModel> login(AuthRequest authRequest) {
         authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         UserModel userDetails = userService.getUserDetails(authRequest.getUsername());
         jwtUtil.generateToken(userDetails);
