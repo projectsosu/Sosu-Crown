@@ -17,11 +17,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * Product processes
+ */
 @Service
-@Transactional
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -30,6 +31,12 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CommonProductMapper commonProductMapper;
 
+    /**
+     * Get products by selected conditions
+     *
+     * @param request search params
+     * @return found product list
+     */
     @Override
     public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getDesc()) {
@@ -41,11 +48,22 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    /**
+     * Saves product
+     *
+     * @param product product entity
+     */
     @Override
     public void saveOrUpdate(Product product) {
         repository.save(product);
     }
 
+    /**
+     * Gets random products for initial page
+     *
+     * @param page page number
+     * @return random 10 products
+     */
     @Override
     public List<CommonProductModel> findRandomProduct(Integer page) {
         return commonProductMapper.productsToCommon(repository.findRandomProduct(PageRequest.of(page, 10, Sort.by("name"))));

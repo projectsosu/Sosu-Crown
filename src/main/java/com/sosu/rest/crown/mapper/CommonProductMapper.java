@@ -15,16 +15,15 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommonProductMapper {
 
-    ArrayList<CommonProductModel> productsToCommon(List<Product> products);
+    List<CommonProductModel> productsToCommon(List<Product> products);
 
-    ArrayList<CommonProductModel> gamesToCommon(List<Game> games);
+    List<CommonProductModel> gamesToCommon(List<Game> games);
 
     @AfterMapping
     default void afterMap(@MappingTarget CommonProductModel commonProductModel, Product product) {

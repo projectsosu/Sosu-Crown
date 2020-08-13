@@ -15,6 +15,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * Mail service
+ */
 @Slf4j
 @Service
 public class MailServiceImpl implements MailService {
@@ -22,6 +25,11 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender emailSender;
 
+    /**
+     * This methods send information mail to all developer for quick solution
+     *
+     * @param ex throwed exception
+     */
     @Override
     @Async
     public void exceptionMailSender(Exception ex) {
@@ -38,6 +46,12 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * This methods send validation mail after success register
+     *
+     * @param mail  user mail
+     * @param token validation token
+     */
     @Override
     @Async
     public void sendRegisterMail(String mail, String token) {

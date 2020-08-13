@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This service includes category processes
+ */
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -37,16 +40,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private GameRepository gameRepository;
 
-    @Override
-    public Category saveOrUpdate(Category category) {
-        return categoryRepository.save(category);
-    }
-
-    @Override
-    public Category findByNameAndLang(String name, String lang) {
-        return categoryRepository.findByNameAndLang(name, lang);
-    }
-
+    /**
+     * Get category list from parent id
+     *
+     * @param categoryId parent id of category
+     * @return cached category list
+     */
     @Override
     @Cacheable("categoriesById")
     public List<CategoryDTO> findByParentId(String categoryId) {
@@ -54,6 +53,12 @@ public class CategoryServiceImpl implements CategoryService {
         return getCategoryDTOS(categories);
     }
 
+    /**
+     * Get category list by language
+     *
+     * @param lang language of user
+     * @return cached category list by language
+     */
     @Override
     @Cacheable("categories")
     public List<CategoryDTO> getCategoryList(String lang) {
@@ -64,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
     private List<CategoryDTO> getCategoryDTOS(List<Category> categories) {
         List<CategoryDTO> categoryDTOS = categoryMapper.entityToModel(categories);
         categoryDTOS.parallelStream().forEach(item -> {
-            if (item.getType().equals(ProductType.GAME)) {
+            if (ProductType.GAME.equals(item.getType())) {
                 if (item.getParentId() == null) {
                     item.setItemCount(gameRepository.countByMainCategoryIdContaining(item.getDefaultCategory()));
                 } else if (item.getConsole() != null && item.getConsole()) {

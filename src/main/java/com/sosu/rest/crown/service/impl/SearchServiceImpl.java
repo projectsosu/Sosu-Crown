@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * General product and game searcher
+ */
 @Service
 public class SearchServiceImpl implements SearchService {
 
@@ -36,6 +39,12 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     private ProductMapper productMapper;
 
+    /**
+     * Search like name
+     *
+     * @param name search request
+     * @return found game and product list
+     */
     @Override
     public List<SearchResponseModel> searchByName(String name) {
         List<Game> games = gameRepository.findTop10ByAndNameContains(name);

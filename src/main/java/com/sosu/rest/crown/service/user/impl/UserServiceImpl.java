@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * General user processes
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -38,6 +41,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MailService mailService;
 
+    /**
+     * Gets user details
+     *
+     * @param username of searched user
+     * @return user detail
+     * @throws SoSuException if not find user
+     */
     @Override
     public UserModel getUserDetails(String username) {
         User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
@@ -47,6 +57,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.mapEntityToModel(user);
     }
 
+    /**
+     * Adds new user
+     *
+     * @param userRegisterRequest of new user
+     * @throws SoSuException in case of already signed up
+     */
     @Override
     public void signUpUser(UserRegisterRequest userRegisterRequest) {
         if (userRepository.findByUsername(userRegisterRequest.getUsername().toLowerCase()) != null) {
@@ -69,9 +85,16 @@ public class UserServiceImpl implements UserService {
         mailService.sendRegisterMail(user.getEmail(), security.getToken());
     }
 
+    /**
+     * Validate user mail
+     *
+     * @param username of new user
+     * @param token    of user
+     * @throws SoSuException in any exception case
+     */
     @Override
     public void validate(String username, String token) {
-        User user = userRepository.findByUsername(username.toLowerCase());
+        User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
         if (user == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User not found", "USER_NOT_FOUND");
         }
@@ -85,7 +108,7 @@ public class UserServiceImpl implements UserService {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "Fields not valid", "USR_VALIDATION_ERROR");
         }
         if (LocalDateTime.now().minusDays(7).compareTo(security.getTokenDate()) > 0) {
-            throw new SoSuException(HttpStatus.BAD_REQUEST, "Token out of date.", "TOKEN_OUT_OF_DATE");
+            throw new SoSuException(HttpStatus.BAD_REQUEST, "Token out of date", "TOKEN_OUT_OF_DATE");
         }
         user.setValidated(Boolean.TRUE);
         userRepository.save(user);

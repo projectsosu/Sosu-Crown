@@ -16,8 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -65,13 +65,13 @@ class CommonProductMapperTest {
 
     @Test
     void productsToCommon() {
-        ArrayList<CommonProductModel> commonProductModels = commonProductMapper.productsToCommon(Collections.nCopies(5, new Product()));
+        List<CommonProductModel> commonProductModels = commonProductMapper.productsToCommon(Collections.nCopies(5, new Product()));
         assertEquals(5, commonProductModels.size());
     }
 
     @Test
     void gamesToCommon() {
-        ArrayList<CommonProductModel> commonProductModels = commonProductMapper.gamesToCommon(Collections.nCopies(5, new Game()));
+        List<CommonProductModel> commonProductModels = commonProductMapper.gamesToCommon(Collections.nCopies(5, new Game()));
         assertEquals(5, commonProductModels.size());
     }
 }
