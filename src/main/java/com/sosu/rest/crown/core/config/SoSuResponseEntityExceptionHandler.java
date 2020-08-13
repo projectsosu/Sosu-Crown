@@ -103,6 +103,9 @@ public class SoSuResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        if (!HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
+            return new ResponseEntity<>(body, headers, status);
+        }
         log.error("Unexpected IS error: {}", ex.getMessage());
         log.error("Unexpected IS trace: {}", ExceptionUtils.getStackTrace(ex));
         mailService.exceptionMailSender(ex);

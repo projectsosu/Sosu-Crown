@@ -7,7 +7,7 @@
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.UserController;
-import com.sosu.rest.crown.core.annotations.SoSuValidated;
+import com.sosu.rest.crown.core.annotations.Security;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserModel;
@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @Slf4j
@@ -52,7 +53,7 @@ public class UserControllerImpl implements UserController {
     /**
      * Register new user
      *
-     * @param registerRequest
+     * @param registerRequest user registration request
      * @return void
      */
     @Override
@@ -64,14 +65,29 @@ public class UserControllerImpl implements UserController {
     /**
      * Validate user email
      *
-     * @param username
+     * @param username of user
      * @param token    of mail
      * @return void
      */
     @Override
-    @SoSuValidated
+    @Security
     public ResponseEntity<Void> validate(String username, String token) {
         userService.validate(username, token);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Upload user profile image
+     *
+     * @param username of user
+     * @param file     of image
+     * @return void
+     */
+    @Override
+    @Security
+    public ResponseEntity<Void> uploadFile(MultipartFile file, String username) {
+        userService.uploadImage(file, username);
+        return ResponseEntity.noContent().build();
+    }
+
 }

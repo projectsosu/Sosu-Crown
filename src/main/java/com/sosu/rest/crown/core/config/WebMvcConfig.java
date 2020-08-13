@@ -24,9 +24,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new InternalResourceViewResolver();
     }
 
+    @Bean
+    public SecurityCheckerInterceptor securityCheckerInterceptor() {
+        return new SecurityCheckerInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new SecurityCheckerInterceptor()).
+        registry.addInterceptor(securityCheckerInterceptor()).
                 excludePathPatterns(
                         "/swagger-ui/**",
                         "/v3/api-docs/**",

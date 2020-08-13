@@ -27,6 +27,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -56,7 +58,7 @@ class SoSuResponseEntityExceptionHandlerTest {
                 .handleSecurity(new SoSuSecurityException(HttpStatus.BAD_GATEWAY, "Example", "ERROR"), getMockRequest());
         assertEquals(HttpStatus.BAD_GATEWAY, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("ERROR", errorData.getMessage());
+        assertEquals("ERROR", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Example", errorData.getError());
     }
 
@@ -66,7 +68,7 @@ class SoSuResponseEntityExceptionHandlerTest {
                 .handleSoSuException(new SoSuException(HttpStatus.BAD_GATEWAY, "Example", "ERROR"), getMockRequest());
         assertEquals(HttpStatus.BAD_GATEWAY, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("ERROR", errorData.getMessage());
+        assertEquals("ERROR", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Example", errorData.getError());
     }
 
@@ -76,7 +78,7 @@ class SoSuResponseEntityExceptionHandlerTest {
                 .handleBadCredential(new BadCredentialsException("Example"), getMockRequest());
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("BAD_CREDENTIAL", errorData.getMessage());
+        assertEquals("BAD_CREDENTIAL", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Example", errorData.getError());
     }
 
@@ -87,7 +89,7 @@ class SoSuResponseEntityExceptionHandlerTest {
                         HttpStatus.BAD_REQUEST, getMockRequest());
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("JSON_EXCEPTION", errorData.getMessage());
+        assertEquals("JSON_EXCEPTION", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Json parse exception: 123456", errorData.getError());
     }
 
@@ -102,7 +104,7 @@ class SoSuResponseEntityExceptionHandlerTest {
                         mock(HttpHeaders.class), HttpStatus.BAD_REQUEST, getMockRequest());
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("NOT_VALID", errorData.getMessage());
+        assertEquals("NOT_VALID", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Exampleclass.abcd is not valid", errorData.getError());
     }
 
@@ -116,7 +118,7 @@ class SoSuResponseEntityExceptionHandlerTest {
                 .handleBindException(new BindException(bindingResult), mock(HttpHeaders.class), HttpStatus.BAD_REQUEST, getMockRequest());
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("NOT_VALID", errorData.getMessage());
+        assertEquals("NOT_VALID", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Exampleclass.abcd is not valid", errorData.getError());
     }
 
@@ -127,7 +129,7 @@ class SoSuResponseEntityExceptionHandlerTest {
                         HttpStatus.BAD_REQUEST, getMockRequest());
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("NOT_VALID", errorData.getMessage());
+        assertEquals("NOT_VALID", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Required 12 parameter '13' is not present", errorData.getError());
     }
 
@@ -136,7 +138,7 @@ class SoSuResponseEntityExceptionHandlerTest {
         ResponseEntity<Object> responseEntity = soSuResponseEntityExceptionHandler.handle(new Exception("Example"), getMockRequest());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("UNKNOWN_ERR", errorData.getMessage());
+        assertEquals("UNKNOWN_ERR", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.", errorData.getError());
         verify(mailService, times(1)).exceptionMailSender(any());
     }
@@ -144,10 +146,10 @@ class SoSuResponseEntityExceptionHandlerTest {
     @Test
     void handleExceptionInternal() {
         ResponseEntity<Object> responseEntity = soSuResponseEntityExceptionHandler
-                .handleExceptionInternal(new Exception(), mock(Object.class), mock(HttpHeaders.class), HttpStatus.CHECKPOINT, getMockRequest());
-        assertEquals(HttpStatus.CHECKPOINT, responseEntity.getStatusCode());
+                .handleExceptionInternal(new Exception(), mock(Object.class), mock(HttpHeaders.class), HttpStatus.INTERNAL_SERVER_ERROR, getMockRequest());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         ErrorData errorData = (ErrorData) responseEntity.getBody();
-        assertEquals("UNKNOWN_ERR", errorData.getMessage());
+        assertEquals("UNKNOWN_ERR", Objects.requireNonNull(errorData).getMessage());
         assertEquals("Sorry unexpected error occurred :( We sent a mail to our system admins and they will solve this problem as soon as possible.", errorData.getError());
         verify(mailService, times(1)).exceptionMailSender(any());
     }

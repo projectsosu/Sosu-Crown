@@ -23,8 +23,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -42,6 +44,9 @@ class CategoryServiceTest {
 
     @Mock
     private GameRepository gameRepository;
+
+    @Mock
+    private ConcurrentMap<String, String> categoryMap;
 
     @InjectMocks
     private CategoryServiceImpl categoryService;
@@ -95,5 +100,19 @@ class CategoryServiceTest {
         when(categoryRepository.findByLang(any())).thenReturn(Collections.singletonList(new Category()));
         List<CategoryDTO> categoryDTOS = categoryService.getCategoryList("");
         assertEquals(1, Objects.requireNonNull(categoryDTOS).size());
+    }
+
+    @Test
+    void getCategoryName() {
+        when(categoryMap.get("any")).thenReturn("found");
+        String name = categoryService.getCategoryName("any");
+        assertEquals("found", name);
+    }
+
+    @Test
+    void getCategoryNameNull() {
+        when(categoryMap.get("any")).thenReturn(null);
+        String name = categoryService.getCategoryName("any");
+        assertNull(name);
     }
 }

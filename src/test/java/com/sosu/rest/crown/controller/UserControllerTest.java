@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -69,5 +70,12 @@ class UserControllerTest {
         ResponseEntity<Void> responseEntity = userController.validate("", "");
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         verify(userService, times(1)).validate(any(), any());
+    }
+
+    @Test
+    void uploadFile() {
+        ResponseEntity<Void> responseEntity = userController.uploadFile(mock(MultipartFile.class), "");
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        verify(userService, times(1)).uploadImage(any(), any());
     }
 }

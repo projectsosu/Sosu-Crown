@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -51,4 +52,12 @@ public interface UserController {
     @GetMapping(value = "/validate/{username}/{token}")
     ResponseEntity<Void> validate(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username,
                                   @Parameter(description = "Toke for validation", required = true, example = "example") @PathVariable String token);
+
+    @Operation(summary = "Upload profile image")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Validate success", content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @PostMapping(value = "/uploadImage/{username}")
+    ResponseEntity<Void> uploadFile(@Parameter(description = "Image information", required = true, example = "example") @RequestBody MultipartFile file,
+                                    @Parameter(description = "Username", required = true, example = "example") @PathVariable String username);
 }

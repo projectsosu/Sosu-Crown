@@ -61,7 +61,7 @@ class SecurityCheckerInterceptorTest {
         SoSuSecurityException exception = assertThrows(SoSuSecurityException.class,
                 () -> securityCheckerInterceptor.preHandle(mock(HttpServletRequest.class), mock(HttpServletResponse.class), method));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
-        assertEquals("TOKEN_NULL", exception.getCause().getMessage());
+        assertEquals("JWT_TOKEN_NULL", exception.getCause().getMessage());
     }
 
     @Test
@@ -72,11 +72,11 @@ class SecurityCheckerInterceptorTest {
         when(method.getMethod()).thenReturn(method1);
         when(method1.getDeclaredAnnotation(SoSuValidated.class)).thenReturn(mock(SoSuValidated.class));
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("Bearer-Token")).thenReturn("123123122312331");
+        when(request.getHeader("Authorization")).thenReturn("123123122312331");
         SoSuSecurityException exception = assertThrows(SoSuSecurityException.class,
                 () -> securityCheckerInterceptor.preHandle(request, mock(HttpServletResponse.class), method));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
-        assertEquals("TOKEN_INVALID", exception.getCause().getMessage());
+        assertEquals("JWT_TOKEN_INVALID", exception.getCause().getMessage());
     }
 
     @Test
@@ -89,7 +89,7 @@ class SecurityCheckerInterceptorTest {
         when(method.getMethod()).thenReturn(method1);
         when(method1.getDeclaredAnnotation(SoSuValidated.class)).thenReturn(mock(SoSuValidated.class));
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("Bearer-Token")).thenReturn("123123122312331");
+        when(request.getHeader("Authorization")).thenReturn("123123122312331");
         SoSuException exception = assertThrows(SoSuException.class,
                 () -> securityCheckerInterceptor.preHandle(request, mock(HttpServletResponse.class), method));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
@@ -106,7 +106,7 @@ class SecurityCheckerInterceptorTest {
         when(method.getMethod()).thenReturn(method1);
         when(method1.getDeclaredAnnotation(SoSuValidated.class)).thenReturn(mock(SoSuValidated.class));
         HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("Bearer-Token")).thenReturn("123123122312331");
+        when(request.getHeader("Authorization")).thenReturn("123123122312331");
         SoSuException exception = assertThrows(SoSuException.class,
                 () -> securityCheckerInterceptor.preHandle(request, mock(HttpServletResponse.class), method));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());

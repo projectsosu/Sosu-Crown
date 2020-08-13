@@ -13,6 +13,7 @@ import com.sosu.rest.crown.core.exception.SoSuSecurityException;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.repo.mongo.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
@@ -39,25 +40,23 @@ public class SecurityCheckerInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(
-            HttpServletRequest request, HttpServletResponse response, Object handler) {
+            @NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
         HandlerMethod hm = (HandlerMethod) handler;
         if (hm.getMethod().getDeclaredAnnotation(SoSuValidated.class) != null || hm.getMethod().getDeclaredAnnotation(Security.class) != null) {
-            String token = request.getHeader("Bearer-Token");
+            String token = request.getHeader("Authorization");
             if (token == null) {
-                throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "Token can not be null", "TOKEN_NULL");
+                throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "JWT token can not be null", "JWT_TOKEN_NULL");
             }
             if (!jwtUtil.validateToken(token)) {
-                throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "User token invalid", "TOKEN_INVALID");
+                throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "JWT token invalid", "JWT_TOKEN_INVALID");
             }
-            if (hm.getMethod().getDeclaredAnnotation(SoSuValidated.class) != null) {
-                String username = jwtUtil.extractUsername(token);
-                User user = userRepository.findByUsername(username.toLowerCase());
-                if (user == null) {
-                    throw new SoSuException(HttpStatus.BAD_REQUEST, "User not found", "USER_NOT_FOUND");
-                }
-                if (!user.getValidated()) {
-                    throw new SoSuException(HttpStatus.UNAUTHORIZED, "User not validated", "NOT_VALIDATED");
-                }
+            String username = jwtUtil.extractUsername(token);
+            User user = userRepository.findByUsername(username.toLowerCase());
+            if (user == null) {
+                throw new SoSuException(HttpStatus.BAD_REQUEST, "User not found", "USER_NOT_FOUND");
+            }
+            if (hm.getMethod().getDeclaredAnnotation(SoSuValidated.class) != null && !user.getValidated()) {
+                throw new SoSuException(HttpStatus.UNAUTHORIZED, "User not validated", "NOT_VALIDATED");
             }
         }
         return true;

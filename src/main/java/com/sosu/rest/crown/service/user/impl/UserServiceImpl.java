@@ -7,6 +7,7 @@
 package com.sosu.rest.crown.service.user.impl;
 
 import com.sosu.rest.crown.core.exception.SoSuException;
+import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Security;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.mapper.UserMapper;
@@ -17,9 +18,13 @@ import com.sosu.rest.crown.repo.mongo.UserRepository;
 import com.sosu.rest.crown.service.core.MailService;
 import com.sosu.rest.crown.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -40,6 +45,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private ImageUploader imageUploader;
+
+    @Value("${sosu.supported.types}")
+    private String supportedTypes;
 
     /**
      * Gets user details
@@ -114,4 +125,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         securityRepository.delete(security);
     }
+
+    /**
+     * Ths method upload profile image of user
+     *
+     * @param image    byte of user
+     * @param username of user
+     */
+    @Override
+    @Async
+    public void uploadImage(MultipartFile image, String username) {
+        if (!supportedTypes.contains(image.getContentType())) {
+            throw new SoSuException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                    "Unsupported media type.You can upload JPG, JPEG or PNG images", "UNSUPPORTED_FILE");
+        }
+        User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
+        String url;
+        try {
+            url = imageUploader.uploadProfileImage(image.getBytes(), username);
+        } catch (IOException e) {
+            throw new SoSuException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage(), "UPLOAD_ERROR");
+        }
+        user.setImage(url);
+        userRepository.save(user);
+    }
+
 }

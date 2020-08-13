@@ -6,9 +6,8 @@
  **/
 package com.sosu.rest.crown.service.user;
 
-import java.time.LocalDateTime;
-
 import com.sosu.rest.crown.core.exception.SoSuException;
+import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Security;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.mapper.UserMapper;
@@ -24,13 +23,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,6 +54,9 @@ class UserServiceTest {
 
     @Mock
     private MailService mailService;
+
+    @Mock
+    private ImageUploader imageUploader;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -176,5 +183,39 @@ class UserServiceTest {
         verify(userRepository, times(1)).save(any());
         verify(securityRepository, times(1)).delete(any());
     }
+
+    @Test
+    void uploadImage() {
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getContentType()).thenReturn("asdadasd");
+        ReflectionTestUtils.setField(userService, "supportedTypes", "JPG;PNG");
+        SoSuException exception = assertThrows(SoSuException.class, () -> userService.uploadImage(multipartFile, "asd"));
+        assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exception.getStatus());
+        assertEquals("Unsupported media type.You can upload JPG, JPEG or PNG images", exception.getReason());
+        assertEquals("UNSUPPORTED_FILE", exception.getCause().getMessage());
+    }
+
+    @Test
+    void uploadImageWithUser() {
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getContentType()).thenReturn("JPG");
+        when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(new User());
+        ReflectionTestUtils.setField(userService, "supportedTypes", "JPG;PNG");
+        userService.uploadImage(multipartFile, "asd");
+        verify(imageUploader, times(1)).uploadProfileImage(any(), any());
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    void uploadImageException() throws IOException {
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getContentType()).thenReturn("JPG");
+        ReflectionTestUtils.setField(userService, "supportedTypes", "JPG;PNG");
+        when(multipartFile.getBytes()).thenThrow(IOException.class);
+        SoSuException exception = assertThrows(SoSuException.class, () -> userService.uploadImage(multipartFile, "asd"));
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, exception.getStatus());
+        assertEquals("UPLOAD_ERROR", exception.getCause().getMessage());
+    }
+
 
 }
