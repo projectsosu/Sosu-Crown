@@ -15,4 +15,6 @@ public interface CategoryService {
     List<CategoryDTO> findByParentId(String categoryId);
 
     List<CategoryDTO> getCategoryList(String lang);
+
+    String getCategoryName(String id);
 }

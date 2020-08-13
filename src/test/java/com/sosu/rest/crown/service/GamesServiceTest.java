@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,7 +52,7 @@ class GamesServiceTest {
     void getProductByCategory() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
         productByCategorySearchRequest.setDesc(true);
-        when(commonProductMapper.gamesToCommon(any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
+        when(commonProductMapper.gamesToCommon(anyList(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
         List<CommonProductModel> commonProductModels = gamesService.getProductByCategory(productByCategorySearchRequest);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }
@@ -60,7 +61,7 @@ class GamesServiceTest {
     void getProductByCategoryNonDesc() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
         productByCategorySearchRequest.setDesc(false);
-        when(commonProductMapper.gamesToCommon(any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
+        when(commonProductMapper.gamesToCommon(anyList(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
         List<CommonProductModel> commonProductModels = gamesService.getProductByCategory(productByCategorySearchRequest);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }
@@ -68,7 +69,7 @@ class GamesServiceTest {
     @Test
     void findRandomGame() {
         when(gameRepository.findRandomGame(any())).thenReturn(new ArrayList<>());
-        when(commonProductMapper.gamesToCommon(any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
+        when(commonProductMapper.gamesToCommon(anyList(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
         List<CommonProductModel> commonProductModels = gamesService.findRandomGame(1);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }

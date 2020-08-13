@@ -51,7 +51,7 @@ class ProductServiceTest {
     void getProductByCategory() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
         productByCategorySearchRequest.setDesc(true);
-        when(commonProductMapper.productsToCommon(any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
+        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
         List<CommonProductModel> commonProductModels = productService.getProductByCategory(productByCategorySearchRequest);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }
@@ -60,7 +60,7 @@ class ProductServiceTest {
     void getProductByCategoryNonDesc() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
         productByCategorySearchRequest.setDesc(false);
-        when(commonProductMapper.productsToCommon(any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
+        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
         List<CommonProductModel> commonProductModels = productService.getProductByCategory(productByCategorySearchRequest);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }
@@ -68,7 +68,7 @@ class ProductServiceTest {
     @Test
     void findRandomProduct() {
         when(productRepository.findRandomProduct(any())).thenReturn(new ArrayList<>());
-        when(commonProductMapper.productsToCommon(any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
+        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
         List<CommonProductModel> commonProductModels = productService.findRandomProduct(1);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }

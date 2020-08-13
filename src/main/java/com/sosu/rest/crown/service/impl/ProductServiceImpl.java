@@ -11,6 +11,7 @@ import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
+import com.sosu.rest.crown.service.CategoryService;
 import com.sosu.rest.crown.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,9 @@ import java.util.List;
  */
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     private ProductRepository repository;
@@ -41,10 +45,12 @@ public class ProductServiceImpl implements ProductService {
     public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getDesc()) {
             return commonProductMapper.productsToCommon(repository.getProductByCategory(request.getCategoryId(),
-                    PageRequest.of(request.getPage() - 1, request.getPageSize(), Sort.by(request.getSortBy().label).descending())));
+                    PageRequest.of(request.getPage() - 1, request.getPageSize(), Sort.by(request.getSortBy().label).descending())),
+                    categoryService);
         } else {
             return commonProductMapper.productsToCommon(repository.getProductByCategory(request.getCategoryId(),
-                    PageRequest.of(request.getPage() - 1, request.getPageSize(), Sort.by(request.getSortBy().label).ascending())));
+                    PageRequest.of(request.getPage() - 1, request.getPageSize(), Sort.by(request.getSortBy().label).ascending())),
+                    categoryService);
         }
     }
 
@@ -66,6 +72,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<CommonProductModel> findRandomProduct(Integer page) {
-        return commonProductMapper.productsToCommon(repository.findRandomProduct(PageRequest.of(page, 10, Sort.by("name"))));
+        return commonProductMapper.productsToCommon(repository.findRandomProduct(PageRequest.of(page, 10, Sort.by("name"))), categoryService);
     }
 }

@@ -11,6 +11,7 @@ import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
+import com.sosu.rest.crown.service.CategoryService;
 import com.sosu.rest.crown.service.GamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,9 @@ import java.util.List;
  */
 @Service
 public class GamesServiceImpl implements GamesService {
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     private GameRepository gameRepository;
@@ -51,10 +55,10 @@ public class GamesServiceImpl implements GamesService {
     public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getDesc()) {
             return commonProductMapper.gamesToCommon(gameRepository.findByCategoryId(request.getCategoryId(), PageRequest.of(request.getPage() - 1, request.getPageSize(),
-                    Sort.by(request.getSortBy().label).descending())));
+                    Sort.by(request.getSortBy().label).descending())), categoryService);
         } else {
             return commonProductMapper.gamesToCommon(gameRepository.findByCategoryId(request.getCategoryId(), PageRequest.of(request.getPage() - 1, request.getPageSize(),
-                    Sort.by(request.getSortBy().label).ascending())));
+                    Sort.by(request.getSortBy().label).ascending())), categoryService);
         }
     }
 
@@ -66,6 +70,6 @@ public class GamesServiceImpl implements GamesService {
      */
     @Override
     public List<CommonProductModel> findRandomGame(Integer page) {
-        return commonProductMapper.gamesToCommon(gameRepository.findRandomGame(PageRequest.of(page, 10, Sort.by("name"))));
+        return commonProductMapper.gamesToCommon(gameRepository.findRandomGame(PageRequest.of(page, 10, Sort.by("name"))), categoryService);
     }
 }

@@ -10,10 +10,12 @@ import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.service.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
@@ -23,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class CommonProductMapperTest {
+
+    @Mock
+    private CategoryService categoryService;
 
     private CommonProductMapper commonProductMapper;
 
@@ -34,7 +39,7 @@ class CommonProductMapperTest {
     @Test
     void afterMap() {
         CommonProductModel commonProductModel = new CommonProductModel();
-        commonProductMapper.afterMap(commonProductModel, new Product());
+        commonProductMapper.afterMap(commonProductModel, new Product(), categoryService);
         assertEquals(ProductType.PRODUCT, commonProductModel.getProductType());
     }
 
@@ -43,14 +48,14 @@ class CommonProductMapperTest {
         CommonProductModel commonProductModel = new CommonProductModel();
         Product product = new Product();
         product.setCategoryId("asdasd");
-        commonProductMapper.afterMap(commonProductModel, product);
+        commonProductMapper.afterMap(commonProductModel, product, categoryService);
         assertEquals(ProductType.PRODUCT, commonProductModel.getProductType());
     }
 
     @Test
     void testAfterMap() {
         CommonProductModel commonProductModel = new CommonProductModel();
-        commonProductMapper.afterMap(commonProductModel, new Game());
+        commonProductMapper.afterMap(commonProductModel, new Game(), categoryService);
         assertEquals(ProductType.GAME, commonProductModel.getProductType());
     }
 
@@ -59,19 +64,19 @@ class CommonProductMapperTest {
         CommonProductModel commonProductModel = new CommonProductModel();
         Game game = new Game();
         game.setCategoryId("asdasd");
-        commonProductMapper.afterMap(commonProductModel, game);
+        commonProductMapper.afterMap(commonProductModel, game, categoryService);
         assertEquals(ProductType.GAME, commonProductModel.getProductType());
     }
 
     @Test
     void productsToCommon() {
-        List<CommonProductModel> commonProductModels = commonProductMapper.productsToCommon(Collections.nCopies(5, new Product()));
+        List<CommonProductModel> commonProductModels = commonProductMapper.productsToCommon(Collections.nCopies(5, new Product()), categoryService);
         assertEquals(5, commonProductModels.size());
     }
 
     @Test
     void gamesToCommon() {
-        List<CommonProductModel> commonProductModels = commonProductMapper.gamesToCommon(Collections.nCopies(5, new Game()));
+        List<CommonProductModel> commonProductModels = commonProductMapper.gamesToCommon(Collections.nCopies(5, new Game()), categoryService);
         assertEquals(5, commonProductModels.size());
     }
 }

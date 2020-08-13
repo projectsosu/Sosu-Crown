@@ -39,4 +39,7 @@ public class CommonProductModel {
     @Schema(description = "Categories of product")
     private List<String> categories;
 
+    @Schema(description = "Category names of product")
+    private List<String> categoryNames;
+
 }

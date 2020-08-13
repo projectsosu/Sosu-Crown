@@ -20,7 +20,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * This service includes category processes
@@ -39,6 +42,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private GameRepository gameRepository;
+
+    private ConcurrentMap<String, String> categoryMap = new ConcurrentHashMap<>();
+
+    @PostConstruct
+    @Cacheable("categories")
+    public List<CategoryDTO> createHashedCategories() {
+        List<Category> categories = categoryRepository.findByLang("en_US");
+        createHashMap(categories);
+        return getCategoryDTOS(categories);
+    }
 
     /**
      * Get category list from parent id
@@ -66,6 +79,17 @@ public class CategoryServiceImpl implements CategoryService {
         return getCategoryDTOS(categories);
     }
 
+    /**
+     * Get category name by language
+     *
+     * @param id   of category
+     * @return category anme
+     */
+    @Override
+    public String getCategoryName(String id) {
+        return categoryMap.get(id);
+    }
+
     private List<CategoryDTO> getCategoryDTOS(List<Category> categories) {
         List<CategoryDTO> categoryDTOS = categoryMapper.entityToModel(categories);
         categoryDTOS.parallelStream().forEach(item -> {
@@ -86,6 +110,11 @@ public class CategoryServiceImpl implements CategoryService {
             }
         });
         return categoryDTOS;
+    }
+
+    private synchronized void createHashMap(List<Category> categories) {
+        categoryMap.clear();
+        categories.parallelStream().forEach(item -> categoryMap.put(item.getId(), item.getName()));
     }
 
 }
