@@ -8,7 +8,6 @@ package com.sosu.rest.crown.service.user;
 
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
@@ -18,5 +17,5 @@ public interface UserService {
 
     void validate(String username, String token);
 
-    void uploadImage(MultipartFile image, String username);
+    void uploadImage(byte[] image, String username);
 }

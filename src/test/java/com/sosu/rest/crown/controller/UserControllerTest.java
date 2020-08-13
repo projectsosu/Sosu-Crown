@@ -7,6 +7,7 @@
 package com.sosu.rest.crown.controller;
 
 import com.sosu.rest.crown.controller.impl.UserControllerImpl;
+import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserModel;
@@ -20,10 +21,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -73,9 +78,35 @@ class UserControllerTest {
     }
 
     @Test
-    void uploadFile() {
-        ResponseEntity<Void> responseEntity = userController.uploadFile(mock(MultipartFile.class), "");
+    void uploadImage() {
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getContentType()).thenReturn("asdadasd");
+        ReflectionTestUtils.setField(userController, "supportedTypes", "JPG;PNG");
+        SoSuException exception = assertThrows(SoSuException.class, () -> userController.uploadFile(multipartFile, "asd"));
+        assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exception.getStatus());
+        assertEquals("Unsupported media type.You can upload JPG, JPEG or PNG images", exception.getReason());
+        assertEquals("UNSUPPORTED_FILE", exception.getCause().getMessage());
+    }
+
+    @Test
+    void uploadImageIO() throws IOException {
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getContentType()).thenReturn("JPG");
+        when(multipartFile.getBytes()).thenThrow(IOException.class);
+        ReflectionTestUtils.setField(userController, "supportedTypes", "JPG;PNG");
+        SoSuException exception = assertThrows(SoSuException.class, () -> userController.uploadFile(multipartFile, "asd"));
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, exception.getStatus());
+        assertEquals("UPLOAD_ERROR", exception.getCause().getMessage());
+    }
+
+    @Test
+    void uploadImageSuccess(){
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getContentType()).thenReturn("JPG");
+        ReflectionTestUtils.setField(userController, "supportedTypes", "JPG;PNG");
+        ResponseEntity<Void> responseEntity = userController.uploadFile(multipartFile, "asd");
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         verify(userService, times(1)).uploadImage(any(), any());
     }
+
 }

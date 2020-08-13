@@ -8,6 +8,7 @@ package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.UserController;
 import com.sosu.rest.crown.core.annotations.Security;
+import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserModel;
@@ -15,12 +16,17 @@ import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -35,6 +41,9 @@ public class UserControllerImpl implements UserController {
 
     @Autowired
     private UserService userService;
+
+    @Value("${sosu.supported.types}")
+    private String supportedTypes;
 
     /**
      * Login request
@@ -86,7 +95,15 @@ public class UserControllerImpl implements UserController {
     @Override
     @Security
     public ResponseEntity<Void> uploadFile(MultipartFile file, String username) {
-        userService.uploadImage(file, username);
+        if (!supportedTypes.contains(Objects.requireNonNull(file.getContentType()))) {
+            throw new SoSuException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                    "Unsupported media type.You can upload JPG, JPEG or PNG images", "UNSUPPORTED_FILE");
+        }
+        try {
+            userService.uploadImage(file.getBytes(), username);
+        } catch (IOException e) {
+            throw new SoSuException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage(), "UPLOAD_ERROR");
+        }
         return ResponseEntity.noContent().build();
     }
 

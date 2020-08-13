@@ -18,13 +18,10 @@ import com.sosu.rest.crown.repo.mongo.UserRepository;
 import com.sosu.rest.crown.service.core.MailService;
 import com.sosu.rest.crown.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -48,9 +45,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ImageUploader imageUploader;
-
-    @Value("${sosu.supported.types}")
-    private String supportedTypes;
 
     /**
      * Gets user details
@@ -134,18 +128,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Async
-    public void uploadImage(MultipartFile image, String username) {
-        if (!supportedTypes.contains(image.getContentType())) {
-            throw new SoSuException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-                    "Unsupported media type.You can upload JPG, JPEG or PNG images", "UNSUPPORTED_FILE");
-        }
+    public void uploadImage(byte[] image, String username) {
         User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
-        String url;
-        try {
-            url = imageUploader.uploadProfileImage(image.getBytes(), username);
-        } catch (IOException e) {
-            throw new SoSuException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage(), "UPLOAD_ERROR");
-        }
+        String url = imageUploader.uploadProfileImage(image, username);
         user.setImage(url);
         userRepository.save(user);
     }

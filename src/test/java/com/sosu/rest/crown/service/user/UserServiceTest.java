@@ -186,36 +186,10 @@ class UserServiceTest {
 
     @Test
     void uploadImage() {
-        MultipartFile multipartFile = mock(MultipartFile.class);
-        when(multipartFile.getContentType()).thenReturn("asdadasd");
-        ReflectionTestUtils.setField(userService, "supportedTypes", "JPG;PNG");
-        SoSuException exception = assertThrows(SoSuException.class, () -> userService.uploadImage(multipartFile, "asd"));
-        assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, exception.getStatus());
-        assertEquals("Unsupported media type.You can upload JPG, JPEG or PNG images", exception.getReason());
-        assertEquals("UNSUPPORTED_FILE", exception.getCause().getMessage());
-    }
-
-    @Test
-    void uploadImageWithUser() {
-        MultipartFile multipartFile = mock(MultipartFile.class);
-        when(multipartFile.getContentType()).thenReturn("JPG");
-        when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(new User());
-        ReflectionTestUtils.setField(userService, "supportedTypes", "JPG;PNG");
-        userService.uploadImage(multipartFile, "asd");
-        verify(imageUploader, times(1)).uploadProfileImage(any(), any());
+        when(userRepository.findByUsernameOrEmail("123", "123")).thenReturn(new User());
+        userService.uploadImage("12".getBytes(), "123");
         verify(userRepository, times(1)).save(any());
+        verify(imageUploader, times(1)).uploadProfileImage(any(), any());
     }
-
-    @Test
-    void uploadImageException() throws IOException {
-        MultipartFile multipartFile = mock(MultipartFile.class);
-        when(multipartFile.getContentType()).thenReturn("JPG");
-        ReflectionTestUtils.setField(userService, "supportedTypes", "JPG;PNG");
-        when(multipartFile.getBytes()).thenThrow(IOException.class);
-        SoSuException exception = assertThrows(SoSuException.class, () -> userService.uploadImage(multipartFile, "asd"));
-        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, exception.getStatus());
-        assertEquals("UPLOAD_ERROR", exception.getCause().getMessage());
-    }
-
 
 }
