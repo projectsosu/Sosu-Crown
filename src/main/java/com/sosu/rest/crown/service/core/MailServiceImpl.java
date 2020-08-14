@@ -76,6 +76,7 @@ public class MailServiceImpl implements MailService {
             Context context = new Context();
             context.setVariable("token", token);
             context.setVariable("name", user.getName());
+            context.setVariable("username", user.getUsername());
             context.setLocale(locale);
             String html = templateEngine.process("validation", context);
             helper.setTo(user.getEmail());

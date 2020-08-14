@@ -7,7 +7,7 @@
 		<p th:text="#{mail.general.dear(${name})}"></p>
 		<p></p>
 		<p th:text="#{mail.validation.confirm}"></p>
-		<p th:text="#{mail.validation.messsage(${token})}"></p>
+		<p th:text="#{mail.validation.messsage(${username}, ${token})}"></p>
 		<div th:insert="fragments/footer :: footer"></div>
 	</body>
 </html>
