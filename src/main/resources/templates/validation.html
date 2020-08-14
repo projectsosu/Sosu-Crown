@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</head>
+	<body>
+		<p th:text="#{mail.general.dear(${name})}"></p>
+		<p></p>
+		<p th:text="#{mail.validation.confirm}"></p>
+		<p th:text="#{mail.validation.messsage(${token})}"></p>
+		<div th:insert="fragments/footer :: footer"></div>
+	</body>
+</html>

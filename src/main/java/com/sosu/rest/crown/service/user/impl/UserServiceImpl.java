@@ -23,6 +23,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
      * @throws SoSuException in case of already signed up
      */
     @Override
-    public void signUpUser(UserRegisterRequest userRegisterRequest) {
+    public void signUpUser(UserRegisterRequest userRegisterRequest, Locale locale) {
         if (userRepository.findByUsername(userRegisterRequest.getUsername().toLowerCase()) != null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User already signed up", "USER_FOUND");
         }
@@ -87,7 +88,7 @@ public class UserServiceImpl implements UserService {
         security.setToken(UUID.randomUUID().toString());
         securityRepository.save(security);
 
-        mailService.sendRegisterMail(user.getEmail(), security.getToken());
+        mailService.sendRegisterMail(user, security.getToken(), locale);
     }
 
     /**

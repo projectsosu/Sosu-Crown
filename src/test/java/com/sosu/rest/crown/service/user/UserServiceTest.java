@@ -23,18 +23,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -84,7 +81,7 @@ class UserServiceTest {
         UserRegisterRequest userRegisterRequest = new UserRegisterRequest();
         userRegisterRequest.setUsername("123");
         when(userRepository.findByUsername("123")).thenReturn(new User());
-        SoSuException exception = assertThrows(SoSuException.class, () -> userService.signUpUser(userRegisterRequest));
+        SoSuException exception = assertThrows(SoSuException.class, () -> userService.signUpUser(userRegisterRequest, mock(Locale.class)));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
         assertEquals("User already signed up", exception.getReason());
         assertEquals("USER_FOUND", exception.getCause().getMessage());
@@ -96,7 +93,7 @@ class UserServiceTest {
         userRegisterRequest.setEmail("123");
         userRegisterRequest.setUsername("123");
         when(userRepository.findByEmail("123")).thenReturn(new User());
-        SoSuException exception = assertThrows(SoSuException.class, () -> userService.signUpUser(userRegisterRequest));
+        SoSuException exception = assertThrows(SoSuException.class, () -> userService.signUpUser(userRegisterRequest, mock(Locale.class)));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
         assertEquals("User already signed up", exception.getReason());
         assertEquals("EMAIL_FOUND", exception.getCause().getMessage());
@@ -119,10 +116,10 @@ class UserServiceTest {
         user.setValidated(false);
         when(userMapper.registerRequestToModel(any())).thenReturn(user);
         when(userRepository.findByEmail(any())).thenReturn(null);
-        userService.signUpUser(userRegisterRequest);
+        userService.signUpUser(userRegisterRequest, mock(Locale.class));
         verify(userRepository, times(1)).save(any());
         verify(securityRepository, times(1)).save(any());
-        verify(mailService, times(1)).sendRegisterMail(any(), any());
+        verify(mailService, times(1)).sendRegisterMail(any(), any(), any());
     }
 
     @Test

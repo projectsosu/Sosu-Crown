@@ -9,11 +9,13 @@ package com.sosu.rest.crown.service.user;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 
+import java.util.Locale;
+
 public interface UserService {
 
     UserModel getUserDetails(String username);
 
-    void signUpUser(UserRegisterRequest userRegisterRequest);
+    void signUpUser(UserRegisterRequest userRegisterRequest, Locale locale);
 
     void validate(String username, String token);
 

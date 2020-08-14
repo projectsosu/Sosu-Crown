@@ -6,12 +6,13 @@
  **/
 package com.sosu.rest.crown.service.core;
 
-import org.springframework.scheduling.annotation.Async;
+import com.sosu.rest.crown.entity.mongo.User;
+
+import java.util.Locale;
 
 public interface MailService {
 
     void exceptionMailSender(Exception ex);
 
-    @Async
-    void sendRegisterMail(String mail, String token);
+    void sendRegisterMail(User user, String token, Locale locale);
 }

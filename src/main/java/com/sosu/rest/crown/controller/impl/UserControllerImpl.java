@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
 @RestController
@@ -66,8 +67,8 @@ public class UserControllerImpl implements UserController {
      * @return void
      */
     @Override
-    public ResponseEntity<Void> register(UserRegisterRequest registerRequest) {
-        userService.signUpUser(registerRequest);
+    public ResponseEntity<Void> register(UserRegisterRequest registerRequest, Locale locale) {
+        userService.signUpUser(registerRequest, locale);
         return ResponseEntity.noContent().build();
     }
 

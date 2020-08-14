@@ -25,6 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -65,9 +66,9 @@ class UserControllerTest {
 
     @Test
     void register() {
-        ResponseEntity<Void> responseEntity = userController.register(mock(UserRegisterRequest.class));
+        ResponseEntity<Void> responseEntity = userController.register(mock(UserRegisterRequest.class), mock(Locale.class));
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-        verify(userService, times(1)).signUpUser(any());
+        verify(userService, times(1)).signUpUser(any(), any());
     }
 
     @Test
@@ -100,7 +101,7 @@ class UserControllerTest {
     }
 
     @Test
-    void uploadImageSuccess(){
+    void uploadImageSuccess() {
         MultipartFile multipartFile = mock(MultipartFile.class);
         when(multipartFile.getContentType()).thenReturn("JPG");
         ReflectionTestUtils.setField(userController, "supportedTypes", "JPG;PNG");

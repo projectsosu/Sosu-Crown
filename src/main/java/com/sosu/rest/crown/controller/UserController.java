@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 @Tag(name = "User Operations", description = "User auth operations")
 public interface UserController {
@@ -44,7 +45,7 @@ public interface UserController {
             @ApiResponse(responseCode = "204", description = "Register success", content = {@Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Void> register(@RequestBody @Valid UserRegisterRequest registerRequest);
+    ResponseEntity<Void> register(@RequestBody @Valid UserRegisterRequest registerRequest, Locale locale);
 
     @Operation(summary = "Validate user")
     @ApiResponses(value = {
