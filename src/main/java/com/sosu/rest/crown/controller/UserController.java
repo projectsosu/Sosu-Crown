@@ -45,7 +45,7 @@ public interface UserController {
             @ApiResponse(responseCode = "204", description = "Register success", content = {@Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Void> register(@RequestBody @Valid UserRegisterRequest registerRequest, Locale locale);
+    ResponseEntity<Void> register(@RequestBody @Valid UserRegisterRequest registerRequest, @Parameter(hidden = true) Locale locale);
 
     @Operation(summary = "Validate user")
     @ApiResponses(value = {

@@ -7,15 +7,16 @@
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.CategoryController;
+import com.sosu.rest.crown.core.util.LanguageUtil;
 import com.sosu.rest.crown.model.CategoryDTO;
 import com.sosu.rest.crown.service.CategoryService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/category")
@@ -27,12 +28,12 @@ public class CategoryControllerImpl implements CategoryController {
     /**
      * Getting categories
      *
-     * @param lang language of user
+     * @param locale language of user
      * @return category list
      */
     @Override
-    public ResponseEntity<List<CategoryDTO>> getCategoryList(String lang) {
-        return ResponseEntity.ok(categoryService.getCategoryList(StringUtils.isBlank(lang) ? "en_US" : lang));
+    public ResponseEntity<List<CategoryDTO>> getCategoryList(Locale locale) {
+        return ResponseEntity.ok(categoryService.getCategoryList(LanguageUtil.getLanguage(locale)));
     }
 
     /**

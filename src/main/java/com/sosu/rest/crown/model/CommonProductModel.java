@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -37,9 +37,9 @@ public class CommonProductModel {
     private String image;
 
     @Schema(description = "Categories of product")
-    private List<String> categories;
+    private Set<String> categories;
 
     @Schema(description = "Category names of product")
-    private List<String> categoryNames;
+    private Set<String> categoryNames;
 
 }

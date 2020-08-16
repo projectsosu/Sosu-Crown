@@ -17,9 +17,10 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface CommonProductMapper {
@@ -31,7 +32,7 @@ public interface CommonProductMapper {
     @AfterMapping
     default void afterMap(@MappingTarget CommonProductModel commonProductModel, Product product, @Context CategoryService categoryService) {
         if (product != null && StringUtils.isNotEmpty(product.getCategoryId())) {
-            commonProductModel.setCategories(Arrays.asList(product.getCategoryId().split(";")));
+            commonProductModel.setCategories(new HashSet<>(Arrays.asList(product.getCategoryId().split(";"))));
             createCategoryNameList(commonProductModel, categoryService);
         }
         commonProductModel.setProductType(ProductType.PRODUCT);
@@ -40,14 +41,14 @@ public interface CommonProductMapper {
     @AfterMapping
     default void afterMap(@MappingTarget CommonProductModel commonProductModel, Game game, @Context CategoryService categoryService) {
         if (game != null && StringUtils.isNotEmpty(game.getCategoryId())) {
-            commonProductModel.setCategories(Arrays.asList(game.getCategoryId().split(";")));
+            commonProductModel.setCategories(new HashSet<>(Arrays.asList(game.getCategoryId().split(";"))));
             createCategoryNameList(commonProductModel, categoryService);
         }
         commonProductModel.setProductType(ProductType.GAME);
     }
 
     private void createCategoryNameList(@MappingTarget CommonProductModel commonProductModel, @Context CategoryService categoryService) {
-        ArrayList<String> categoryNames = new ArrayList<>();
+        Set<String> categoryNames = new HashSet<>();
         commonProductModel.getCategories().stream().parallel().forEach(item -> {
             if (categoryService.getCategoryName(item) != null) {
                 categoryNames.add(categoryService.getCategoryName(item));

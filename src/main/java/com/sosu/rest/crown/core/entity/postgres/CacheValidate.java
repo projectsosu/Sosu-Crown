@@ -4,7 +4,7 @@
  * <p>
  * Copyright - SoSu Backend
  **/
-package com.sosu.rest.crown.core.entity;
+package com.sosu.rest.crown.core.entity.postgres;
 
 import lombok.Data;
 
@@ -22,6 +22,6 @@ public class CacheValidate {
 
     private String cacheName;
 
-    private String cache_key;
+    private String cacheKey;
 
 }

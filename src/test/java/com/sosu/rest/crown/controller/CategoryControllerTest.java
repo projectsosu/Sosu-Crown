@@ -19,10 +19,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +39,7 @@ class CategoryControllerTest {
     @Test
     void getCategoryList() {
         when(categoryService.getCategoryList("en_US")).thenReturn(new ArrayList<>());
-        ResponseEntity<List<CategoryDTO>> responseEntity = categoryController.getCategoryList("en_US");
+        ResponseEntity<List<CategoryDTO>> responseEntity = categoryController.getCategoryList(mock(Locale.class));
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
     }

@@ -14,7 +14,6 @@ import com.sosu.rest.crown.repo.mongo.CategoryRepository;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.CategoryService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
@@ -75,14 +74,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Cacheable("categories")
     public List<CategoryDTO> getCategoryList(String lang) {
-        List<Category> categories = categoryRepository.findByLang(StringUtils.isEmpty(lang) ? "en_US" : lang);
+        List<Category> categories = categoryRepository.findByLang(lang);
         return getCategoryDTOS(categories);
     }
 
     /**
      * Get category name by language
      *
-     * @param id   of category
+     * @param id of category
      * @return category anme
      */
     @Override

@@ -30,20 +30,18 @@ public class SoSuCacheManager {
     @Scheduled(fixedRate = 60000)
     private void checkCacheTTL() {
         cacheRepository.findAll().forEach(item -> {
-            synchronized (item) {
-                if (cacheManager.getCache(item.getCacheName()) != null) {
-                    try {
-                        if (item.getCache_key() != null) {
-                            cacheManager.getCache(item.getCacheName()).evict(item.getCache_key());
-                            log.info("Cache cleared: {} {}", item.getCacheName(), item.getCache_key());
-                        } else {
-                            cacheManager.getCache(item.getCacheName()).clear();
-                            log.info("Cache cleared: {}", item.getCacheName());
-                        }
-                        cacheRepository.delete(item);
-                    } catch (Exception e) {
-                        log.error("Cache clear error: {} {} {}", item.getCacheName(), item.getCache_key(), ExceptionUtils.getStackTrace(e));
+            if (cacheManager.getCache(item.getCacheName()) != null) {
+                try {
+                    if (item.getCacheKey() != null) {
+                        cacheManager.getCache(item.getCacheName()).evict(item.getCacheKey());
+                        log.info("Cache cleared: {} {}", item.getCacheName(), item.getCacheKey());
+                    } else {
+                        cacheManager.getCache(item.getCacheName()).clear();
+                        log.info("Cache cleared: {}", item.getCacheName());
                     }
+                    cacheRepository.delete(item);
+                } catch (Exception e) {
+                    log.error("Cache clear error: {} {} {}", item.getCacheName(), item.getCacheKey(), ExceptionUtils.getStackTrace(e));
                 }
             }
         });

@@ -18,8 +18,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableCaching
 @EnableAsync
-@EnableMongoRepositories(basePackages = "com.sosu.rest.crown.repo.mongo")
-@EnableJpaRepositories(basePackages = {"com.sosu.rest.crown.repo.postgres", "com.sosu.rest.crown.core.entity"})
+@EnableMongoRepositories(basePackages = {"com.sosu.rest.crown.repo.mongo", "com.sosu.rest.crown.core.entity.mongo"})
+@EnableJpaRepositories(basePackages = {"com.sosu.rest.crown.repo.postgres", "com.sosu.rest.crown.core.entity.postgres"})
 public class CrownApplication {
 
     public static void main(String[] args) {
