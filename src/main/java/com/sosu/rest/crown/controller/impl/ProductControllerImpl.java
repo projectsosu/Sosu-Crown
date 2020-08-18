@@ -69,12 +69,16 @@ public class ProductControllerImpl implements ProductController {
     /**
      * Get product detail
      *
-     * @param productId id of product
+     * @param productId   id of product
      * @param productType type of product
      * @return product detail
      */
     @Override
     public ResponseEntity<CommonProductModel> getProductDetail(Long productId, ProductType productType) {
-        return ResponseEntity.ok(productService.findProduct(productId));
+        if (ProductType.GAME.equals(productType)) {
+            return ResponseEntity.ok(gamesService.findGame(productId));
+        } else {
+            return ResponseEntity.ok(productService.findProduct(productId));
+        }
     }
 }

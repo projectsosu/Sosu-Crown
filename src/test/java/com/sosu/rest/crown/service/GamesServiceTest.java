@@ -6,7 +6,9 @@
  **/
 package com.sosu.rest.crown.service;
 
+import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.Game;
+import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
@@ -17,13 +19,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
@@ -73,4 +78,30 @@ class GamesServiceTest {
         List<CommonProductModel> commonProductModels = gamesService.findRandomGame(1);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }
+
+    @Test
+    void findGame() {
+        CommonProductModel commonProductModel = new CommonProductModel();
+        commonProductModel.setName("example");
+        when(gameRepository.findById(any())).thenReturn(Optional.of(new Game()));
+        when(commonProductMapper.gameToCommon(any())).thenReturn(commonProductModel);
+        CommonProductModel commonProductModels = gamesService.findGame(1L);
+        assertEquals("example", commonProductModels.getName());
+    }
+
+    @Test
+    void findGameError() {
+        when(gameRepository.findById(any())).thenReturn(Optional.empty());
+        SoSuException exception = assertThrows(SoSuException.class, () -> gamesService.findGame(1L));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("Product can not find", exception.getReason());
+        assertEquals("PRODUCT_NOT_FOUND", exception.getCause().getMessage());
+    }
+
+    @Test
+    void save() {
+        gamesService.saveOrUpdate(new Game());
+        verify(gameRepository, times(1)).save(any());
+    }
+
 }

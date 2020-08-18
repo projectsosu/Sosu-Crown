@@ -19,4 +19,6 @@ public interface GamesService {
     List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request);
 
     List<CommonProductModel> findRandomGame(Integer page);
+
+    CommonProductModel findGame(Long id);
 }

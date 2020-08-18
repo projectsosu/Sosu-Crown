@@ -27,6 +27,8 @@ public interface CommonProductMapper {
 
     CommonProductModel productsToCommon(Product product);
 
+    CommonProductModel gameToCommon(Game product);
+
     List<CommonProductModel> productsToCommon(List<Product> products, @Context CategoryService categoryService);
 
     List<CommonProductModel> gamesToCommon(List<Game> games, @Context CategoryService categoryService);

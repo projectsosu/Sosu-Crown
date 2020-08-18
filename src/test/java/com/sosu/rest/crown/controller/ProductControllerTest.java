@@ -84,6 +84,28 @@ class ProductControllerTest {
         assertEquals(10, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
+    @Test
+    void getProductDetail() {
+        CommonProductModel commonProductModel = new CommonProductModel();
+        commonProductModel.setName("exampleproduct");
+        when(productService.findProduct(1L)).thenReturn(commonProductModel);
+        ResponseEntity<CommonProductModel> responseEntity = productController.getProductDetail(1L, ProductType.PRODUCT);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("exampleproduct", Objects.requireNonNull(responseEntity.getBody()).getName());
+
+    }
+
+    @Test
+    void getProductDetailGame() {
+        CommonProductModel commonProductModel = new CommonProductModel();
+        commonProductModel.setName("examplegame");
+        when(gamesService.findGame(1L)).thenReturn(commonProductModel);
+        ResponseEntity<CommonProductModel> responseEntity = productController.getProductDetail(1L, ProductType.GAME);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("examplegame", Objects.requireNonNull(responseEntity.getBody()).getName());
+
+    }
+
     ProductByCategorySearchRequest createMockRequestObject() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
         productByCategorySearchRequest.setCategoryId("");

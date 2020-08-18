@@ -6,6 +6,7 @@
  **/
 package com.sosu.rest.crown.service.product.impl;
 
+import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductModel;
@@ -16,6 +17,7 @@ import com.sosu.rest.crown.service.product.GamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,5 +73,18 @@ public class GamesServiceImpl implements GamesService {
     @Override
     public List<CommonProductModel> findRandomGame(Integer page) {
         return commonProductMapper.gamesToCommon(gameRepository.findRandomGame(PageRequest.of(page, 10, Sort.by("name"))), categoryService);
+    }
+
+    /**
+     * Get game detail
+     *
+     * @param id of game
+     * @return of game detail
+     */
+    @Override
+    public CommonProductModel findGame(Long id) {
+        return commonProductMapper.gameToCommon(gameRepository.findById(id).orElseThrow(() ->
+                new SoSuException(HttpStatus.BAD_REQUEST, "Product can not find", "PRODUCT_NOT_FOUND")
+        ));
     }
 }

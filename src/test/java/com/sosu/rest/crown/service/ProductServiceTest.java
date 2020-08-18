@@ -6,6 +6,7 @@
  **/
 package com.sosu.rest.crown.service;
 
+import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductModel;
@@ -17,13 +18,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -72,4 +76,30 @@ class ProductServiceTest {
         List<CommonProductModel> commonProductModels = productService.findRandomProduct(1);
         assertEquals(5, Objects.requireNonNull(commonProductModels).size());
     }
+
+    @Test
+    void findProduct() {
+        CommonProductModel commonProductModel = new CommonProductModel();
+        commonProductModel.setName("example");
+        when(productRepository.findById(any())).thenReturn(Optional.of(new Product()));
+        when(commonProductMapper.productsToCommon(any())).thenReturn(commonProductModel);
+        CommonProductModel commonProductModels = productService.findProduct(1L);
+        assertEquals("example", commonProductModels.getName());
+    }
+
+    @Test
+    void findProductError() {
+        when(productRepository.findById(any())).thenReturn(Optional.empty());
+        SoSuException exception = assertThrows(SoSuException.class, () -> productService.findProduct(1L));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("Product can not find", exception.getReason());
+        assertEquals("PRODUCT_NOT_FOUND", exception.getCause().getMessage());
+    }
+
+    @Test
+    void save() {
+        productService.saveOrUpdate(new Product());
+        verify(productRepository, times(1)).save(any());
+    }
+
 }
