@@ -55,4 +55,7 @@ public class Product {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     private List<ProductFeature> productFeatures;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    private List<ProductComment> productComments;
 }

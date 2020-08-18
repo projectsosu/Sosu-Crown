@@ -4,7 +4,7 @@
  * <p>
  * Copyright - SoSu Backend
  **/
-package com.sosu.rest.crown.service;
+package com.sosu.rest.crown.service.product;
 
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.model.CommonProductModel;

@@ -10,8 +10,8 @@ import com.sosu.rest.crown.controller.ProductController;
 import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
-import com.sosu.rest.crown.service.GamesService;
-import com.sosu.rest.crown.service.ProductService;
+import com.sosu.rest.crown.service.product.GamesService;
+import com.sosu.rest.crown.service.product.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -64,5 +64,17 @@ public class ProductControllerImpl implements ProductController {
             return ResponseEntity.ok(commonProductModels.subList(0, 10));
         }
         return ResponseEntity.ok(commonProductModels);
+    }
+
+    /**
+     * Get product detail
+     *
+     * @param productId id of product
+     * @param productType type of product
+     * @return product detail
+     */
+    @Override
+    public ResponseEntity<CommonProductModel> getProductDetail(Long productId, ProductType productType) {
+        return ResponseEntity.ok(productService.findProduct(productId));
     }
 }

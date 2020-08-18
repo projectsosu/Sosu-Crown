@@ -11,7 +11,7 @@ import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
-import com.sosu.rest.crown.service.impl.ProductServiceImpl;
+import com.sosu.rest.crown.service.product.impl.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

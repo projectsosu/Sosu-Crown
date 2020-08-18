@@ -4,18 +4,20 @@
  * <p>
  * Copyright - SoSu Backend
  **/
-package com.sosu.rest.crown.service.impl;
+package com.sosu.rest.crown.service.product.impl;
 
+import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.CategoryService;
-import com.sosu.rest.crown.service.ProductService;
+import com.sosu.rest.crown.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -73,5 +75,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<CommonProductModel> findRandomProduct(Integer page) {
         return commonProductMapper.productsToCommon(repository.findRandomProduct(PageRequest.of(page, 10, Sort.by("name"))), categoryService);
+    }
+
+    /**
+     * Get product detail
+     *
+     * @param id of product
+     * @return of product detail
+     */
+    @Override
+    public CommonProductModel findProduct(Long id) {
+        return commonProductMapper.productsToCommon(repository.findById(id).orElseThrow(() ->
+                new SoSuException(HttpStatus.BAD_REQUEST, "Product can not find", "PRODUCT_NOT_FOUND")
+        ));
     }
 }

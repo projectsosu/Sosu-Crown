@@ -6,6 +6,7 @@
  **/
 package com.sosu.rest.crown.controller;
 
+import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
@@ -43,4 +45,14 @@ public interface ProductController {
     @GetMapping(value = "/getRandomProducts", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<CommonProductModel>> getRandomProducts(@Parameter(description = "Page number of products", example = "1")
                                                                @RequestParam(required = false) Integer page);
+
+    @Operation(summary = "Get product detail")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the product",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CommonProductModel.class))}),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)})
+    @GetMapping(value = "/getProductDetail/{productType}/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<CommonProductModel> getProductDetail(@Parameter(description = "Id of product", example = "165") @PathVariable Long productId,
+                                                        @Parameter(description = "Type of product", example = "PRODUCT") @PathVariable ProductType productType);
+
 }

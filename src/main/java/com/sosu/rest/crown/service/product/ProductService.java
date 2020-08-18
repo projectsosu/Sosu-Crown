@@ -4,7 +4,7 @@
  * <p>
  * Copyright - SoSu Backend
  **/
-package com.sosu.rest.crown.service;
+package com.sosu.rest.crown.service.product;
 
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.model.CommonProductModel;
@@ -19,4 +19,6 @@ public interface ProductService {
     void saveOrUpdate(Product product);
 
     List<CommonProductModel> findRandomProduct(Integer page);
+
+    CommonProductModel findProduct(Long id);
 }

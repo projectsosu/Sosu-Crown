@@ -4,7 +4,7 @@
  * <p>
  * Copyright - SoSu Backend
  **/
-package com.sosu.rest.crown.service.impl;
+package com.sosu.rest.crown.service.product.impl;
 
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
@@ -12,7 +12,7 @@ import com.sosu.rest.crown.model.CommonProductModel;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.service.CategoryService;
-import com.sosu.rest.crown.service.GamesService;
+import com.sosu.rest.crown.service.product.GamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
