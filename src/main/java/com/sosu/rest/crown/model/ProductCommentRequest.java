@@ -24,7 +24,7 @@ public class ProductCommentRequest {
     @Schema(description = "Comment", example = "Comment", required = true)
     private String comment;
 
-    @Schema(description = "Id of user", example = "5f3684de2809ee27dc272307")
-    private String userId;
+    @Schema(description = "Name of user", example = "5f3684de2809ee27dc272307")
+    private String userName;
 
 }

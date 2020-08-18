@@ -21,12 +21,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * Game processes
  */
 @Service
+@Transactional
 public class GamesServiceImpl implements GamesService {
 
     @Autowired

@@ -11,6 +11,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductCommentRepository extends PagingAndSortingRepository<ProductComment, Long> {
+public interface ProductCommentRepository extends PagingAndSortingRepository<ProductComment, String> {
 
 }

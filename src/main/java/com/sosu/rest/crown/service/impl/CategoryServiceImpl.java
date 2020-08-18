@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -28,6 +29,7 @@ import java.util.concurrent.ConcurrentMap;
  * This service includes category processes
  */
 @Service
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired

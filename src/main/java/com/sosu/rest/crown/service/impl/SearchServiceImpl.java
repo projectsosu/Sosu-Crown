@@ -17,6 +17,7 @@ import com.sosu.rest.crown.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
  * General product and game searcher
  */
 @Service
+@Transactional
 public class SearchServiceImpl implements SearchService {
 
     @Autowired
