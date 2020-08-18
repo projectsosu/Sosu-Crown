@@ -10,7 +10,7 @@ import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.mapper.GamesMapper;
 import com.sosu.rest.crown.mapper.ProductMapper;
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.SearchService;
@@ -46,16 +46,16 @@ public class SearchServiceImpl implements SearchService {
      * @return found game and product list
      */
     @Override
-    public List<SearchResponseModel> searchByName(String name) {
+    public List<SearchResponseDTO> searchByName(String name) {
         List<Game> games = gameRepository.findTop10ByAndNameContains(name);
         List<Product> products = productRepository.findTop10ByAndNameContains(name);
-        List<SearchResponseModel> searchResponseModels = new ArrayList<>();
-        searchResponseModels.addAll(gamesMapper.entityToModel(games));
-        searchResponseModels.addAll(productMapper.entityToModel(products));
-        searchResponseModels.sort(Comparator.comparing(SearchResponseModel::getName));
-        if (searchResponseModels.size() > 10) {
-            return searchResponseModels.subList(0, 10);
+        List<SearchResponseDTO> searchResponseDTOS = new ArrayList<>();
+        searchResponseDTOS.addAll(gamesMapper.entityToModel(games));
+        searchResponseDTOS.addAll(productMapper.entityToModel(products));
+        searchResponseDTOS.sort(Comparator.comparing(SearchResponseDTO::getName));
+        if (searchResponseDTOS.size() > 10) {
+            return searchResponseDTOS.subList(0, 10);
         }
-        return searchResponseModels;
+        return searchResponseDTOS;
     }
 }

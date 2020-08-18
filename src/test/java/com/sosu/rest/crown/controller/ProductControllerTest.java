@@ -9,7 +9,8 @@ package com.sosu.rest.crown.controller;
 import com.sosu.rest.crown.controller.impl.ProductControllerImpl;
 import com.sosu.rest.crown.enums.ProductField;
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.service.product.GamesService;
 import com.sosu.rest.crown.service.product.ProductService;
@@ -43,53 +44,53 @@ class ProductControllerTest {
 
     @Test
     void getProductByCategory() {
-        when(gamesService.getProductByCategory(any(ProductByCategorySearchRequest.class))).thenReturn(Collections.singletonList(new CommonProductModel()));
-        ResponseEntity<List<CommonProductModel>> responseEntity = productController.getProductByCategory(createMockRequestObject());
+        when(gamesService.getProductByCategory(any(ProductByCategorySearchRequest.class))).thenReturn(Collections.singletonList(new CommonProductDTO()));
+        ResponseEntity<List<CommonProductDTO>> responseEntity = productController.getProductByCategory(createMockRequestObject());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
     @Test
     void getProductByCategoryGame() {
-        when(productService.getProductByCategory(any(ProductByCategorySearchRequest.class))).thenReturn(Collections.singletonList(new CommonProductModel()));
+        when(productService.getProductByCategory(any(ProductByCategorySearchRequest.class))).thenReturn(Collections.singletonList(new CommonProductDTO()));
         ProductByCategorySearchRequest request = createMockRequestObject();
         request.setProductType(ProductType.PRODUCT);
-        ResponseEntity<List<CommonProductModel>> responseEntity = productController.getProductByCategory(request);
+        ResponseEntity<List<CommonProductDTO>> responseEntity = productController.getProductByCategory(request);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
     @Test
     void getProductByCategoryEmptyList() {
-        ResponseEntity<List<CommonProductModel>> responseEntity = productController.getProductByCategory(createMockRequestObject());
+        ResponseEntity<List<CommonProductDTO>> responseEntity = productController.getProductByCategory(createMockRequestObject());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
     @Test
     void getRandomProducts() {
-        when(productService.findRandomProduct(any())).thenReturn(Collections.singletonList(new CommonProductModel("")));
-        when(gamesService.findRandomGame(any())).thenReturn(Collections.singletonList(new CommonProductModel("")));
-        ResponseEntity<List<CommonProductModel>> responseEntity = productController.getRandomProducts(1);
+        when(productService.findRandomProduct(any())).thenReturn(Collections.singletonList(new CommonProductDTO("")));
+        when(gamesService.findRandomGame(any())).thenReturn(Collections.singletonList(new CommonProductDTO("")));
+        ResponseEntity<List<CommonProductDTO>> responseEntity = productController.getRandomProducts(1);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(2, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
     @Test
     void getRandomProducts_many() {
-        when(productService.findRandomProduct(any())).thenReturn(Collections.nCopies(10, new CommonProductModel("")));
-        when(gamesService.findRandomGame(any())).thenReturn(Collections.nCopies(10, new CommonProductModel("")));
-        ResponseEntity<List<CommonProductModel>> responseEntity = productController.getRandomProducts(1);
+        when(productService.findRandomProduct(any())).thenReturn(Collections.nCopies(10, new CommonProductDTO("")));
+        when(gamesService.findRandomGame(any())).thenReturn(Collections.nCopies(10, new CommonProductDTO("")));
+        ResponseEntity<List<CommonProductDTO>> responseEntity = productController.getRandomProducts(1);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(10, Objects.requireNonNull(responseEntity.getBody()).size());
     }
 
     @Test
     void getProductDetail() {
-        CommonProductModel commonProductModel = new CommonProductModel();
+        CommonProductDetailDTO commonProductModel = new CommonProductDetailDTO();
         commonProductModel.setName("exampleproduct");
         when(productService.findProduct(1L)).thenReturn(commonProductModel);
-        ResponseEntity<CommonProductModel> responseEntity = productController.getProductDetail(1L, ProductType.PRODUCT);
+        ResponseEntity<CommonProductDetailDTO> responseEntity = productController.getProductDetail(1L, ProductType.PRODUCT);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("exampleproduct", Objects.requireNonNull(responseEntity.getBody()).getName());
 
@@ -97,10 +98,10 @@ class ProductControllerTest {
 
     @Test
     void getProductDetailGame() {
-        CommonProductModel commonProductModel = new CommonProductModel();
+        CommonProductDetailDTO commonProductModel = new CommonProductDetailDTO();
         commonProductModel.setName("examplegame");
         when(gamesService.findGame(1L)).thenReturn(commonProductModel);
-        ResponseEntity<CommonProductModel> responseEntity = productController.getProductDetail(1L, ProductType.GAME);
+        ResponseEntity<CommonProductDetailDTO> responseEntity = productController.getProductDetail(1L, ProductType.GAME);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("examplegame", Objects.requireNonNull(responseEntity.getBody()).getName());
 

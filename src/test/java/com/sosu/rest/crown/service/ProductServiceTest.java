@@ -9,7 +9,8 @@ package com.sosu.rest.crown.service;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDTO;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.product.impl.ProductServiceImpl;
@@ -55,35 +56,35 @@ class ProductServiceTest {
     void getProductByCategory() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
         productByCategorySearchRequest.setDesc(true);
-        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
-        List<CommonProductModel> commonProductModels = productService.getProductByCategory(productByCategorySearchRequest);
-        assertEquals(5, Objects.requireNonNull(commonProductModels).size());
+        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductDTO()));
+        List<CommonProductDTO> commonProductDTOS = productService.getProductByCategory(productByCategorySearchRequest);
+        assertEquals(5, Objects.requireNonNull(commonProductDTOS).size());
     }
 
     @Test
     void getProductByCategoryNonDesc() {
         ProductByCategorySearchRequest productByCategorySearchRequest = new ProductByCategorySearchRequest();
         productByCategorySearchRequest.setDesc(false);
-        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
-        List<CommonProductModel> commonProductModels = productService.getProductByCategory(productByCategorySearchRequest);
-        assertEquals(5, Objects.requireNonNull(commonProductModels).size());
+        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductDTO()));
+        List<CommonProductDTO> commonProductDTOS = productService.getProductByCategory(productByCategorySearchRequest);
+        assertEquals(5, Objects.requireNonNull(commonProductDTOS).size());
     }
 
     @Test
     void findRandomProduct() {
         when(productRepository.findRandomProduct(any())).thenReturn(new ArrayList<>());
-        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductModel()));
-        List<CommonProductModel> commonProductModels = productService.findRandomProduct(1);
-        assertEquals(5, Objects.requireNonNull(commonProductModels).size());
+        when(commonProductMapper.productsToCommon(any(), any())).thenReturn(Collections.nCopies(5, new CommonProductDTO()));
+        List<CommonProductDTO> commonProductDTOS = productService.findRandomProduct(1);
+        assertEquals(5, Objects.requireNonNull(commonProductDTOS).size());
     }
 
     @Test
     void findProduct() {
-        CommonProductModel commonProductModel = new CommonProductModel();
-        commonProductModel.setName("example");
+        CommonProductDetailDTO commonProductDTO = new CommonProductDetailDTO();
+        commonProductDTO.setName("example");
         when(productRepository.findById(any())).thenReturn(Optional.of(new Product()));
-        when(commonProductMapper.productsToCommon(any())).thenReturn(commonProductModel);
-        CommonProductModel commonProductModels = productService.findProduct(1L);
+        when(commonProductMapper.productToCommon(any())).thenReturn(commonProductDTO);
+        CommonProductDetailDTO commonProductModels = productService.findProduct(1L);
         assertEquals("example", commonProductModels.getName());
     }
 

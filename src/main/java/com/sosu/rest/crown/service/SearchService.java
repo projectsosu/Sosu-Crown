@@ -6,12 +6,12 @@
  **/
 package com.sosu.rest.crown.service;
 
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 
 import java.util.List;
 
 public interface SearchService {
 
-    List<SearchResponseModel> searchByName(String name);
+    List<SearchResponseDTO> searchByName(String name);
 
 }

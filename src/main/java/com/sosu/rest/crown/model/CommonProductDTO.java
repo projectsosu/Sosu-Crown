@@ -15,9 +15,9 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class CommonProductModel {
+public class CommonProductDTO {
 
-    public CommonProductModel(String name) {
+    public CommonProductDTO(String name) {
         this.name = name;
     }
 

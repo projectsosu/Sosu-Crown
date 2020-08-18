@@ -9,7 +9,7 @@ import com.sosu.rest.crown.enums.ProductType;
 
 import com.sosu.rest.crown.mapper.GamesMapper;
 import com.sosu.rest.crown.mapper.ProductMapper;
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.impl.SearchServiceImpl;
@@ -52,8 +52,8 @@ class SearchServiceTest {
         when(productRepository.findTop10ByAndNameContains(any())).thenReturn(new ArrayList<>());
         when(gamesMapper.entityToModel(any())).thenReturn(Collections.singletonList(getResponseModel()));
         when(productMapper.entityToModel(any())).thenReturn(Collections.singletonList(getResponseModel()));
-        List<SearchResponseModel> searchResponseModels = searchService.searchByName("");
-        assertEquals(2, Objects.requireNonNull(searchResponseModels).size());
+        List<SearchResponseDTO> searchResponseDTOS = searchService.searchByName("");
+        assertEquals(2, Objects.requireNonNull(searchResponseDTOS).size());
     }
 
     @Test
@@ -62,16 +62,16 @@ class SearchServiceTest {
         when(productRepository.findTop10ByAndNameContains(any())).thenReturn(new ArrayList<>());
         when(gamesMapper.entityToModel(any())).thenReturn(Collections.nCopies(10, getResponseModel()));
         when(productMapper.entityToModel(any())).thenReturn(Collections.nCopies(10, getResponseModel()));
-        List<SearchResponseModel> searchResponseModels = searchService.searchByName("");
-        assertEquals(10, Objects.requireNonNull(searchResponseModels).size());
+        List<SearchResponseDTO> searchResponseDTOS = searchService.searchByName("");
+        assertEquals(10, Objects.requireNonNull(searchResponseDTOS).size());
     }
 
-    private SearchResponseModel getResponseModel(){
-        SearchResponseModel searchResponseModel = new SearchResponseModel();
-        searchResponseModel.setName("asdadasd");
-        searchResponseModel.setId(0L);
-        searchResponseModel.setProductType(ProductType.GAME);
-        return searchResponseModel;
+    private SearchResponseDTO getResponseModel(){
+        SearchResponseDTO searchResponseDTO = new SearchResponseDTO();
+        searchResponseDTO.setName("asdadasd");
+        searchResponseDTO.setId(0L);
+        searchResponseDTO.setProductType(ProductType.GAME);
+        return searchResponseDTO;
     }
 
 }

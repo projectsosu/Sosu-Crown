@@ -7,7 +7,7 @@
 package com.sosu.rest.crown.controller;
 
 import com.sosu.rest.crown.controller.impl.SearchControllerImpl;
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import com.sosu.rest.crown.service.SearchService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +36,8 @@ class SearchControllerTest {
 
     @Test
     void searchByName() {
-        when(searchService.searchByName(anyString())).thenReturn(Collections.singletonList(new SearchResponseModel()));
-        ResponseEntity<List<SearchResponseModel>> responseEntity = searchController.searchByName("");
+        when(searchService.searchByName(anyString())).thenReturn(Collections.singletonList(new SearchResponseDTO()));
+        ResponseEntity<List<SearchResponseDTO>> responseEntity = searchController.searchByName("");
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1, Objects.requireNonNull(responseEntity.getBody()).size());
     }

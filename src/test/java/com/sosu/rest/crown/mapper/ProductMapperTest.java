@@ -7,7 +7,7 @@
 package com.sosu.rest.crown.mapper;
 
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +28,8 @@ class ProductMapperTest {
 
     @Test
     void afterMap() {
-        SearchResponseModel searchResponseModel = new SearchResponseModel();
-        productMapper.afterMap(searchResponseModel);
-        assertEquals(ProductType.PRODUCT, searchResponseModel.getProductType());
+        SearchResponseDTO searchResponseDTO = new SearchResponseDTO();
+        productMapper.afterMap(searchResponseDTO);
+        assertEquals(ProductType.PRODUCT, searchResponseDTO.getProductType());
     }
 }

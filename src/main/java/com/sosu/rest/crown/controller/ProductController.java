@@ -7,7 +7,8 @@
 package com.sosu.rest.crown.controller;
 
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,28 +32,28 @@ public interface ProductController {
     @Operation(summary = "Get product from category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the products", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = CommonProductModel.class))}),
+                    schema = @Schema(implementation = CommonProductDTO.class))}),
             @ApiResponse(responseCode = "400", description = "Request Error", content = @Content),
             @ApiResponse(responseCode = "404", description = "Products not found", content = @Content)})
     @GetMapping(value = "/getProductByCategory", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<CommonProductModel>> getProductByCategory(@Parameter(description = "Request object")
+    ResponseEntity<List<CommonProductDTO>> getProductByCategory(@Parameter(description = "Request object")
                                                                   @Valid ProductByCategorySearchRequest request);
 
     @Operation(summary = "Get random products")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the products",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CommonProductModel.class))})})
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CommonProductDTO.class))})})
     @GetMapping(value = "/getRandomProducts", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<CommonProductModel>> getRandomProducts(@Parameter(description = "Page number of products", example = "1")
+    ResponseEntity<List<CommonProductDTO>> getRandomProducts(@Parameter(description = "Page number of products", example = "1")
                                                                @RequestParam(required = false) Integer page);
 
     @Operation(summary = "Get product detail")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the product",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CommonProductModel.class))}),
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CommonProductDetailDTO.class))}),
             @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)})
     @GetMapping(value = "/getProductDetail/{productType}/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<CommonProductModel> getProductDetail(@Parameter(description = "Id of product", example = "165") @PathVariable Long productId,
-                                                        @Parameter(description = "Type of product", example = "PRODUCT") @PathVariable ProductType productType);
+    ResponseEntity<CommonProductDetailDTO> getProductDetail(@Parameter(description = "Id of product", example = "165") @PathVariable Long productId,
+                                                            @Parameter(description = "Type of product", example = "PRODUCT") @PathVariable ProductType productType);
 
 }

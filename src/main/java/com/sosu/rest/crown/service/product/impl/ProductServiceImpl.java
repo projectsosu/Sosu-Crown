@@ -9,7 +9,8 @@ package com.sosu.rest.crown.service.product.impl;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDTO;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.CategoryService;
@@ -44,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
      * @return found product list
      */
     @Override
-    public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
+    public List<CommonProductDTO> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getDesc()) {
             return commonProductMapper.productsToCommon(repository.getProductByCategory(request.getCategoryId(),
                     PageRequest.of(request.getPage() - 1, request.getPageSize(), Sort.by(request.getSortBy().label).descending())),
@@ -73,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
      * @return random 10 products
      */
     @Override
-    public List<CommonProductModel> findRandomProduct(Integer page) {
+    public List<CommonProductDTO> findRandomProduct(Integer page) {
         return commonProductMapper.productsToCommon(repository.findRandomProduct(PageRequest.of(page, 10, Sort.by("name"))), categoryService);
     }
 
@@ -84,8 +85,8 @@ public class ProductServiceImpl implements ProductService {
      * @return of product detail
      */
     @Override
-    public CommonProductModel findProduct(Long id) {
-        return commonProductMapper.productsToCommon(repository.findById(id).orElseThrow(() ->
+    public CommonProductDetailDTO findProduct(Long id) {
+        return commonProductMapper.productToCommon(repository.findById(id).orElseThrow(() ->
                 new SoSuException(HttpStatus.BAD_REQUEST, "Product can not find", "PRODUCT_NOT_FOUND")
         ));
     }

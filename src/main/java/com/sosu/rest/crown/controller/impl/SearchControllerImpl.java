@@ -7,7 +7,7 @@
 package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.SearchController;
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import com.sosu.rest.crown.service.SearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class SearchControllerImpl implements SearchController {
      * @return foundsss products
      */
     @Override
-    public ResponseEntity<List<SearchResponseModel>> searchByName(String name) {
+    public ResponseEntity<List<SearchResponseDTO>> searchByName(String name) {
         return ResponseEntity.ok(searchService.searchByName(name));
     }
 }

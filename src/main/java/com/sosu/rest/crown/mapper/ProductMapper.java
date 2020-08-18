@@ -8,7 +8,7 @@ package com.sosu.rest.crown.mapper;
 
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -18,11 +18,11 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    List<SearchResponseModel> entityToModel(List<Product> products);
+    List<SearchResponseDTO> entityToModel(List<Product> products);
 
     @AfterMapping
-    default void afterMap(@MappingTarget SearchResponseModel searchResponseModel) {
-        searchResponseModel.setProductType(ProductType.PRODUCT);
+    default void afterMap(@MappingTarget SearchResponseDTO searchResponseDTO) {
+        searchResponseDTO.setProductType(ProductType.PRODUCT);
     }
 
 }

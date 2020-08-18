@@ -9,7 +9,7 @@ package com.sosu.rest.crown.mapper;
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.service.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,45 +38,45 @@ class CommonProductMapperTest {
 
     @Test
     void afterMap() {
-        CommonProductModel commonProductModel = new CommonProductModel();
-        commonProductMapper.afterMap(commonProductModel, new Product(), categoryService);
-        assertEquals(ProductType.PRODUCT, commonProductModel.getProductType());
+        CommonProductDTO commonProductDTO = new CommonProductDTO();
+        commonProductMapper.afterMap(commonProductDTO, new Product(), categoryService);
+        assertEquals(ProductType.PRODUCT, commonProductDTO.getProductType());
     }
 
     @Test
     void afterMap_game() {
-        CommonProductModel commonProductModel = new CommonProductModel();
+        CommonProductDTO commonProductDTO = new CommonProductDTO();
         Product product = new Product();
         product.setCategoryId("asdasd");
-        commonProductMapper.afterMap(commonProductModel, product, categoryService);
-        assertEquals(ProductType.PRODUCT, commonProductModel.getProductType());
+        commonProductMapper.afterMap(commonProductDTO, product, categoryService);
+        assertEquals(ProductType.PRODUCT, commonProductDTO.getProductType());
     }
 
     @Test
     void testAfterMap() {
-        CommonProductModel commonProductModel = new CommonProductModel();
-        commonProductMapper.afterMap(commonProductModel, new Game(), categoryService);
-        assertEquals(ProductType.GAME, commonProductModel.getProductType());
+        CommonProductDTO commonProductDTO = new CommonProductDTO();
+        commonProductMapper.afterMap(commonProductDTO, new Game(), categoryService);
+        assertEquals(ProductType.GAME, commonProductDTO.getProductType());
     }
 
     @Test
     void testAfterMap_game() {
-        CommonProductModel commonProductModel = new CommonProductModel();
+        CommonProductDTO commonProductDTO = new CommonProductDTO();
         Game game = new Game();
         game.setCategoryId("asdasd");
-        commonProductMapper.afterMap(commonProductModel, game, categoryService);
-        assertEquals(ProductType.GAME, commonProductModel.getProductType());
+        commonProductMapper.afterMap(commonProductDTO, game, categoryService);
+        assertEquals(ProductType.GAME, commonProductDTO.getProductType());
     }
 
     @Test
     void productsToCommon() {
-        List<CommonProductModel> commonProductModels = commonProductMapper.productsToCommon(Collections.nCopies(5, new Product()), categoryService);
-        assertEquals(5, commonProductModels.size());
+        List<CommonProductDTO> commonProductDTOS = commonProductMapper.productsToCommon(Collections.nCopies(5, new Product()), categoryService);
+        assertEquals(5, commonProductDTOS.size());
     }
 
     @Test
     void gamesToCommon() {
-        List<CommonProductModel> commonProductModels = commonProductMapper.gamesToCommon(Collections.nCopies(5, new Game()), categoryService);
-        assertEquals(5, commonProductModels.size());
+        List<CommonProductDTO> commonProductDTOS = commonProductMapper.gamesToCommon(Collections.nCopies(5, new Game()), categoryService);
+        assertEquals(5, commonProductDTOS.size());
     }
 }

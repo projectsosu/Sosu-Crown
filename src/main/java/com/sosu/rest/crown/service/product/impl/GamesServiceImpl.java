@@ -9,7 +9,8 @@ package com.sosu.rest.crown.service.product.impl;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.service.CategoryService;
@@ -54,7 +55,7 @@ public class GamesServiceImpl implements GamesService {
      * @return found game list
      */
     @Override
-    public List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request) {
+    public List<CommonProductDTO> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getDesc()) {
             return commonProductMapper.gamesToCommon(gameRepository.findByCategoryId(request.getCategoryId(), PageRequest.of(request.getPage() - 1, request.getPageSize(),
                     Sort.by(request.getSortBy().label).descending())), categoryService);
@@ -71,7 +72,7 @@ public class GamesServiceImpl implements GamesService {
      * @return random 10 games
      */
     @Override
-    public List<CommonProductModel> findRandomGame(Integer page) {
+    public List<CommonProductDTO> findRandomGame(Integer page) {
         return commonProductMapper.gamesToCommon(gameRepository.findRandomGame(PageRequest.of(page, 10, Sort.by("name"))), categoryService);
     }
 
@@ -82,7 +83,7 @@ public class GamesServiceImpl implements GamesService {
      * @return of game detail
      */
     @Override
-    public CommonProductModel findGame(Long id) {
+    public CommonProductDetailDTO findGame(Long id) {
         return commonProductMapper.gameToCommon(gameRepository.findById(id).orElseThrow(() ->
                 new SoSuException(HttpStatus.BAD_REQUEST, "Product can not find", "PRODUCT_NOT_FOUND")
         ));

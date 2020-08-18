@@ -8,7 +8,8 @@ package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.ProductController;
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.service.product.GamesService;
 import com.sosu.rest.crown.service.product.ProductService;
@@ -40,7 +41,7 @@ public class ProductControllerImpl implements ProductController {
      * @return selected product list with condition
      */
     @Override
-    public ResponseEntity<List<CommonProductModel>> getProductByCategory(ProductByCategorySearchRequest request) {
+    public ResponseEntity<List<CommonProductDTO>> getProductByCategory(ProductByCategorySearchRequest request) {
         if (request.getProductType() == ProductType.GAME) {
             return ResponseEntity.ok(gamesService.getProductByCategory(request));
         } else {
@@ -55,15 +56,15 @@ public class ProductControllerImpl implements ProductController {
      * @return max 10 random products and games
      */
     @Override
-    public ResponseEntity<List<CommonProductModel>> getRandomProducts(Integer page) {
-        List<CommonProductModel> commonProductModels = new ArrayList<>();
-        commonProductModels.addAll(productService.findRandomProduct(page == null || page < 0 ? 0 : page));
-        commonProductModels.addAll(gamesService.findRandomGame(page == null || page < 0 ? 0 : page));
-        commonProductModels.sort(Comparator.comparing(CommonProductModel::getName));
-        if (commonProductModels.size() > 10) {
-            return ResponseEntity.ok(commonProductModels.subList(0, 10));
+    public ResponseEntity<List<CommonProductDTO>> getRandomProducts(Integer page) {
+        List<CommonProductDTO> commonProductDTOS = new ArrayList<>();
+        commonProductDTOS.addAll(productService.findRandomProduct(page == null || page < 0 ? 0 : page));
+        commonProductDTOS.addAll(gamesService.findRandomGame(page == null || page < 0 ? 0 : page));
+        commonProductDTOS.sort(Comparator.comparing(CommonProductDTO::getName));
+        if (commonProductDTOS.size() > 10) {
+            return ResponseEntity.ok(commonProductDTOS.subList(0, 10));
         }
-        return ResponseEntity.ok(commonProductModels);
+        return ResponseEntity.ok(commonProductDTOS);
     }
 
     /**
@@ -74,7 +75,7 @@ public class ProductControllerImpl implements ProductController {
      * @return product detail
      */
     @Override
-    public ResponseEntity<CommonProductModel> getProductDetail(Long productId, ProductType productType) {
+    public ResponseEntity<CommonProductDetailDTO> getProductDetail(Long productId, ProductType productType) {
         if (ProductType.GAME.equals(productType)) {
             return ResponseEntity.ok(gamesService.findGame(productId));
         } else {

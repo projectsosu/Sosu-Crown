@@ -7,7 +7,8 @@
 package com.sosu.rest.crown.service.product;
 
 import com.sosu.rest.crown.entity.postgres.Game;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 
 import java.util.List;
@@ -16,9 +17,9 @@ public interface GamesService {
 
     void saveOrUpdate(Game game);
 
-    List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request);
+    List<CommonProductDTO> getProductByCategory(ProductByCategorySearchRequest request);
 
-    List<CommonProductModel> findRandomGame(Integer page);
+    List<CommonProductDTO> findRandomGame(Integer page);
 
-    CommonProductModel findGame(Long id);
+    CommonProductDetailDTO findGame(Long id);
 }

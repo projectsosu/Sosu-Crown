@@ -7,7 +7,7 @@
 package com.sosu.rest.crown.mapper;
 
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +28,8 @@ class GamesMapperTest {
 
     @Test
     void afterMap() {
-        SearchResponseModel searchResponseModel = new SearchResponseModel();
-        gamesMapper.afterMap(searchResponseModel);
-        assertEquals(ProductType.GAME, searchResponseModel.getProductType());
+        SearchResponseDTO searchResponseDTO = new SearchResponseDTO();
+        gamesMapper.afterMap(searchResponseDTO);
+        assertEquals(ProductType.GAME, searchResponseDTO.getProductType());
     }
 }

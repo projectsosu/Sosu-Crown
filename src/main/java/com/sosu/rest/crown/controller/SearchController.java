@@ -6,7 +6,7 @@
  **/
 package com.sosu.rest.crown.controller;
 
-import com.sosu.rest.crown.model.SearchResponseModel;
+import com.sosu.rest.crown.model.SearchResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,10 +27,10 @@ public interface SearchController {
     @Operation(summary = "Search product from name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the products", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SearchResponseModel[].class))}),
+                    schema = @Schema(implementation = SearchResponseDTO[].class))}),
             @ApiResponse(responseCode = "404", description = "Products not found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @GetMapping(value = "/searchByName", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<SearchResponseModel>> searchByName(@Parameter(description = "Name of the product", required = true, example = "Valentine") @RequestParam String name);
+    ResponseEntity<List<SearchResponseDTO>> searchByName(@Parameter(description = "Name of the product", required = true, example = "Valentine") @RequestParam String name);
 
 }

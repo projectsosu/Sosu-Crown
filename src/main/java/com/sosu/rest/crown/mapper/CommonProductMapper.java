@@ -9,7 +9,8 @@ package com.sosu.rest.crown.mapper;
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
@@ -25,40 +26,40 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface CommonProductMapper {
 
-    CommonProductModel productsToCommon(Product product);
+    CommonProductDetailDTO productToCommon(Product product);
 
-    CommonProductModel gameToCommon(Game product);
+    CommonProductDetailDTO gameToCommon(Game product);
 
-    List<CommonProductModel> productsToCommon(List<Product> products, @Context CategoryService categoryService);
+    List<CommonProductDTO> productsToCommon(List<Product> products, @Context CategoryService categoryService);
 
-    List<CommonProductModel> gamesToCommon(List<Game> games, @Context CategoryService categoryService);
+    List<CommonProductDTO> gamesToCommon(List<Game> games, @Context CategoryService categoryService);
 
     @AfterMapping
-    default void afterMap(@MappingTarget CommonProductModel commonProductModel, Product product, @Context CategoryService categoryService) {
+    default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Product product, @Context CategoryService categoryService) {
         if (product != null && StringUtils.isNotEmpty(product.getCategoryId())) {
-            commonProductModel.setCategories(new HashSet<>(Arrays.asList(product.getCategoryId().split(";"))));
-            createCategoryNameList(commonProductModel, categoryService);
+            commonProductDTO.setCategories(new HashSet<>(Arrays.asList(product.getCategoryId().split(";"))));
+            createCategoryNameList(commonProductDTO, categoryService);
         }
-        commonProductModel.setProductType(ProductType.PRODUCT);
+        commonProductDTO.setProductType(ProductType.PRODUCT);
     }
 
     @AfterMapping
-    default void afterMap(@MappingTarget CommonProductModel commonProductModel, Game game, @Context CategoryService categoryService) {
+    default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Game game, @Context CategoryService categoryService) {
         if (game != null && StringUtils.isNotEmpty(game.getCategoryId())) {
-            commonProductModel.setCategories(new HashSet<>(Arrays.asList(game.getCategoryId().split(";"))));
-            createCategoryNameList(commonProductModel, categoryService);
+            commonProductDTO.setCategories(new HashSet<>(Arrays.asList(game.getCategoryId().split(";"))));
+            createCategoryNameList(commonProductDTO, categoryService);
         }
-        commonProductModel.setProductType(ProductType.GAME);
+        commonProductDTO.setProductType(ProductType.GAME);
     }
 
-    private void createCategoryNameList(@MappingTarget CommonProductModel commonProductModel, @Context CategoryService categoryService) {
+    private void createCategoryNameList(@MappingTarget CommonProductDTO commonProductDTO, @Context CategoryService categoryService) {
         Set<String> categoryNames = new HashSet<>();
-        commonProductModel.getCategories().stream().parallel().forEach(item -> {
+        commonProductDTO.getCategories().stream().parallel().forEach(item -> {
             if (categoryService.getCategoryName(item) != null) {
                 categoryNames.add(categoryService.getCategoryName(item));
             }
         });
-        commonProductModel.setCategoryNames(categoryNames);
+        commonProductDTO.setCategoryNames(categoryNames);
     }
 
 }

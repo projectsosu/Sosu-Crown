@@ -7,18 +7,19 @@
 package com.sosu.rest.crown.service.product;
 
 import com.sosu.rest.crown.entity.postgres.Product;
-import com.sosu.rest.crown.model.CommonProductModel;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
+import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<CommonProductModel> getProductByCategory(ProductByCategorySearchRequest request);
+    List<CommonProductDTO> getProductByCategory(ProductByCategorySearchRequest request);
 
     void saveOrUpdate(Product product);
 
-    List<CommonProductModel> findRandomProduct(Integer page);
+    List<CommonProductDTO> findRandomProduct(Integer page);
 
-    CommonProductModel findProduct(Long id);
+    CommonProductDetailDTO findProduct(Long id);
 }
