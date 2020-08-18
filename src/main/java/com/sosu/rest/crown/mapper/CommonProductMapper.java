@@ -9,8 +9,8 @@ package com.sosu.rest.crown.mapper;
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.enums.ProductType;
-import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.model.CommonProductDTO;
+import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
@@ -49,6 +49,16 @@ public interface CommonProductMapper {
             commonProductDTO.setCategories(new HashSet<>(Arrays.asList(game.getCategoryId().split(";"))));
             createCategoryNameList(commonProductDTO, categoryService);
         }
+        commonProductDTO.setProductType(ProductType.GAME);
+    }
+
+    @AfterMapping
+    default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Product product) {
+        commonProductDTO.setProductType(ProductType.PRODUCT);
+    }
+
+    @AfterMapping
+    default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Game game) {
         commonProductDTO.setProductType(ProductType.GAME);
     }
 
