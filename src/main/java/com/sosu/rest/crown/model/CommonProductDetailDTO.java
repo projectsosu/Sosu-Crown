@@ -18,6 +18,8 @@ public class CommonProductDetailDTO extends CommonProductDTO {
 
     private List<CommonProductDetailModel> productFeatures;
 
+    private List<ProductCommentDTO> productComments;
+
     @Schema(description = "Product Publisher", example = "Oguz Kahraman")
     private String publisher;
 

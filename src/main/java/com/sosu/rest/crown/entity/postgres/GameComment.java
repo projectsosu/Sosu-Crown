@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,6 +27,7 @@ public class GameComment extends AbstractPersistable<Long> {
     private Game game;
     private String comment;
     private String lang;
-    private String userId;
+    @Column(name = "user_id")
+    private String userName;
 
 }

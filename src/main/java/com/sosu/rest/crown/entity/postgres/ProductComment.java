@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,6 +27,8 @@ public class ProductComment extends AbstractPersistable<Long> {
     private Product product;
     private String comment;
     private String lang;
-    private String userId;
+
+    @Column(name = "user_id")
+    private String userName;
 
 }
