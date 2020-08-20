@@ -37,16 +37,8 @@ class CategoryControllerTest {
     private CategoryControllerImpl categoryController;
 
     @Test
-    void getCategoryList() {
-        when(categoryService.getCategoryList("en_US")).thenReturn(new ArrayList<>());
-        ResponseEntity<List<CategoryDTO>> responseEntity = categoryController.getCategoryList(mock(Locale.class));
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-    }
-
-    @Test
     void getCategoryList_empty() {
-        when(categoryService.getCategoryList("en_US")).thenReturn(new ArrayList<>());
+        when(categoryService.getCategoryList("en")).thenReturn(new ArrayList<>());
         ResponseEntity<List<CategoryDTO>> responseEntity = categoryController.getCategoryList(null);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
@@ -54,7 +46,7 @@ class CategoryControllerTest {
 
     @Test
     void getCategoryList_null() {
-        when(categoryService.getCategoryList("en_US")).thenReturn(null);
+        when(categoryService.getCategoryList("en")).thenReturn(null);
         ResponseEntity<List<CategoryDTO>> responseEntity = categoryController.getCategoryList(null);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNull(responseEntity.getBody());
@@ -62,8 +54,8 @@ class CategoryControllerTest {
 
     @Test
     void findByParentId() {
-        when(categoryService.findByParentId("en_US")).thenReturn(new ArrayList<>());
-        ResponseEntity<List<CategoryDTO>> responseEntity = categoryController.findByParentId("en_US");
+        when(categoryService.findByParentId("en")).thenReturn(new ArrayList<>());
+        ResponseEntity<List<CategoryDTO>> responseEntity = categoryController.findByParentId("en");
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
     }

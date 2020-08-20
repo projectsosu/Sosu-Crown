@@ -13,7 +13,10 @@ import lombok.Data;
 @Data
 public class CategoryDTO {
 
-    @Schema(description = "Lang of category", example = "en_US")
+    @Schema(description = "Id of category", example = "5ee73ec6973ea9022e68a497")
+    private String categoryId;
+
+    @Schema(description = "Lang of category", example = "en")
     private String lang;
 
     @Schema(description = "Name of category", example = "Example")

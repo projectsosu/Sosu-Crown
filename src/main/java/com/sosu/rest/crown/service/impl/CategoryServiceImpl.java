@@ -47,9 +47,9 @@ public class CategoryServiceImpl implements CategoryService {
     private ConcurrentMap<String, String> categoryMap = new ConcurrentHashMap<>();
 
     @PostConstruct
-    @Cacheable("categories")
+    @Cacheable(value = "categories", key = "en")
     public List<CategoryDTO> createHashedCategories() {
-        List<Category> categories = categoryRepository.findByLang("en_US");
+        List<Category> categories = categoryRepository.findByLang("en");
         createHashMap(categories);
         return getCategoryDTOS(categories);
     }
@@ -92,7 +92,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private List<CategoryDTO> getCategoryDTOS(List<Category> categories) {
-        List<CategoryDTO> categoryDTOS = categoryMapper.entityToModel(categories);
+        List<CategoryDTO> categoryDTOS = categoryMapper.entityListToModelList(categories);
         categoryDTOS.parallelStream().forEach(item -> {
             if (ProductType.GAME.equals(item.getType())) {
                 if (item.getParentId() == null) {

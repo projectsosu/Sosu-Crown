@@ -53,7 +53,7 @@ class CategoryServiceTest {
 
     @Test
     void findByParentId() {
-        when(categoryMapper.entityToModel(any())).thenReturn(Collections.singletonList(new CategoryDTO()));
+        when(categoryMapper.entityListToModelList(any())).thenReturn(Collections.singletonList(new CategoryDTO()));
         when(categoryRepository.findByParentId(any(), any())).thenReturn(Collections.singletonList(new Category()));
         List<CategoryDTO> categoryDTOS = categoryService.findByParentId("");
         assertEquals(1, Objects.requireNonNull(categoryDTOS).size());
@@ -63,7 +63,7 @@ class CategoryServiceTest {
     void findByParentIdProductParent() {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setParentId("weqeqwe");
-        when(categoryMapper.entityToModel(any())).thenReturn(Collections.singletonList(categoryDTO));
+        when(categoryMapper.entityListToModelList(any())).thenReturn(Collections.singletonList(categoryDTO));
         when(categoryRepository.findByParentId(any(), any())).thenReturn(Collections.singletonList(new Category()));
         List<CategoryDTO> categoryDTOS = categoryService.findByParentId("");
         assertEquals(1, Objects.requireNonNull(categoryDTOS).size());
@@ -73,7 +73,7 @@ class CategoryServiceTest {
     void findByParentIdGame() {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setType(ProductType.GAME);
-        when(categoryMapper.entityToModel(any())).thenReturn(Collections.singletonList(categoryDTO));
+        when(categoryMapper.entityListToModelList(any())).thenReturn(Collections.singletonList(categoryDTO));
         when(categoryRepository.findByParentId(any(), any())).thenReturn(Collections.singletonList(new Category()));
         List<CategoryDTO> categoryDTOS = categoryService.findByParentId("");
         assertEquals(1, Objects.requireNonNull(categoryDTOS).size());
@@ -84,7 +84,7 @@ class CategoryServiceTest {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setParentId("weqeqwe");
         categoryDTO.setType(ProductType.GAME);
-        when(categoryMapper.entityToModel(any())).thenReturn(Collections.singletonList(categoryDTO));
+        when(categoryMapper.entityListToModelList(any())).thenReturn(Collections.singletonList(categoryDTO));
         when(categoryRepository.findByParentId(any(), any())).thenReturn(Collections.singletonList(new Category()));
         List<CategoryDTO> categoryDTOS = categoryService.findByParentId("");
         assertEquals(1, Objects.requireNonNull(categoryDTOS).size());
@@ -96,7 +96,7 @@ class CategoryServiceTest {
         categoryDTO.setParentId("weqeqwe");
         categoryDTO.setType(ProductType.GAME);
         categoryDTO.setConsole(true);
-        when(categoryMapper.entityToModel(any())).thenReturn(Collections.singletonList(categoryDTO));
+        when(categoryMapper.entityListToModelList(any())).thenReturn(Collections.singletonList(categoryDTO));
         when(categoryRepository.findByLang(any())).thenReturn(Collections.singletonList(new Category()));
         List<CategoryDTO> categoryDTOS = categoryService.getCategoryList("");
         assertEquals(1, Objects.requireNonNull(categoryDTOS).size());

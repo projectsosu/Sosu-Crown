@@ -35,10 +35,10 @@ public class LanguageUtil {
     }
 
     public static String getLanguage(Locale locale) {
-        if (locale != null && supported.contains(locale.toString())) {
-            return locale.toString();
+        if (locale != null && supported.contains(locale.getLanguage())) {
+            return locale.getLanguage();
         } else {
-            return "en_US";
+            return "en";
         }
     }
 
