@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,58 +39,52 @@ public class GameGetter {
     @Autowired
     private ImageUploader imageUploader;
 
-    private static final List<String> LINKS = new ArrayList<>() {
-        {
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/ps4/date");
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/xboxone/date");
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/switch/date");
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/pc/date");
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/ios/date");
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/xbox-series-x/date");
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/ps5/date");
-            add("https://www.metacritic.com/browse/games/release-date/new-releases/stadia/date");
-        }
-    };
+    private static final List<String> LINKS = new ArrayList<>();
+    private static final List<String> CATEGORY_IDS = new ArrayList<>();
+    private static final List<String> CATEGORIES = new ArrayList<>();
+    private static final String METACRITIC_BASE_URL = "https://www.metacritic.com/browse/games/release-date/new-releases";
 
-    private static final List<String> CATEGORY_IDS = new ArrayList<>() {
-        {
-            add("5eebb7587ea2d9497f4d7636");
-            add("5eebb75f7ea2d9497f4d7682");
-            add("5eebb7697ea2d9497f4d76f4");
-            add("5eebb7707ea2d9497f4d7740");
-            add("5eebb76d7ea2d9497f4d771a");
-            add("5eebb7637ea2d9497f4d76a8");
-            add("5eebb75c7ea2d9497f4d765c");
-            add("5eebb7667ea2d9497f4d76ce");
-        }
-    };
-
-    private static final List<String> CATEGORIES = new ArrayList<>() {
-        {
-            add("2D");
-            add("Action");
-            add("Adventure");
-            add("Compilation");
-            add("Fighting");
-            add("First-Person");
-            add("Flight");
-            add("General");
-            add("Miscellaneous");
-            add("Party");
-            add("Platformer");
-            add("Puzzle");
-            add("Racing");
-            add("Real-Time");
-            add("Role-Playing");
-            add("Simulation");
-            add("Sports");
-            add("Strategy");
-            add("Third-Person");
-            add("Turn-Based");
-            add("War");
-            add("Wrestling");
-        }
-    };
+    @PostConstruct
+    private void initialize() {
+        LINKS.add(METACRITIC_BASE_URL + "/ps4/date");
+        LINKS.add(METACRITIC_BASE_URL + "/xboxone/date");
+        LINKS.add(METACRITIC_BASE_URL + "/switch/date");
+        LINKS.add(METACRITIC_BASE_URL + "/pc/date");
+        LINKS.add(METACRITIC_BASE_URL + "/ios/date");
+        LINKS.add(METACRITIC_BASE_URL + "/xbox-series-x/date");
+        LINKS.add(METACRITIC_BASE_URL + "/ps5/date");
+        LINKS.add(METACRITIC_BASE_URL + "/stadia/date");
+        CATEGORY_IDS.add("5eebb7587ea2d9497f4d7636");
+        CATEGORY_IDS.add("5eebb75f7ea2d9497f4d7682");
+        CATEGORY_IDS.add("5eebb7697ea2d9497f4d76f4");
+        CATEGORY_IDS.add("5eebb7707ea2d9497f4d7740");
+        CATEGORY_IDS.add("5eebb76d7ea2d9497f4d771a");
+        CATEGORY_IDS.add("5eebb7637ea2d9497f4d76a8");
+        CATEGORY_IDS.add("5eebb75c7ea2d9497f4d765c");
+        CATEGORY_IDS.add("5eebb7667ea2d9497f4d76ce");
+        CATEGORIES.add("2D");
+        CATEGORIES.add("Action");
+        CATEGORIES.add("Adventure");
+        CATEGORIES.add("Compilation");
+        CATEGORIES.add("Fighting");
+        CATEGORIES.add("First-Person");
+        CATEGORIES.add("Flight");
+        CATEGORIES.add("General");
+        CATEGORIES.add("Miscellaneous");
+        CATEGORIES.add("Party");
+        CATEGORIES.add("Platformer");
+        CATEGORIES.add("Puzzle");
+        CATEGORIES.add("Racing");
+        CATEGORIES.add("Real-Time");
+        CATEGORIES.add("Role-Playing");
+        CATEGORIES.add("Simulation");
+        CATEGORIES.add("Sports");
+        CATEGORIES.add("Strategy");
+        CATEGORIES.add("Third-Person");
+        CATEGORIES.add("Turn-Based");
+        CATEGORIES.add("War");
+        CATEGORIES.add("Wrestling");
+    }
 
     @Scheduled(cron = " 0 0 0 ? * * ")
     private void startTask() {
