@@ -11,15 +11,17 @@ import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.mapper.CategoryMapper;
 import com.sosu.rest.crown.model.CategoryDTO;
 import com.sosu.rest.crown.repo.mongo.CategoryRepository;
+import com.sosu.rest.crown.repo.mongo.LangRepository;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,16 +44,19 @@ public class CategoryServiceImpl implements CategoryService {
     private ProductRepository productRepository;
 
     @Autowired
+    private LangRepository langRepository;
+
+    @Autowired
     private GameRepository gameRepository;
 
     private ConcurrentMap<String, String> categoryMap = new ConcurrentHashMap<>();
 
-    @PostConstruct
-    @Cacheable(value = "categories", key = "en")
-    public List<CategoryDTO> createHashedCategories() {
-        List<Category> categories = categoryRepository.findByLang("en");
-        createHashMap(categories);
-        return getCategoryDTOS(categories);
+    @EventListener(ApplicationReadyEvent.class)
+    public void createHashedCategories() {
+        langRepository.findAll().forEach(item -> {
+            List<CategoryDTO> categories = getCategoryList(item.getName());
+            createHashMap(categories);
+        });
     }
 
     /**
@@ -96,26 +101,26 @@ public class CategoryServiceImpl implements CategoryService {
         categoryDTOS.parallelStream().forEach(item -> {
             if (ProductType.GAME.equals(item.getType())) {
                 if (item.getParentId() == null) {
-                    item.setItemCount(gameRepository.countByMainCategoryIdContaining(item.getDefaultCategory()));
+                    item.setItemCount(gameRepository.countByMainCategoryIdListContaining(item.getDefaultCategory()));
                 } else if (item.getConsole() != null && item.getConsole()) {
-                    item.setItemCount(gameRepository.countByConsoleCategoryIdContaining(item.getDefaultCategory()));
+                    item.setItemCount(gameRepository.countByConsoleCategoryIdListContaining(item.getDefaultCategory()));
                 } else {
-                    item.setItemCount(gameRepository.countByCategoryIdContaining(item.getDefaultCategory()));
+                    item.setItemCount(gameRepository.countByCategoryIdListContaining(item.getDefaultCategory()));
                 }
             } else {
                 if (item.getParentId() == null) {
-                    item.setItemCount(productRepository.countByMainCategoryIdContaining(item.getDefaultCategory()));
+                    item.setItemCount(productRepository.countByMainCategoryIdListContaining(item.getDefaultCategory()));
                 } else {
-                    item.setItemCount(productRepository.countByCategoryIdContaining(item.getDefaultCategory()));
+                    item.setItemCount(productRepository.countByCategoryIdListContaining(item.getDefaultCategory()));
                 }
             }
         });
         return categoryDTOS;
     }
 
-    private synchronized void createHashMap(List<Category> categories) {
+    private synchronized void createHashMap(List<CategoryDTO> categories) {
         categoryMap.clear();
-        categories.parallelStream().forEach(item -> categoryMap.put(item.getId(), item.getName()));
+        categories.parallelStream().forEach(item -> categoryMap.put(item.getCategoryId(), item.getName()));
     }
 
 }

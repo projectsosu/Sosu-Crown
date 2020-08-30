@@ -84,7 +84,7 @@ class GamesServiceTest {
         CommonProductDetailDTO commonProductDTO = new CommonProductDetailDTO();
         commonProductDTO.setName("example");
         when(gameRepository.findById(any())).thenReturn(Optional.of(new Game()));
-        when(commonProductMapper.gameToCommon(any())).thenReturn(commonProductDTO);
+        when(commonProductMapper.gameToCommon(any(), any())).thenReturn(commonProductDTO);
         CommonProductDetailDTO commonProductModels = gamesService.findGame(1L);
         assertEquals("example", commonProductModels.getName());
     }

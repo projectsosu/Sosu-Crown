@@ -47,7 +47,7 @@ class CommonProductMapperTest {
     void afterMap_game() {
         CommonProductDTO commonProductDTO = new CommonProductDTO();
         Product product = new Product();
-        product.setCategoryId("asdasd");
+        product.setCategoryIdList(Collections.singletonList("asdasd"));
         commonProductMapper.afterMap(commonProductDTO, product, categoryService);
         assertEquals(ProductType.PRODUCT, commonProductDTO.getProductType());
     }
@@ -63,7 +63,7 @@ class CommonProductMapperTest {
     void testAfterMap_game() {
         CommonProductDTO commonProductDTO = new CommonProductDTO();
         Game game = new Game();
-        game.setCategoryId("asdasd");
+        game.setCategoryIdList(Collections.singletonList("asdasd"));
         commonProductMapper.afterMap(commonProductDTO, game, categoryService);
         assertEquals(ProductType.GAME, commonProductDTO.getProductType());
     }

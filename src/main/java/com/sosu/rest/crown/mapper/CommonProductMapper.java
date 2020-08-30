@@ -12,13 +12,13 @@ import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.service.CategoryService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,9 +26,14 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface CommonProductMapper {
 
-    CommonProductDetailDTO productToCommon(Product product);
+    @Mapping(source = "categoryIdList", target = "categories")
+    @Mapping(source = "mainCategoryIdList", target = "mainCategories")
+    CommonProductDetailDTO productToCommon(Product product, @Context CategoryService categoryService);
 
-    CommonProductDetailDTO gameToCommon(Game product);
+    @Mapping(source = "categoryIdList", target = "categories")
+    @Mapping(source = "mainCategoryIdList", target = "mainCategories")
+    @Mapping(source = "consoleCategoryIdList", target = "consoleCategories")
+    CommonProductDetailDTO gameToCommon(Game product, @Context CategoryService categoryService);
 
     List<CommonProductDTO> productsToCommon(List<Product> products, @Context CategoryService categoryService);
 
@@ -36,8 +41,7 @@ public interface CommonProductMapper {
 
     @AfterMapping
     default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Product product, @Context CategoryService categoryService) {
-        if (product != null && StringUtils.isNotEmpty(product.getCategoryId())) {
-            commonProductDTO.setCategories(new HashSet<>(Arrays.asList(product.getCategoryId().split(";"))));
+        if (product != null) {
             createCategoryNameList(commonProductDTO, categoryService);
         }
         commonProductDTO.setProductType(ProductType.PRODUCT);
@@ -45,31 +49,40 @@ public interface CommonProductMapper {
 
     @AfterMapping
     default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Game game, @Context CategoryService categoryService) {
-        if (game != null && StringUtils.isNotEmpty(game.getCategoryId())) {
-            commonProductDTO.setCategories(new HashSet<>(Arrays.asList(game.getCategoryId().split(";"))));
+        if (game != null) {
             createCategoryNameList(commonProductDTO, categoryService);
         }
         commonProductDTO.setProductType(ProductType.GAME);
     }
 
-    @AfterMapping
-    default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Product product) {
-        commonProductDTO.setProductType(ProductType.PRODUCT);
-    }
-
-    @AfterMapping
-    default void afterMap(@MappingTarget CommonProductDTO commonProductDTO, Game game) {
-        commonProductDTO.setProductType(ProductType.GAME);
-    }
-
     private void createCategoryNameList(@MappingTarget CommonProductDTO commonProductDTO, @Context CategoryService categoryService) {
         Set<String> categoryNames = new HashSet<>();
-        commonProductDTO.getCategories().stream().parallel().forEach(item -> {
-            if (categoryService.getCategoryName(item) != null) {
-                categoryNames.add(categoryService.getCategoryName(item));
-            }
-        });
+        Set<String> mainCategoryNames = new HashSet<>();
+        Set<String> consoleCategoryNames = new HashSet<>();
+        if (CollectionUtils.isNotEmpty(commonProductDTO.getCategories())) {
+            commonProductDTO.getCategories().stream().parallel().forEach(item -> {
+                if (categoryService.getCategoryName(item) != null) {
+                    categoryNames.add(categoryService.getCategoryName(item));
+                }
+            });
+        }
+        if (CollectionUtils.isNotEmpty(commonProductDTO.getMainCategories())) {
+            commonProductDTO.getMainCategories().stream().parallel().forEach(item -> {
+                if (categoryService.getCategoryName(item) != null) {
+                    mainCategoryNames.add(categoryService.getCategoryName(item));
+                }
+            });
+        }
+        if (CollectionUtils.isNotEmpty(commonProductDTO.getConsoleCategories())) {
+            commonProductDTO.getConsoleCategories().stream().parallel().forEach(item -> {
+                if (categoryService.getCategoryName(item) != null) {
+                    consoleCategoryNames.add(categoryService.getCategoryName(item));
+                }
+            });
+        }
         commonProductDTO.setCategoryNames(categoryNames);
+        commonProductDTO.setMainCategories(mainCategoryNames);
+        commonProductDTO.setConsoleCategoryNames(consoleCategoryNames);
     }
 
 }

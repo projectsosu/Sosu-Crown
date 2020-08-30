@@ -91,7 +91,7 @@ public class GameGetter {
         }
     };
 
-//    @Scheduled(cron = " 0 0 0 ? * * ")
+    @Scheduled(cron = " 0 0 0 ? * * ")
     private void startTask() {
         log.info("Started game update service");
         for (int i = 0; i < LINKS.size(); i++) {

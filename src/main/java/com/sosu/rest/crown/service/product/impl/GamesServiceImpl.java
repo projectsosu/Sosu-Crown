@@ -88,6 +88,6 @@ public class GamesServiceImpl implements GamesService {
     public CommonProductDetailDTO findGame(Long id) {
         return commonProductMapper.gameToCommon(gameRepository.findById(id).orElseThrow(() ->
                 new SoSuException(HttpStatus.BAD_REQUEST, "Product can not find", "PRODUCT_NOT_FOUND")
-        ));
+        ), categoryService);
     }
 }

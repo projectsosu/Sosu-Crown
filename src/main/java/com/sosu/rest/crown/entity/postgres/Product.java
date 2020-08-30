@@ -6,7 +6,10 @@
  **/
 package com.sosu.rest.crown.entity.postgres;
 
+import com.vladmihalcea.hibernate.type.array.ListArrayType;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +24,10 @@ import java.util.List;
 
 @Entity
 @Data
+@TypeDef(
+        name = "list-array",
+        typeClass = ListArrayType.class
+)
 public class Product {
 
     @Id
@@ -38,6 +45,12 @@ public class Product {
 
     @Column(name = "category_id")
     private String categoryId;
+
+    @Type(type = "list-array")
+    private List<String> categoryIdList;
+
+    @Type(type = "list-array")
+    private List<String> mainCategoryIdList;
 
     @Column(name = "main_category_id")
     private String mainCategoryId;

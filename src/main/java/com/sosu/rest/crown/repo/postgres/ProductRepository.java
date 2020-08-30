@@ -22,7 +22,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 
     List<Product> findByYear(Integer year);
 
-    @Query("SELECT p FROM Product p WHERE p.categoryId like %:category% or p.mainCategoryId like %:category% ")
+    @Query(value = "SELECT * FROM product p WHERE ?1 like any(p.category_id_list) or ?1 like any(p.main_category_id_list)", nativeQuery = true)
     List<Product> getProductByCategory(String category, Pageable pageable);
 
     List<Product> findTop10ByAndNameContains(@Param("name") String name);
@@ -32,9 +32,13 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 
     List<Product> findByTmdbId(Integer imdbId);
 
-    List<Product> findByCategoryId(String categoryId);
+    @Query(value = "SELECT count(*) FROM product p WHERE ?1 like any(p.category_id_list)", nativeQuery = true)
+    Integer countByCategoryIdListContaining(String categoryId);
 
-    Integer countByCategoryIdContaining(String categoryId);
+    @Query(value = "SELECT count(*) FROM product p WHERE ?1 like any(p.main_category_id_list)", nativeQuery = true)
+    Integer countByMainCategoryIdListContaining(String categoryId);
 
-    Integer countByMainCategoryIdContaining(String categoryId);
+    @Query(value = "SELECT * FROM product p WHERE category_id_list = '{}')", nativeQuery = true)
+    List<Product> findEmptyCategories();
+
 }

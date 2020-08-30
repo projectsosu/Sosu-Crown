@@ -29,9 +29,13 @@ import org.springframework.web.client.RestTemplate;
 import javax.sql.DataSource;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Add new products, checks for invalid products
@@ -94,7 +98,12 @@ public class TMDBGetter {
     private static String getterLink = "https://api.themoviedb.org/3/discover/[TYPE]?api_key=2c77bdb30d44c27312cb203cd5491210&sort_by=release_date.desc&page={0}";
     private static String detailLink = "https://api.themoviedb.org/3/{0}/{1}?api_key=2c77bdb30d44c27312cb203cd5491210&language=en-US";
     private static String imageUrl = "http://image.tmdb.org/t/p/w185{0}";
-    private static final String GENERAL_ID = "5edd816e7d85f9caded1c5bb;5ee9e7eedee64f1214047c03";
+    private static final List<String> GENERAL_ID = new ArrayList<>() {
+        {
+            add("5edd816e7d85f9caded1c5bb");
+            add("5ee9e7eedee64f1214047c03");
+        }
+    };
     private static final String TV_ID = "5ee9e7eedee64f1214047c03";
 
     @Autowired
@@ -115,26 +124,26 @@ public class TMDBGetter {
         HttpEntity request = new HttpEntity(headers);
         (new Thread(() -> {
             log.info("Getting Genres started");
-            productRepository.findByCategoryId("").parallelStream().forEach(item -> {
+            productRepository.findEmptyCategories().parallelStream().forEach(item -> {
                 try {
                     ProductDetail productDetail = getProductDetail(request, item);
-                    String genreList = "";
-                    if (item.getMainCategoryId().contains(TV_ID)) {
+                    Set<String> categoryList = new HashSet<>();
+                    if (item.getMainCategoryIdList().contains(TV_ID)) {
                         for (Genre genre : productDetail.getGenres()) {
                             String selected = genresTv.get(genre.getId());
                             if (selected != null) {
-                                genreList = genreList + ";" + selected;
+                                categoryList.add(selected);
                             }
                         }
                     } else {
                         for (Genre genre : productDetail.getGenres()) {
                             String selected = genresMovie.get(genre.getId());
                             if (selected != null) {
-                                genreList = genreList + ";" + selected;
+                                categoryList.add(selected);
                             }
                         }
                     }
-                    item.setCategoryId(genreList);
+                    item.setCategoryIdList(new ArrayList<>(categoryList));
                     productRepository.save(item);
                 } catch (Exception e) {
                     log.error("Error link genre: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
@@ -188,7 +197,7 @@ public class TMDBGetter {
 
     public ProductDetail getProductDetail(HttpEntity request, Product item) {
         ProductDetail productDetail;
-        if (item.getMainCategoryId().contains(TV_ID)) {
+        if (item.getMainCategoryIdList().contains(TV_ID)) {
             productDetail = restTemplate.exchange(MessageFormat.format(detailLink, "tv", item.getTmdbId()), HttpMethod.GET,
                     request, ProductDetail.class).getBody();
         } else {
@@ -238,45 +247,44 @@ public class TMDBGetter {
     }
 
     private void setMovieProduct(TMDBResult tmdbResult) {
+        Set<String> categoryList = new HashSet<>();
         if (CollectionUtils.isEmpty(productRepository.findByTmdbId(tmdbResult.getId()))) {
             Product product = new Product();
             product.setName(tmdbResult.getTitle());
-            String genreList = "";
             for (Integer genre : tmdbResult.getGenre_ids()) {
                 String selected = genresMovie.get(genre);
                 if (selected != null) {
-                    genreList = genreList + ";" + selected;
+                    categoryList.add(selected);
                 }
             }
-            if (genreList.contains("5ee73fdb2ace0520f01af3cf")) {
-                product.setMainCategoryId(GENERAL_ID);
-                product.setCategoryId(genreList + ";5ee9eeb9c106085337e8ee83");
+            if (categoryList.contains("5ee73fdb2ace0520f01af3cf")) {
+                product.setMainCategoryIdList(GENERAL_ID);
+                categoryList.add("5ee9eeb9c106085337e8ee83");
             } else {
-                product.setMainCategoryId("5ee9e7eedee64f1214047c03");
-                product.setCategoryId(genreList);
+                product.setMainCategoryIdList(Collections.singletonList("5ee9e7eedee64f1214047c03"));
             }
+            product.setCategoryIdList(new ArrayList<>(categoryList));
             saveMovieWithDetail(tmdbResult, product);
         }
     }
 
     private void setTvProduct(TMDBResult tmdbResult) {
+        Set<String> categoryList = new HashSet<>();
         if (productRepository.findByTmdbId(tmdbResult.getId()) == null) {
             Product product = new Product();
             product.setName(tmdbResult.getName());
-            String genreList = "";
             for (Integer genre : tmdbResult.getGenre_ids()) {
                 String selected = genresTv.get(genre);
                 if (selected != null) {
-                    genreList = genreList + ";" + selected;
+                    categoryList.add(selected);
                 }
             }
-            if (genreList.contains("5ee9eeb9c106085337e8ee83")) {
-                product.setMainCategoryId(GENERAL_ID);
-                product.setCategoryId(genreList + "; 5ee73fdb2ace0520f01af3cf");
+            if (categoryList.contains("5ee9eeb9c106085337e8ee83")) {
+                product.setMainCategoryIdList(GENERAL_ID);
             } else {
-                product.setMainCategoryId("5edd816e7d85f9caded1c5bb");
-                product.setCategoryId(genreList);
+                product.setMainCategoryIdList(Collections.singletonList("5edd816e7d85f9caded1c5bb"));
             }
+            product.setCategoryIdList(new ArrayList<>(categoryList));
             saveMovieWithDetail(tmdbResult, product);
         }
     }

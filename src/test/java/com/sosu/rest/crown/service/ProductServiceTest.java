@@ -83,7 +83,7 @@ class ProductServiceTest {
         CommonProductDetailDTO commonProductDTO = new CommonProductDetailDTO();
         commonProductDTO.setName("example");
         when(productRepository.findById(any())).thenReturn(Optional.of(new Product()));
-        when(commonProductMapper.productToCommon(any())).thenReturn(commonProductDTO);
+        when(commonProductMapper.productToCommon(any(), any())).thenReturn(commonProductDTO);
         CommonProductDetailDTO commonProductModels = productService.findProduct(1L);
         assertEquals("example", commonProductModels.getName());
     }

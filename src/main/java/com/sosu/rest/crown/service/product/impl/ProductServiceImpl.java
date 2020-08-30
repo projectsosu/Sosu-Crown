@@ -90,6 +90,6 @@ public class ProductServiceImpl implements ProductService {
     public CommonProductDetailDTO findProduct(Long id) {
         return commonProductMapper.productToCommon(repository.findById(id).orElseThrow(() ->
                 new SoSuException(HttpStatus.BAD_REQUEST, "Product can not find", "PRODUCT_NOT_FOUND")
-        ));
+        ), categoryService);
     }
 }

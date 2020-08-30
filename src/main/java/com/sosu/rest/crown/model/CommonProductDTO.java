@@ -36,6 +36,18 @@ public class CommonProductDTO {
     @Schema(description = "Image url of product", example = "http://example.png")
     private String image;
 
+    @Schema(description = "Main categories of product")
+    private Set<String> mainCategories;
+
+    @Schema(description = "Main category names of product")
+    private Set<String> mainCategoryNames;
+
+    @Schema(description = "Console categories of product")
+    private Set<String> consoleCategories;
+
+    @Schema(description = "Console category names of product")
+    private Set<String> consoleCategoryNames;
+
     @Schema(description = "Categories of product")
     private Set<String> categories;
 

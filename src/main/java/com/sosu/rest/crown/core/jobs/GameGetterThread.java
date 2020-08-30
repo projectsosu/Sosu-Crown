@@ -20,8 +20,12 @@ import org.jsoup.select.Elements;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Thread for new games
@@ -73,15 +77,17 @@ public class GameGetterThread extends Thread {
                                 Document documentGame = Jsoup.connect(METACRITIC_COM + linkOfGame).get();
                                 if (gameRepository.findByName(gameName) != null) {
                                     Game game = gameRepository.findByName(gameName);
-                                    if (!game.getCategoryId().contains(category)) {
-                                        game.setCategoryId(game.getCategoryId() + ";" + category);
+                                    if (!game.getConsoleCategoryIdList().contains(category)) {
+                                        Set<String> categoryList = new HashSet<>(game.getCategoryIdList());
+                                        categoryList.add(category);
+                                        game.setConsoleCategoryIdList(new ArrayList<>(categoryList));
                                         gameRepository.save(game);
                                     }
                                 } else {
                                     Game game = new Game();
                                     game.setName(gameName);
-                                    game.setMainCategoryId(GAME_GENRE);
-                                    game.setConsoleCategoryId(category);
+                                    game.setMainCategoryIdList(Collections.singletonList(GAME_GENRE));
+                                    game.setConsoleCategoryIdList(Collections.singletonList(category));
                                     game.setDescription(summary);
                                     gameDetail(documentGame, genre, game, imageUrl);
                                 }
@@ -111,7 +117,6 @@ public class GameGetterThread extends Thread {
     }
 
     private void gameDetail(Document documentGame, Map<String, String> genres, Game game, String imageUrl) {
-        StringBuilder platforms = new StringBuilder();
         String publisher = null;
         if (CollectionUtils.isNotEmpty(documentGame.getElementsByClass("summary_detail publisher"))) {
             publisher = documentGame.getElementsByClass("summary_detail publisher").get(0).getElementsByClass("data")
@@ -133,18 +138,15 @@ public class GameGetterThread extends Thread {
                 .html();
         LocalDate formattedDate = LocalDate.parse(releaseDate, FORMATTER);
 
+        Set<String> categoryList = new HashSet<>();
         for (Element element : documentGame.getElementsByClass("summary_detail product_genre").get(0).getElementsByClass("data")) {
             if (genres.containsKey(element.html())) {
-                platforms.append(genres.get(element.html()));
-                platforms.append(";");
+                categoryList.add(genres.get(element.html()));
             }
         }
-        if (StringUtils.isBlank(platforms.toString())) {
-            platforms.append(genres.get("General"));
-        } else {
-            platforms.deleteCharAt(platforms.length() - 1);
+        if (CollectionUtils.isEmpty(categoryList)) {
+            categoryList.add(genres.get("General"));
         }
-        String genre = platforms.toString();
 
         String rating = "E";
         if (CollectionUtils.isNotEmpty(documentGame.getElementsByClass("summary_detail product_rating"))) {
@@ -155,7 +157,7 @@ public class GameGetterThread extends Thread {
         game.setDeveloper(developer);
         game.setPublisher(publisher);
         game.setPublishDate(formattedDate);
-        game.setCategoryId(genre);
+        game.setCategoryIdList(new ArrayList<>(categoryList));
         game.setImage(imageUploader.uploadImage(imageUrl, game.getName()));
         gameRepository.save(game);
     }

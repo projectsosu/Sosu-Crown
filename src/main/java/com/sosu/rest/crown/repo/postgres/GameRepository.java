@@ -20,8 +20,9 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long> {
 
     Game findByName(@Param("name") String name);
 
-    @Query("SELECT g FROM Game g WHERE g.categoryId like %:categoryId% or g.mainCategoryId like %:categoryId% or " +
-            "g.consoleCategoryId like %:categoryId%")
+
+    @Query(value = "SELECT * FROM games p WHERE ?1 like any(p.category_id_list) or ?1 like any(p.main_category_id_list)" +
+            "or ?1 like any(p.console_category_id_list)", nativeQuery = true)
     List<Game> findByCategoryId(@Param("categoryId") String categoryId,
                                 Pageable pageable);
 
@@ -30,11 +31,14 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long> {
     @Query("SELECT g FROM Game g order by function('RAND')")
     List<Game> findRandomGame(Pageable pageable);
 
-    Integer countByCategoryIdContaining(String categoryId);
+    @Query(value = "SELECT count(*) FROM games p WHERE ?1 like any(p.category_id_list)", nativeQuery = true)
+    Integer countByCategoryIdListContaining(String categoryId);
 
-    Integer countByConsoleCategoryIdContaining(String consoleCategoryId);
+    @Query(value = "SELECT count(*) FROM games p WHERE ?1 like any(p.console_category_id_list)", nativeQuery = true)
+    Integer countByConsoleCategoryIdListContaining(String consoleCategoryId);
 
-    Integer countByMainCategoryIdContaining(String categoryId);
+    @Query(value = "SELECT count(*) FROM games p WHERE ?1 like any(p.main_category_id_list)", nativeQuery = true)
+    Integer countByMainCategoryIdListContaining(String categoryId);
 
 
 }
