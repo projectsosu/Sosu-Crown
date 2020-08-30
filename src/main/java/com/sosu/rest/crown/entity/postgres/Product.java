@@ -43,17 +43,11 @@ public class Product {
 
     private String image;
 
-    @Column(name = "category_id")
-    private String categoryId;
-
     @Type(type = "list-array")
     private List<String> categoryIdList;
 
     @Type(type = "list-array")
     private List<String> mainCategoryIdList;
-
-    @Column(name = "main_category_id")
-    private String mainCategoryId;
 
     private String status;
 
