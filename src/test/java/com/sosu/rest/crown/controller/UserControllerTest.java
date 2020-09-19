@@ -8,9 +8,11 @@ package com.sosu.rest.crown.controller;
 
 import com.sosu.rest.crown.controller.impl.UserControllerImpl;
 import com.sosu.rest.crown.core.exception.SoSuException;
+import com.sosu.rest.crown.core.exception.SoSuSecurityException;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
+import com.sosu.rest.crown.model.user.UserFollowRequest;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.service.user.UserService;
@@ -148,6 +150,27 @@ class UserControllerTest {
         assertEquals(userBasicDTO.getImage(), response.getImage());
         assertEquals(userBasicDTO.getName(), response.getName());
         assertEquals(userBasicDTO.getUsername(), response.getUsername());
+    }
+
+    @Test
+    void followUser() {
+        UserFollowRequest userFollowRequest = new UserFollowRequest();
+        userFollowRequest.setFollower("example");
+        when(jwtUtil.extractUsername(any())).thenReturn("example");
+        ResponseEntity<Void> responseEntity = userController.followUser(userFollowRequest, "asd");
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+    }
+
+
+    @Test
+    void followUserError() {
+        UserFollowRequest userFollowRequest = new UserFollowRequest();
+        userFollowRequest.setFollower("example");
+        when(jwtUtil.extractUsername(any())).thenReturn("noone");
+        SoSuSecurityException exception = assertThrows(SoSuSecurityException.class, () -> userController.followUser(userFollowRequest, "asd"));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
+        assertEquals("User can not have required permission for this process", exception.getReason());
+        assertEquals("UNAUTHORIZED_PROCESS", exception.getCause().getMessage());
     }
 
     private UserBasicDTO getBasicDto() {

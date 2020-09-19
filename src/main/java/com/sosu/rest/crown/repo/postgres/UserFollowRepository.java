@@ -25,7 +25,7 @@ public interface UserFollowRepository extends PagingAndSortingRepository<UserFol
     FFCountModel getFollowingAndFollowersCount(String userName);
 
     @Query(value = "select user_id from follow where followed_user_id = ?1 order by follow_date desc", nativeQuery = true)
-    List<String> getFolllowers(String userName);
+    List<String> getFollowers(String userName);
 
     @Query(value = "select followed_user_id from follow where user_id = ?1 order by follow_date desc", nativeQuery = true)
     List<String> getFollowings(String userName);

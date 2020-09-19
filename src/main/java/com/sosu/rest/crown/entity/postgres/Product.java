@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import java.util.List;
 
@@ -64,5 +65,6 @@ public class Product {
     private List<ProductFeature> productFeatures;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    @OrderBy("date desc")
     private List<ProductComment> productComments;
 }

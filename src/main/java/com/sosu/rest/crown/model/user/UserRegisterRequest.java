@@ -7,12 +7,14 @@
 package com.sosu.rest.crown.model.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Data
+@Tag(name = "User", description = "User register model")
 public class UserRegisterRequest {
 
     @Schema(description = "Password of user", example = "123456", required = true)

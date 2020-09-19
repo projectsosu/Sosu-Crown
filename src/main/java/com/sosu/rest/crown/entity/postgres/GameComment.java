@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "game_comment")
@@ -30,5 +31,7 @@ public class GameComment {
 
     @Column(name = "user_id")
     private String userName;
+
+    private LocalDateTime date = LocalDateTime.now();
 
 }

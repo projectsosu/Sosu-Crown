@@ -10,9 +10,11 @@ import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Security;
 import com.sosu.rest.crown.entity.mongo.User;
+import com.sosu.rest.crown.entity.postgres.UserFollow;
 import com.sosu.rest.crown.mapper.UserMapper;
 import com.sosu.rest.crown.model.service.FFCountModel;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
+import com.sosu.rest.crown.model.user.UserFollowRequest;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.repo.mongo.SecurityRepository;
@@ -34,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -246,7 +249,7 @@ class UserServiceTest {
     void getFollowerUsers() {
         UserBasicDTO userBasicDTO = getBasicDto();
         when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(new User());
-        when(userFollowRepository.getFolllowers(any())).thenReturn(new ArrayList<>());
+        when(userFollowRepository.getFollowers(any())).thenReturn(new ArrayList<>());
         when(userRepository.findByUsernameIn(any())).thenReturn(new ArrayList<>());
         when(userMapper.entityListToBasicList(any())).thenReturn(Collections.singletonList(userBasicDTO));
         List<UserBasicDTO> userBasicDTOS = userService.getFollowerUsers("ASD");
@@ -263,6 +266,27 @@ class UserServiceTest {
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
         assertEquals("User name can not find", exception.getReason());
         assertEquals("USR_NOT_FOUND", exception.getCause().getMessage());
+    }
+
+    @Test
+    void setFollowUser() {
+        UserFollowRequest userFollowRequest = new UserFollowRequest();
+        userFollowRequest.setFollower("");
+        userFollowRequest.setFollowed("");
+        when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(new User());
+        userService.setFollowUser(userFollowRequest);
+        verify(userFollowRepository, times(1)).save(any());
+    }
+
+    @Test
+    void setFollowUserDelete() {
+        UserFollowRequest userFollowRequest = new UserFollowRequest();
+        userFollowRequest.setFollower("");
+        userFollowRequest.setFollowed("");
+        when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(new User());
+        when(userFollowRepository.findById(any())).thenReturn(Optional.of(new UserFollow()));
+        userService.setFollowUser(userFollowRequest);
+        verify(userFollowRepository, times(1)).delete(any());
     }
 
     private UserBasicDTO getBasicDto() {

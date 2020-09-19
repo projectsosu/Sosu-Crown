@@ -6,8 +6,10 @@
  **/
 package com.sosu.rest.crown.controller;
 
+import com.sosu.rest.crown.core.annotations.SoSuValidated;
 import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
+import com.sosu.rest.crown.model.user.UserFollowRequest;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,9 +22,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -91,4 +95,13 @@ public interface UserController {
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @GetMapping(value = "/getFollowerUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<UserBasicDTO>> getFollowerUsers(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username);
+
+    @SoSuValidated
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User follow or unfollow success", content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @PatchMapping(value = "/followUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Void> followUser(@RequestBody UserFollowRequest request,
+                                    @RequestHeader("Authorization") String jwtToken);
 }

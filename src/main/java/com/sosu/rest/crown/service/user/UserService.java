@@ -7,6 +7,7 @@
 package com.sosu.rest.crown.service.user;
 
 import com.sosu.rest.crown.model.user.UserBasicDTO;
+import com.sosu.rest.crown.model.user.UserFollowRequest;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 
@@ -28,4 +29,6 @@ public interface UserService {
     List<UserBasicDTO> getFollowedUsers(String username);
 
     List<UserBasicDTO> getFollowerUsers(String username);
+
+    void setFollowUser(UserFollowRequest userFollowRequest);
 }

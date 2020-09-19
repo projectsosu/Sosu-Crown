@@ -10,9 +10,12 @@ import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Security;
 import com.sosu.rest.crown.entity.mongo.User;
+import com.sosu.rest.crown.entity.postgres.UserFollow;
+import com.sosu.rest.crown.entity.postgres.embeddedid.UserFollowId;
 import com.sosu.rest.crown.mapper.UserMapper;
 import com.sosu.rest.crown.model.service.FFCountModel;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
+import com.sosu.rest.crown.model.user.UserFollowRequest;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.repo.mongo.SecurityRepository;
@@ -66,7 +69,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserModel getUserDetails(String username) {
-        User user = chechUserValidity(username);
+        User user = checkUserValidity(username);
         return userMapper.mapEntityToModel(user);
     }
 
@@ -149,7 +152,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserBasicDTO getUserBasic(String username) {
-        User user = chechUserValidity(username);
+        User user = checkUserValidity(username);
         UserBasicDTO responseDto = userMapper.entityToBasic(user);
         FFCountModel counts = userFollowRepository.getFollowingAndFollowersCount(username);
         responseDto.setFollowedCount(counts.getFollowing());
@@ -165,7 +168,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserBasicDTO> getFollowedUsers(String username) {
-        chechUserValidity(username);
+        checkUserValidity(username);
         List<String> strings = userFollowRepository.getFollowings(username);
         List<User> userList = userRepository.findByUsernameIn(strings);
         return userMapper.entityListToBasicList(userList);
@@ -179,14 +182,36 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserBasicDTO> getFollowerUsers(String username) {
-        chechUserValidity(username);
-        List<String> strings = userFollowRepository.getFolllowers(username);
+        checkUserValidity(username);
+        List<String> strings = userFollowRepository.getFollowers(username);
         List<User> userList = userRepository.findByUsernameIn(strings);
         return userMapper.entityListToBasicList(userList);
     }
 
+    /**
+     * Follow or unfollow user
+     *
+     * @param userFollowRequest for follow
+     */
+    @Override
+    public void setFollowUser(UserFollowRequest userFollowRequest) {
+        checkUserValidity(userFollowRequest.getFollowed());
+        checkUserValidity(userFollowRequest.getFollower());
+        UserFollowId userFollowId = new UserFollowId();
+        userFollowId.setFollowedUserName(userFollowRequest.getFollowed());
+        userFollowId.setUserName(userFollowRequest.getFollower());
+        UserFollow userFollow = userFollowRepository.findById(userFollowId).orElse(null);
+        if (userFollow != null) {
+            userFollowRepository.delete(userFollow);
+        } else {
+            userFollow = new UserFollow();
+            userFollow.setId(userFollowId);
+            userFollowRepository.save(userFollow);
+        }
+    }
+
     @NotNull
-    public User chechUserValidity(String username) {
+    public User checkUserValidity(String username) {
         User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
         if (user == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User name can not find", "USR_NOT_FOUND");

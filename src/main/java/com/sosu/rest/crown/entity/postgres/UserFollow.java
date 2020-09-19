@@ -12,6 +12,7 @@ import lombok.Data;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "follow")
@@ -20,5 +21,7 @@ public class UserFollow {
 
     @EmbeddedId
     private UserFollowId id;
+
+    private LocalDateTime followDate = LocalDateTime.now();
 
 }

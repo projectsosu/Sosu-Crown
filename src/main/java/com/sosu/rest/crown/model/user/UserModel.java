@@ -7,6 +7,7 @@
 package com.sosu.rest.crown.model.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
+@Tag(name = "User", description = "User model")
 public class UserModel {
 
     @Schema(description = "Birth date of user", example = "2000-10-10", required = true)

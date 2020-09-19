@@ -8,13 +8,15 @@ package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.UserController;
 import com.sosu.rest.crown.core.annotations.Security;
+import com.sosu.rest.crown.core.annotations.SoSuValidated;
 import com.sosu.rest.crown.core.exception.SoSuException;
+import com.sosu.rest.crown.core.exception.SoSuSecurityException;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
+import com.sosu.rest.crown.model.user.UserFollowRequest;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
-import com.sosu.rest.crown.repo.postgres.UserFollowRepository;
 import com.sosu.rest.crown.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +47,6 @@ public class UserControllerImpl implements UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserFollowRepository userFollowing;
 
     @Value("${sosu.supported.types}")
     private String supportedTypes;
@@ -142,6 +141,17 @@ public class UserControllerImpl implements UserController {
     @Security
     public ResponseEntity<List<UserBasicDTO>> getFollowerUsers(String username) {
         return ResponseEntity.ok(userService.getFollowerUsers(username));
+    }
+
+    @Override
+    @SoSuValidated
+    public ResponseEntity<Void> followUser(UserFollowRequest request, String jwtToken) {
+        String username = jwtUtil.extractUsername(jwtToken);
+        if (!request.getFollower().equals(username)) {
+            throw new SoSuSecurityException(HttpStatus.UNAUTHORIZED, "User can not have required permission for this process", "UNAUTHORIZED_PROCESS");
+        }
+        userService.setFollowUser(request);
+        return ResponseEntity.noContent().build();
     }
 
 }
