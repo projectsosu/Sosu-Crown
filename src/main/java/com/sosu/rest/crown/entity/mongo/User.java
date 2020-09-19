@@ -34,4 +34,6 @@ public class User {
     private String image;
 
     private Boolean validated = Boolean.FALSE;
+
+    private Boolean secret = Boolean.FALSE;
 }

@@ -211,6 +211,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @NotNull
+    @Override
     public User checkUserValidity(String username) {
         User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
         if (user == null) {

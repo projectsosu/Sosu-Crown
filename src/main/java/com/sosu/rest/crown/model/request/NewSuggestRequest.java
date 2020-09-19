@@ -18,8 +18,4 @@ public class NewSuggestRequest {
     @Schema(description = "User comment", example = "Watch it", required = true)
     private String comment;
 
-    @NotBlank
-    @Schema(description = "Username of user", example = "example", required = true)
-    private String userName;
-
 }

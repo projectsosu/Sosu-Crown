@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -30,5 +31,7 @@ public class LikedSuggest {
 
     @Column(name = "user_id")
     private String userName;
+
+    private LocalDateTime date = LocalDateTime.now();
 
 }

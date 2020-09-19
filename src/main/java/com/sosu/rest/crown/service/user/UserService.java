@@ -6,6 +6,7 @@
  **/
 package com.sosu.rest.crown.service.user;
 
+import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserFollowRequest;
 import com.sosu.rest.crown.model.user.UserModel;
@@ -31,4 +32,6 @@ public interface UserService {
     List<UserBasicDTO> getFollowerUsers(String username);
 
     void setFollowUser(UserFollowRequest userFollowRequest);
+
+    User checkUserValidity(String username);
 }

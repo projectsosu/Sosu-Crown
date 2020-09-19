@@ -7,7 +7,7 @@
 package com.sosu.rest.crown.mapper;
 
 import com.sosu.rest.crown.entity.postgres.Suggest;
-import com.sosu.rest.crown.model.SuggestDTO;
+import com.sosu.rest.crown.model.suggest.SuggestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
