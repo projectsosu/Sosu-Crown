@@ -66,7 +66,7 @@ public interface UserController {
 
     @Operation(summary = "Returns user basic information")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get user basix success", content = {@Content(mediaType = "application/json",
+            @ApiResponse(responseCode = "200", description = "Get user basic success", content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserBasicDTO.class))}),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @GetMapping(value = "/getUserBasic/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
