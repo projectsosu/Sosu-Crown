@@ -11,6 +11,7 @@ import com.sosu.rest.crown.model.SuggestDTO;
 import com.sosu.rest.crown.model.request.NewSuggestRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -43,7 +44,7 @@ public interface SuggestController {
     @Operation(summary = "Returns user suggests")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the suggests", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SuggestDTO[].class))}),
+                    array = @ArraySchema(schema = @Schema(implementation = SuggestDTO.class)))}),
             @ApiResponse(responseCode = "404", description = "Suggests not found", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized user", content = @Content),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
