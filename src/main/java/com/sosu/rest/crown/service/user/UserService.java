@@ -10,6 +10,7 @@ import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 
+import java.util.List;
 import java.util.Locale;
 
 public interface UserService {
@@ -23,4 +24,8 @@ public interface UserService {
     void uploadImage(byte[] image, String username);
 
     UserBasicDTO getUserBasic(String username);
+
+    List<UserBasicDTO> getFollowedUsers(String username);
+
+    List<UserBasicDTO> getFollowerUsers(String username);
 }

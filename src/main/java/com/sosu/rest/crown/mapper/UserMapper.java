@@ -19,6 +19,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = SoSuPasswordEncoder.class)
 public interface UserMapper {
@@ -30,6 +31,8 @@ public interface UserMapper {
     User registerRequestToModel(UserRegisterRequest registerRequest);
 
     UserBasicDTO entityToBasic(User user);
+
+    List<UserBasicDTO> entityListToBasicList(List<User> user);
 
     @Named("birthDateMapper")
     default LocalDate birthDateMapper(String birthDate) {

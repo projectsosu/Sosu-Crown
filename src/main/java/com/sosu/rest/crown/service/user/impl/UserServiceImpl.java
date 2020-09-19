@@ -11,13 +11,16 @@ import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Security;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.mapper.UserMapper;
+import com.sosu.rest.crown.model.service.FFCountModel;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.repo.mongo.SecurityRepository;
 import com.sosu.rest.crown.repo.mongo.UserRepository;
+import com.sosu.rest.crown.repo.postgres.UserFollowRepository;
 import com.sosu.rest.crown.service.core.MailService;
 import com.sosu.rest.crown.service.user.UserService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -40,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SecurityRepository securityRepository;
+
+    @Autowired
+    private UserFollowRepository userFollowRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -59,10 +66,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserModel getUserDetails(String username) {
-        User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
-        if (user == null) {
-            throw new SoSuException(HttpStatus.BAD_REQUEST, "User name can not find", "USR_NOT_FOUND");
-        }
+        User user = chechUserValidity(username);
         return userMapper.mapEntityToModel(user);
     }
 
@@ -139,13 +143,55 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * @param username of user
+     * @return user basic information
+     */
     @Override
     public UserBasicDTO getUserBasic(String username) {
+        User user = chechUserValidity(username);
+        UserBasicDTO responseDto = userMapper.entityToBasic(user);
+        FFCountModel counts = userFollowRepository.getFollowingAndFollowersCount(username);
+        responseDto.setFollowedCount(counts.getFollowing());
+        responseDto.setFollowerCount(counts.getFollower());
+        return responseDto;
+    }
+
+    /**
+     * Get user following users details
+     *
+     * @param username of user
+     * @return following user basic information
+     */
+    @Override
+    public List<UserBasicDTO> getFollowedUsers(String username) {
+        chechUserValidity(username);
+        List<String> strings = userFollowRepository.getFollowings(username);
+        List<User> userList = userRepository.findByUsernameIn(strings);
+        return userMapper.entityListToBasicList(userList);
+    }
+
+    /**
+     * Get user follower users details
+     *
+     * @param username of user
+     * @return follower user basic information
+     */
+    @Override
+    public List<UserBasicDTO> getFollowerUsers(String username) {
+        chechUserValidity(username);
+        List<String> strings = userFollowRepository.getFolllowers(username);
+        List<User> userList = userRepository.findByUsernameIn(strings);
+        return userMapper.entityListToBasicList(userList);
+    }
+
+    @NotNull
+    public User chechUserValidity(String username) {
         User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
         if (user == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User name can not find", "USR_NOT_FOUND");
         }
-        return userMapper.entityToBasic(user);
+        return user;
     }
 
 }

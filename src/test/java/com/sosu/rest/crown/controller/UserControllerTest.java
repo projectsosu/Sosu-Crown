@@ -26,6 +26,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -113,11 +115,32 @@ class UserControllerTest {
     }
 
     @Test
+    void getFollowedUsers() {
+        UserBasicDTO userBasicDTO = getBasicDto();
+        when(userService.getFollowedUsers(any())).thenReturn(Collections.singletonList(userBasicDTO));
+        ResponseEntity<List<UserBasicDTO>> responseEntity = userController.getFollowedUsers("username");
+        UserBasicDTO response = Objects.requireNonNull(responseEntity.getBody()).get(0);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(userBasicDTO.getImage(), response.getImage());
+        assertEquals(userBasicDTO.getName(), response.getName());
+        assertEquals(userBasicDTO.getUsername(), response.getUsername());
+    }
+
+    @Test
+    void getFollowerUsers() {
+        UserBasicDTO userBasicDTO = getBasicDto();
+        when(userService.getFollowerUsers(any())).thenReturn(Collections.singletonList(userBasicDTO));
+        ResponseEntity<List<UserBasicDTO>> responseEntity = userController.getFollowerUsers("username");
+        UserBasicDTO response = Objects.requireNonNull(responseEntity.getBody()).get(0);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(userBasicDTO.getImage(), response.getImage());
+        assertEquals(userBasicDTO.getName(), response.getName());
+        assertEquals(userBasicDTO.getUsername(), response.getUsername());
+    }
+
+    @Test
     void getUserBasic() {
-        UserBasicDTO userBasicDTO = new UserBasicDTO();
-        userBasicDTO.setName("example");
-        userBasicDTO.setImage("exampleImage");
-        userBasicDTO.setUsername("exampleUserName");
+        UserBasicDTO userBasicDTO = getBasicDto();
         when(userService.getUserBasic(any())).thenReturn(userBasicDTO);
         ResponseEntity<UserBasicDTO> responseEntity = userController.getUserBasic("username");
         UserBasicDTO response = Objects.requireNonNull(responseEntity.getBody());
@@ -127,4 +150,11 @@ class UserControllerTest {
         assertEquals(userBasicDTO.getUsername(), response.getUsername());
     }
 
+    private UserBasicDTO getBasicDto() {
+        UserBasicDTO userBasicDTO = new UserBasicDTO();
+        userBasicDTO.setName("example");
+        userBasicDTO.setImage("exampleImage");
+        userBasicDTO.setUsername("exampleUserName");
+        return userBasicDTO;
+    }
 }

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 
 @Tag(name = "User Operations", description = "User auth operations")
@@ -68,7 +69,26 @@ public interface UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Get user basic success", content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserBasicDTO.class))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user", content = @Content),
             @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
     @GetMapping(value = "/getUserBasic/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserBasicDTO> getUserBasic(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username);
+
+    @Operation(summary = "Returns following users basic information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get following user basic success", content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserBasicDTO.class))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @GetMapping(value = "/getFollowedUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<UserBasicDTO>> getFollowedUsers(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username);
+
+    @Operation(summary = "Returns follower users basic information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get follower user basic success", content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserBasicDTO.class))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @GetMapping(value = "/getFollowerUsers/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<UserBasicDTO>> getFollowerUsers(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username);
 }

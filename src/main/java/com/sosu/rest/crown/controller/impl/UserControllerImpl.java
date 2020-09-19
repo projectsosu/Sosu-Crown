@@ -14,6 +14,7 @@ import com.sosu.rest.crown.model.user.AuthRequest;
 import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
+import com.sosu.rest.crown.repo.postgres.UserFollowRepository;
 import com.sosu.rest.crown.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -43,6 +45,9 @@ public class UserControllerImpl implements UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserFollowRepository userFollowing;
 
     @Value("${sosu.supported.types}")
     private String supportedTypes;
@@ -109,9 +114,34 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * @param username of user
+     * @return user basic information
+     */
     @Override
+    @Security
     public ResponseEntity<UserBasicDTO> getUserBasic(String username) {
         return ResponseEntity.ok(userService.getUserBasic(username));
+    }
+
+    /**
+     * @param username of user
+     * @return following user basic information
+     */
+    @Override
+    @Security
+    public ResponseEntity<List<UserBasicDTO>> getFollowedUsers(String username) {
+        return ResponseEntity.ok(userService.getFollowedUsers(username));
+    }
+
+    /**
+     * @param username of user
+     * @return follower user basic information
+     */
+    @Override
+    @Security
+    public ResponseEntity<List<UserBasicDTO>> getFollowerUsers(String username) {
+        return ResponseEntity.ok(userService.getFollowerUsers(username));
     }
 
 }
