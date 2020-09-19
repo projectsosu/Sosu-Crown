@@ -17,5 +17,6 @@ public class ProductDetail {
     private String imdb_id = "";
     private String release_date;
     private String first_air_date;
+    private String poster_path;
 
 }

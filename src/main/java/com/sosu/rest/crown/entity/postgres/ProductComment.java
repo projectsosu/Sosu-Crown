@@ -26,6 +26,7 @@ public class ProductComment {
 
     @Id
     private String comment;
+
     private String lang;
 
     @Column(name = "user_id")

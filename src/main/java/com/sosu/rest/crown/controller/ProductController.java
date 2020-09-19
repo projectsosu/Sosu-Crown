@@ -9,7 +9,7 @@ package com.sosu.rest.crown.controller;
 import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.model.CommonProductDTO;
-import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
+import com.sosu.rest.crown.model.request.ProductByCategorySearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

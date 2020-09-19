@@ -6,7 +6,7 @@
  **/
 package com.sosu.rest.crown.service.product.comment;
 
-import com.sosu.rest.crown.model.ProductCommentRequest;
+import com.sosu.rest.crown.model.request.ProductCommentRequest;
 
 import java.util.Locale;
 

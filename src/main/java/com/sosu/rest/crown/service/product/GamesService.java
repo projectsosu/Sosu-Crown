@@ -9,7 +9,7 @@ package com.sosu.rest.crown.service.product;
 import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.model.CommonProductDTO;
-import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
+import com.sosu.rest.crown.model.request.ProductByCategorySearchRequest;
 
 import java.util.List;
 

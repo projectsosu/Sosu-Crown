@@ -32,6 +32,8 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 
     List<Product> findByTmdbId(Integer imdbId);
 
+    List<Product> findByTmdbIdNot(Integer imdbId);
+
     @Query(value = "SELECT count(*) FROM product p WHERE ?1 like any(p.category_id_list)", nativeQuery = true)
     Integer countByCategoryIdListContaining(String categoryId);
 

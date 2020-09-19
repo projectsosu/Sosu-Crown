@@ -4,7 +4,7 @@
  * <p>
  * Copyright - SoSu Backend
  **/
-package com.sosu.rest.crown.model;
+package com.sosu.rest.crown.model.request;
 
 import com.sosu.rest.crown.enums.ProductType;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -12,6 +12,7 @@ import com.sosu.rest.crown.core.model.ProductDetail;
 import com.sosu.rest.crown.core.model.TMDBResult;
 import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.postgres.Product;
+import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -26,7 +27,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.sql.DataSource;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,9 +43,6 @@ import java.util.Set;
 @Component
 @Slf4j
 public class TMDBGetter {
-
-    @Autowired
-    private DataSource dataSource;
 
     private static final Map<Integer, String> genresMovie = new HashMap<>() {
         {
@@ -97,7 +94,7 @@ public class TMDBGetter {
 
     private static String getterLink = "https://api.themoviedb.org/3/discover/[TYPE]?api_key=2c77bdb30d44c27312cb203cd5491210&sort_by=release_date.desc&page={0}";
     private static String detailLink = "https://api.themoviedb.org/3/{0}/{1}?api_key=2c77bdb30d44c27312cb203cd5491210&language=en-US";
-    private static String imageUrl = "http://image.tmdb.org/t/p/w185{0}";
+    private static String imageUrl = "http://image.tmdb.org/t/p/original{0}";
     private static final List<String> GENERAL_ID = new ArrayList<>() {
         {
             add("5edd816e7d85f9caded1c5bb");
@@ -146,7 +143,11 @@ public class TMDBGetter {
                     item.setCategoryIdList(new ArrayList<>(categoryList));
                     productRepository.save(item);
                 } catch (Exception e) {
-                    log.error("Error link genre: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
+                    if (item.getMainCategoryIdList().contains(TV_ID)) {
+                        log.error("Error link genre date: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId().toString()));
+                    } else {
+                        log.error("Error link genre date: {}", MessageFormat.format(detailLink, "movie", item.getTmdbId().toString()));
+                    }
                 }
             });
             log.info("Getting Genres finished");
@@ -165,7 +166,11 @@ public class TMDBGetter {
                     item.setImdbId(productDetail.getImdb_id() == null ? "" : productDetail.getImdb_id());
                     productRepository.save(item);
                 } catch (Exception e) {
-                    log.error("Error link imdb: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
+                    if (item.getMainCategoryIdList().contains(TV_ID)) {
+                        log.error("Error link imdb: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId().toString()));
+                    } else {
+                        log.error("Error link imdb: {}", MessageFormat.format(detailLink, "movie", item.getTmdbId().toString()));
+                    }
                 }
             });
             log.info("Getting imdb finished");
@@ -188,7 +193,11 @@ public class TMDBGetter {
                     }
                     productRepository.save(item);
                 } catch (Exception e) {
-                    log.error("Error link release date: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId()));
+                    if (item.getMainCategoryIdList().contains(TV_ID)) {
+                        log.error("Error link release date: {}", MessageFormat.format(detailLink, "tv", item.getTmdbId().toString()));
+                    } else {
+                        log.error("Error link release date: {}", MessageFormat.format(detailLink, "movie", item.getTmdbId().toString()));
+                    }
                 }
             });
             log.info("Getting year finished");
@@ -198,10 +207,10 @@ public class TMDBGetter {
     public ProductDetail getProductDetail(HttpEntity request, Product item) {
         ProductDetail productDetail;
         if (item.getMainCategoryIdList().contains(TV_ID)) {
-            productDetail = restTemplate.exchange(MessageFormat.format(detailLink, "tv", item.getTmdbId()), HttpMethod.GET,
+            productDetail = restTemplate.exchange(MessageFormat.format(detailLink, "tv", item.getTmdbId().toString()), HttpMethod.GET,
                     request, ProductDetail.class).getBody();
         } else {
-            productDetail = restTemplate.exchange(MessageFormat.format(detailLink, "movie", item.getTmdbId()), HttpMethod.GET,
+            productDetail = restTemplate.exchange(MessageFormat.format(detailLink, "movie", item.getTmdbId().toString()), HttpMethod.GET,
                     request, ProductDetail.class).getBody();
         }
         return productDetail;
@@ -220,7 +229,7 @@ public class TMDBGetter {
                     try {
                         setMovieProduct(item);
                     } catch (Exception e) {
-                        log.error("Getting new movie error ID: {}", item.getId());
+                        log.error("Getting new movie error ID: {}", item.getId().toString());
                     }
                 });
             }
@@ -238,7 +247,7 @@ public class TMDBGetter {
                     try {
                         setTvProduct(item);
                     } catch (Exception e) {
-                        log.error("Getting new tvs error ID: {}", item.getId());
+                        log.error("Getting new tvs error ID: {}", item.getId().toString());
                     }
                 });
             }
@@ -297,7 +306,7 @@ public class TMDBGetter {
         product.setImdbId("");
         String url = "https://ik.imagekit.io/fbwk6udskh/sosu/default_beIuMGr9a7o.png";
         if (StringUtils.isNotBlank(tmdbResult.getPoster_path())) {
-            url = imageUploader.uploadImage(MessageFormat.format(imageUrl, tmdbResult.getPoster_path()), product.getName());
+            url = imageUploader.uploadImage(MessageFormat.format(imageUrl, tmdbResult.getPoster_path()), product.getName(), ProductType.PRODUCT);
         }
         product.setImage(url);
         if (tmdbResult.getRelease_date() != null) {

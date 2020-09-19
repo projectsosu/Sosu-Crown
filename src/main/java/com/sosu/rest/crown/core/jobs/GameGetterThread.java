@@ -8,6 +8,7 @@ package com.sosu.rest.crown.core.jobs;
 
 import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.postgres.Game;
+import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -50,6 +51,7 @@ public class GameGetterThread extends Thread {
         this.genre = genre;
     }
 
+    @Override
     public void run() {
         getGame();
     }
@@ -158,7 +160,7 @@ public class GameGetterThread extends Thread {
         game.setPublisher(publisher);
         game.setPublishDate(formattedDate);
         game.setCategoryIdList(new ArrayList<>(categoryList));
-        game.setImage(imageUploader.uploadImage(imageUrl, game.getName()));
+        game.setImage(imageUploader.uploadImage(imageUrl, game.getName(), ProductType.GAME));
         gameRepository.save(game);
     }
 }

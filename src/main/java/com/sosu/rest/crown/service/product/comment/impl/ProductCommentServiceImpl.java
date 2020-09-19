@@ -14,7 +14,7 @@ import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.entity.postgres.ProductComment;
 import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.mapper.ProductCommentMapper;
-import com.sosu.rest.crown.model.ProductCommentRequest;
+import com.sosu.rest.crown.model.request.ProductCommentRequest;
 import com.sosu.rest.crown.repo.postgres.GameCommentRepository;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.repo.postgres.ProductCommentRepository;

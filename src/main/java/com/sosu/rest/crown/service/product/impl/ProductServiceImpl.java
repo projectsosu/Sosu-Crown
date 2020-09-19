@@ -11,7 +11,7 @@ import com.sosu.rest.crown.entity.postgres.Product;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.CommonProductDetailDTO;
-import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
+import com.sosu.rest.crown.model.request.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.ProductRepository;
 import com.sosu.rest.crown.service.CategoryService;
 import com.sosu.rest.crown.service.product.ProductService;

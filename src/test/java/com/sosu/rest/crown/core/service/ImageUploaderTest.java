@@ -6,6 +6,7 @@
  **/
 package com.sosu.rest.crown.core.service;
 
+import com.sosu.rest.crown.enums.ProductType;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.results.Result;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ class ImageUploaderTest {
         Result result = new Result();
         result.setUrl("example.com");
         when(imageKit.upload(any())).thenReturn(result);
-        String result1 = imageUploader.uploadImage("", "");
+        String result1 = imageUploader.uploadImage("", "", ProductType.GAME);
         assertEquals("example.com", result1);
     }
 

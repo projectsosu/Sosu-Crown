@@ -7,7 +7,7 @@
 package com.sosu.rest.crown.controller;
 
 import com.sosu.rest.crown.controller.impl.ProductCommentControllerImpl;
-import com.sosu.rest.crown.model.ProductCommentRequest;
+import com.sosu.rest.crown.model.request.ProductCommentRequest;
 import com.sosu.rest.crown.service.product.comment.ProductCommentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

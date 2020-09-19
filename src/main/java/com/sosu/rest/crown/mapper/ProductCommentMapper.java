@@ -8,7 +8,7 @@ package com.sosu.rest.crown.mapper;
 
 import com.sosu.rest.crown.entity.postgres.GameComment;
 import com.sosu.rest.crown.entity.postgres.ProductComment;
-import com.sosu.rest.crown.model.ProductCommentRequest;
+import com.sosu.rest.crown.model.request.ProductCommentRequest;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

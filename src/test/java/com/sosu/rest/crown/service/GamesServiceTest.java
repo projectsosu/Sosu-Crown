@@ -11,7 +11,7 @@ import com.sosu.rest.crown.entity.postgres.Game;
 import com.sosu.rest.crown.mapper.CommonProductMapper;
 import com.sosu.rest.crown.model.CommonProductDTO;
 import com.sosu.rest.crown.model.CommonProductDetailDTO;
-import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
+import com.sosu.rest.crown.model.request.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.repo.postgres.GameRepository;
 import com.sosu.rest.crown.service.product.impl.GamesServiceImpl;
 import org.junit.jupiter.api.Test;

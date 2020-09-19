@@ -6,7 +6,7 @@
  **/
 package com.sosu.rest.crown.controller;
 
-import com.sosu.rest.crown.model.ProductCommentRequest;
+import com.sosu.rest.crown.model.request.ProductCommentRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

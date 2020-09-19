@@ -10,7 +10,7 @@ import com.sosu.rest.crown.controller.ProductController;
 import com.sosu.rest.crown.enums.ProductType;
 import com.sosu.rest.crown.model.CommonProductDetailDTO;
 import com.sosu.rest.crown.model.CommonProductDTO;
-import com.sosu.rest.crown.model.ProductByCategorySearchRequest;
+import com.sosu.rest.crown.model.request.ProductByCategorySearchRequest;
 import com.sosu.rest.crown.service.product.GamesService;
 import com.sosu.rest.crown.service.product.ProductService;
 import lombok.extern.slf4j.Slf4j;

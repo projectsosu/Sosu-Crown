@@ -8,7 +8,7 @@ package com.sosu.rest.crown.controller.impl;
 
 import com.sosu.rest.crown.controller.ProductCommentController;
 import com.sosu.rest.crown.core.annotations.SoSuValidated;
-import com.sosu.rest.crown.model.ProductCommentRequest;
+import com.sosu.rest.crown.model.request.ProductCommentRequest;
 import com.sosu.rest.crown.service.product.comment.ProductCommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

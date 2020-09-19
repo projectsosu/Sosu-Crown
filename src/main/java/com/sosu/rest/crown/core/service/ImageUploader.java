@@ -6,6 +6,7 @@
  **/
 package com.sosu.rest.crown.core.service;
 
+import com.sosu.rest.crown.enums.ProductType;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.models.FileCreateRequest;
@@ -62,14 +63,20 @@ public class ImageUploader {
      *
      * @param url         external url of product or image
      * @param productName name of product or game
+     * @param productType type of product or game
      * @return return url path of product or game
      */
-    public String uploadImage(String url, String productName) {
+    public String uploadImage(String url, String productName, ProductType productType) {
         FileCreateRequest fileCreateRequest = new FileCreateRequest(url, productName);
-        fileCreateRequest.setFolder("sosu");
+        if (productType == ProductType.GAME) {
+            fileCreateRequest.setFolder("sosu/game");
+        } else if (productType == ProductType.PRODUCT) {
+            fileCreateRequest.setFolder("sosu/product");
+        }
         fileCreateRequest.setUseUniqueFileName(true);
         Result result = imageKit.upload(fileCreateRequest);
         return result.getUrl();
     }
+
 
 }
