@@ -11,6 +11,7 @@ import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Security;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.mapper.UserMapper;
+import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.repo.mongo.SecurityRepository;
@@ -136,6 +137,15 @@ public class UserServiceImpl implements UserService {
         String url = imageUploader.uploadProfileImage(image, username);
         user.setImage(url);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserBasicDTO getUserBasic(String username) {
+        User user = userRepository.findByUsernameOrEmail(username.toLowerCase(), username.toLowerCase());
+        if (user == null) {
+            throw new SoSuException(HttpStatus.BAD_REQUEST, "User name can not find", "USR_NOT_FOUND");
+        }
+        return userMapper.entityToBasic(user);
     }
 
 }

@@ -6,6 +6,7 @@
  **/
 package com.sosu.rest.crown.service.user;
 
+import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 
@@ -20,4 +21,6 @@ public interface UserService {
     void validate(String username, String token);
 
     void uploadImage(byte[] image, String username);
+
+    UserBasicDTO getUserBasic(String username);
 }

@@ -29,8 +29,6 @@ public class User {
 
     private String password;
 
-    private String surname;
-
     private String username;
 
     private String image;

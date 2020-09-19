@@ -8,6 +8,7 @@ package com.sosu.rest.crown.mapper;
 
 import com.sosu.rest.crown.core.security.SoSuPasswordEncoder;
 import com.sosu.rest.crown.entity.mongo.User;
+import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,8 @@ public interface UserMapper {
     @Mapping(target = "password", source = "password", qualifiedByName = "passwordMapper")
     User registerRequestToModel(UserRegisterRequest registerRequest);
 
+    UserBasicDTO entityToBasic(User user);
+
     @Named("birthDateMapper")
     default LocalDate birthDateMapper(String birthDate) {
         return LocalDate.parse(birthDate);
@@ -38,6 +41,5 @@ public interface UserMapper {
         user.setUsername(registerRequest.getUsername().toLowerCase());
         user.setEmail(registerRequest.getEmail().toLowerCase());
         user.setName(StringUtils.capitalize(registerRequest.getName().toLowerCase()));
-        user.setSurname(StringUtils.capitalize(registerRequest.getSurname().toLowerCase()));
     }
 }

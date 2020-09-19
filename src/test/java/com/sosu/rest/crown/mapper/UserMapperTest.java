@@ -40,13 +40,11 @@ class UserMapperTest {
         UserRegisterRequest userRegisterRequest = new UserRegisterRequest();
         userRegisterRequest.setEmail("Email");
         userRegisterRequest.setName("name");
-        userRegisterRequest.setSurname("surname");
         userRegisterRequest.setUsername("username");
         User user = new User();
         userMapper.afterMap(user, userRegisterRequest);
         assertEquals("email", user.getEmail());
         assertEquals("Name", user.getName());
-        assertEquals("Surname", user.getSurname());
         assertEquals("username", user.getUsername());
     }
 }

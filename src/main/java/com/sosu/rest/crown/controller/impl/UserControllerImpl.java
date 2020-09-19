@@ -11,6 +11,7 @@ import com.sosu.rest.crown.core.annotations.Security;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
+import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.service.user.UserService;
@@ -106,6 +107,11 @@ public class UserControllerImpl implements UserController {
             throw new SoSuException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage(), "UPLOAD_ERROR");
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<UserBasicDTO> getUserBasic(String username) {
+        return ResponseEntity.ok(userService.getUserBasic(username));
     }
 
 }

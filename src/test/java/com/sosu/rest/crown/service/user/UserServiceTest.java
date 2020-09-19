@@ -11,6 +11,7 @@ import com.sosu.rest.crown.core.service.ImageUploader;
 import com.sosu.rest.crown.entity.mongo.Security;
 import com.sosu.rest.crown.entity.mongo.User;
 import com.sosu.rest.crown.mapper.UserMapper;
+import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.repo.mongo.SecurityRepository;
@@ -110,7 +111,6 @@ class UserServiceTest {
         user.setEmail("");
         user.setName("");
         user.setPassword("");
-        user.setSurname("");
         user.setUsername("");
         user.setImage("");
         user.setValidated(false);
@@ -187,6 +187,29 @@ class UserServiceTest {
         userService.uploadImage("12".getBytes(), "123");
         verify(userRepository, times(1)).save(any());
         verify(imageUploader, times(1)).uploadProfileImage(any(), any());
+    }
+
+    @Test
+    void getUserBasic() {
+        UserBasicDTO userBasicDTO = new UserBasicDTO();
+        userBasicDTO.setName("example");
+        userBasicDTO.setImage("exampleImage");
+        userBasicDTO.setUsername("exampleUserName");
+        when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(new User());
+        when(userMapper.entityToBasic(any())).thenReturn(userBasicDTO);
+        UserBasicDTO response = userService.getUserBasic("example");
+        assertEquals(userBasicDTO.getImage(), response.getImage());
+        assertEquals(userBasicDTO.getName(), response.getName());
+        assertEquals(userBasicDTO.getUsername(), response.getUsername());
+        verify(userRepository, times(1)).findByUsernameOrEmail(any(), any());
+    }
+
+    @Test
+    void getUserBasicError() {
+        SoSuException exception = assertThrows(SoSuException.class, () -> userService.getUserBasic("ASD"));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("User name can not find", exception.getReason());
+        assertEquals("USR_NOT_FOUND", exception.getCause().getMessage());
     }
 
 }

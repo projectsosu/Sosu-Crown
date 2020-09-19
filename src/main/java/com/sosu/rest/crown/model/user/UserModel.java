@@ -28,10 +28,6 @@ public class UserModel {
     @NotEmpty
     private String name;
 
-    @Schema(description = "Surname of user", example = "App", required = true)
-    @NotEmpty
-    private String surname;
-
     @Schema(description = "Username of user", example = "exampleusername", required = true)
     @NotEmpty
     private String username;

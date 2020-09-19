@@ -7,6 +7,7 @@
 package com.sosu.rest.crown.controller;
 
 import com.sosu.rest.crown.model.user.AuthRequest;
+import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,4 +63,12 @@ public interface UserController {
     @PostMapping(value = "/uploadImage/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<Void> uploadFile(@Parameter(description = "Image information", required = true) @RequestParam("file") MultipartFile file,
                                     @Parameter(description = "Username", required = true, example = "example") @PathVariable String username);
+
+    @Operation(summary = "Returns user basic information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get user basix success", content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserBasicDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @GetMapping(value = "/getUserBasic/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<UserBasicDTO> getUserBasic(@Parameter(description = "Username", required = true, example = "example") @PathVariable String username);
 }

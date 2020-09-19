@@ -10,6 +10,7 @@ import com.sosu.rest.crown.controller.impl.UserControllerImpl;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.core.util.JWTUtil;
 import com.sosu.rest.crown.model.user.AuthRequest;
+import com.sosu.rest.crown.model.user.UserBasicDTO;
 import com.sosu.rest.crown.model.user.UserModel;
 import com.sosu.rest.crown.model.user.UserRegisterRequest;
 import com.sosu.rest.crown.service.user.UserService;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -108,6 +110,21 @@ class UserControllerTest {
         ResponseEntity<Void> responseEntity = userController.uploadFile(multipartFile, "asd");
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         verify(userService, times(1)).uploadImage(any(), any());
+    }
+
+    @Test
+    void getUserBasic() {
+        UserBasicDTO userBasicDTO = new UserBasicDTO();
+        userBasicDTO.setName("example");
+        userBasicDTO.setImage("exampleImage");
+        userBasicDTO.setUsername("exampleUserName");
+        when(userService.getUserBasic(any())).thenReturn(userBasicDTO);
+        ResponseEntity<UserBasicDTO> responseEntity = userController.getUserBasic("username");
+        UserBasicDTO response = Objects.requireNonNull(responseEntity.getBody());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(userBasicDTO.getImage(), response.getImage());
+        assertEquals(userBasicDTO.getName(), response.getName());
+        assertEquals(userBasicDTO.getUsername(), response.getUsername());
     }
 
 }
