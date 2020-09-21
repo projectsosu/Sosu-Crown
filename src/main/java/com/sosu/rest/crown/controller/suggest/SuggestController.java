@@ -6,8 +6,9 @@
  **/
 package com.sosu.rest.crown.controller.suggest;
 
-import com.sosu.rest.crown.core.annotations.SoSuValidated;
 import com.sosu.rest.crown.model.request.NewSuggestRequest;
+import com.sosu.rest.crown.model.suggest.SuggestCommentDTO;
+import com.sosu.rest.crown.model.suggest.SuggestCommentRequest;
 import com.sosu.rest.crown.model.suggest.SuggestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,7 +46,6 @@ public interface SuggestController {
             @Parameter(description = "Name of user", required = true, example = "example") @PathVariable String userName,
             @RequestHeader("Authorization") String jwtToken, Locale locale);
 
-    @SoSuValidated
     @Operation(summary = "Returns user suggests")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the suggests", content = {@Content(mediaType = "application/json",
@@ -58,7 +58,6 @@ public interface SuggestController {
                                                      @Parameter(description = "Response page", required = true, example = "0") @RequestParam(required = false) Integer page,
                                                      @RequestHeader("Authorization") String jwtToken);
 
-    @SoSuValidated
     @Operation(summary = "Like suggest")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Liked or unliked", content = {@Content(mediaType = "application/json")}),
@@ -69,4 +68,33 @@ public interface SuggestController {
     ResponseEntity<Void> likeSuggest(@Parameter(description = "Name of user", required = true, example = "example") @PathVariable String userName,
                                      @Parameter(description = "Id of suggest", required = true, example = "0") @PathVariable Long suggestId,
                                      @RequestHeader("Authorization") String jwtToken);
+
+    @Operation(summary = "Add new suggest comment (send parent id of comment for comment reply otherwise send suggest id for suggest reply)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Reply added", content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @PatchMapping(value = "/addSuggestReply")
+    ResponseEntity<Void> addSuggestReply(@RequestBody @Valid SuggestCommentRequest request, @RequestHeader("Authorization") String jwtToken);
+
+    @Operation(summary = "Gets suggest comments")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns suggest comments", content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @PatchMapping(value = "/getSuggestComments/{suggestId}")
+    ResponseEntity<List<SuggestCommentDTO>> getSuggestComments(@Parameter(description = "Id of suggest", required = true, example = "0") @PathVariable Long suggestId,
+                                                               @Parameter(description = "Page of shown", required = true, example = "0") @RequestParam(required = false) Integer page);
+
+    @Operation(summary = "Gets comment replies")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns comment replies", content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Request not valid", content = @Content)})
+    @PatchMapping(value = "/getCommentReplies/{parentId}")
+    ResponseEntity<List<SuggestCommentDTO>> getCommentReplies(@Parameter(description = "Id of comment", required = true, example = "0") @PathVariable Long parentId,
+                                                               @Parameter(description = "Page of shown", required = true, example = "0") @RequestParam(required = false) Integer page);
 }

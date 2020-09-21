@@ -6,6 +6,8 @@
  **/
 package com.sosu.rest.crown.service.suggest;
 
+import com.sosu.rest.crown.model.suggest.SuggestCommentDTO;
+import com.sosu.rest.crown.model.suggest.SuggestCommentRequest;
 import com.sosu.rest.crown.model.suggest.SuggestDTO;
 
 import java.util.List;
@@ -18,4 +20,10 @@ public interface SuggestService {
     List<SuggestDTO> findUserSuggests(String userName, Integer page);
 
     void likeSuggest(String userName, Long suggestId);
+
+    List<SuggestCommentDTO> getSuggestComments(Long suggestId, Integer page);
+
+    void addNewCommentToComment(SuggestCommentRequest request);
+
+    List<SuggestCommentDTO> getCommentsOfComments(Long parentId, Integer page);
 }

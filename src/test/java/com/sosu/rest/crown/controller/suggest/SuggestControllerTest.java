@@ -9,6 +9,8 @@ package com.sosu.rest.crown.controller.suggest;
 import com.sosu.rest.crown.controller.suggest.impl.SuggestControllerImpl;
 import com.sosu.rest.crown.core.util.SecurityCheckUtil;
 import com.sosu.rest.crown.model.request.NewSuggestRequest;
+import com.sosu.rest.crown.model.suggest.SuggestCommentDTO;
+import com.sosu.rest.crown.model.suggest.SuggestCommentRequest;
 import com.sosu.rest.crown.model.suggest.SuggestDTO;
 import com.sosu.rest.crown.service.suggest.SuggestService;
 import org.junit.jupiter.api.Test;
@@ -75,4 +77,26 @@ class SuggestControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         verify(suggestService, times(1)).likeSuggest(any(), any());
     }
+
+    @Test
+    void addSuggestReply() {
+        ResponseEntity<Void> responseEntity = suggestController.addSuggestReply(new SuggestCommentRequest(), "123L");
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        verify(suggestService, times(1)).addNewCommentToComment(any());
+    }
+
+    @Test
+    void getSuggestComments() {
+        ResponseEntity<List<SuggestCommentDTO>> responseEntity = suggestController.getSuggestComments(123L, 0);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(suggestService, times(1)).getSuggestComments(any(), any());
+    }
+
+    @Test
+    void getCommentReplies() {
+        ResponseEntity<List<SuggestCommentDTO>> responseEntity = suggestController.getCommentReplies(123L, 0);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(suggestService, times(1)).getCommentsOfComments(any(), any());
+    }
+
 }

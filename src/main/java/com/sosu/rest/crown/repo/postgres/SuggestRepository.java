@@ -18,4 +18,6 @@ public interface SuggestRepository extends PagingAndSortingRepository<Suggest, L
 
     List<Suggest> findByUserName(String userName, Pageable pageable);
 
+    boolean existsById(Long id);
+
 }

@@ -7,10 +7,21 @@
 package com.sosu.rest.crown.repo.postgres;
 
 import com.sosu.rest.crown.entity.postgres.SuggestComment;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
+
+import java.util.List;
 
 public interface SuggestCommentRepository extends PagingAndSortingRepository<SuggestComment, Long> {
 
     Long countBySuggestId(Long suggestId);
+
+    Long countByParentId(Long parentId);
+
+    List<SuggestComment> findBySuggestIdOrderByDateDesc(Long suggestId, Pageable pageable);
+
+    List<SuggestComment> findByParentIdOrderByDateDesc(Long parentId, Pageable pageable);
+
+    boolean existsById(Long id);
 
 }

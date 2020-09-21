@@ -9,7 +9,10 @@ package com.sosu.rest.crown.service.suggest.impl;
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.LikedSuggest;
 import com.sosu.rest.crown.entity.postgres.Suggest;
+import com.sosu.rest.crown.entity.postgres.SuggestComment;
 import com.sosu.rest.crown.mapper.SuggestMapper;
+import com.sosu.rest.crown.model.suggest.SuggestCommentDTO;
+import com.sosu.rest.crown.model.suggest.SuggestCommentRequest;
 import com.sosu.rest.crown.model.suggest.SuggestDTO;
 import com.sosu.rest.crown.repo.postgres.LikedSuggestRepository;
 import com.sosu.rest.crown.repo.postgres.SuggestCommentRepository;
@@ -86,10 +89,7 @@ public class SuggestServiceImpl implements SuggestService {
      */
     @Override
     public void likeSuggest(String userName, Long suggestId) {
-        Suggest suggest = suggestRepository.findById(suggestId).orElse(null);
-        if (suggest == null) {
-            throw new SoSuException(HttpStatus.BAD_REQUEST, "Suggest id is incorrect", "SUGGEST_NOT_FOUND");
-        }
+        checkSuggest(suggestId);
         userService.checkUserValidity(userName);
         LikedSuggest likedSuggest = likedSuggestRepository.findBySuggestIdAndUserName(suggestId, userName);
         if (likedSuggest != null) {
@@ -99,6 +99,75 @@ public class SuggestServiceImpl implements SuggestService {
             likedSuggest.setSuggestId(suggestId);
             likedSuggest.setUserName(userName);
             likedSuggestRepository.save(likedSuggest);
+        }
+    }
+
+    /**
+     * This gets suggest comments for user
+     *
+     * @param suggestId id of comment
+     * @param page      page of comment
+     * @return returns suggest comments
+     */
+    @Override
+    public List<SuggestCommentDTO> getSuggestComments(Long suggestId, Integer page) {
+        checkSuggest(suggestId);
+        List<SuggestComment> suggestComments = suggestCommentRepository.findBySuggestIdOrderByDateDesc(suggestId, PageRequest.of(page, 10));
+        List<SuggestCommentDTO> suggestCommentDTOS = suggestMapper.commentEntityListToDtoList(suggestComments);
+        suggestCommentDTOS.parallelStream().forEach(item -> {
+            item.setCommentCount(suggestCommentRepository.countByParentId(item.getId()));
+        });
+        return suggestCommentDTOS;
+    }
+
+    /**
+     * This adds new suggest comments for user
+     *
+     * @param request new suggest comment
+     */
+    @Override
+    public void addNewCommentToComment(SuggestCommentRequest request) {
+        SuggestComment suggestComment = new SuggestComment();
+        if (request.getParentId() != null) {
+            checkParent(request.getParentId());
+            suggestComment.setParentId(request.getParentId());
+        } else {
+            checkSuggest(request.getSuggestId());
+        }
+        suggestComment.setComment(request.getComment());
+        suggestComment.setUserName(request.getComment());
+        suggestCommentRepository.save(suggestComment);
+    }
+
+    /**
+     * This gets comments for comments
+     *
+     * @param parentId id of comment
+     * @param page     page of comment
+     * @return returns suggest comments
+     */
+    @Override
+    public List<SuggestCommentDTO> getCommentsOfComments(Long parentId, Integer page) {
+        checkParent(parentId);
+        List<SuggestComment> suggestComments = suggestCommentRepository.findByParentIdOrderByDateDesc(parentId, PageRequest.of(page, 10));
+        List<SuggestCommentDTO> suggestCommentDTOS = suggestMapper.commentEntityListToDtoList(suggestComments);
+        suggestCommentDTOS.parallelStream().forEach(item -> {
+            item.setCommentCount(suggestCommentRepository.countByParentId(item.getId()));
+        });
+        return suggestCommentDTOS;
+    }
+
+    public void checkSuggest(Long suggestId) {
+        Boolean suggest = suggestRepository.existsById(suggestId);
+        if (!suggest) {
+            throw new SoSuException(HttpStatus.BAD_REQUEST, "Suggest id is incorrect", "SUGGEST_NOT_FOUND");
+        }
+    }
+
+    public void checkParent(Long parentId) {
+        Boolean suggest = suggestCommentRepository.existsById(parentId);
+        if (!suggest) {
+            throw new SoSuException(HttpStatus.BAD_REQUEST, "Suggest comment id is incorrect", "SUGGEST_COMMENT_NOT_FOUND");
         }
     }
 

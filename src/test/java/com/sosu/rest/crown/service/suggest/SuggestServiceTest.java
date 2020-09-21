@@ -8,14 +8,16 @@ package com.sosu.rest.crown.service.suggest;
 
 import com.sosu.rest.crown.core.exception.SoSuException;
 import com.sosu.rest.crown.entity.postgres.LikedSuggest;
-import com.sosu.rest.crown.entity.postgres.Suggest;
 import com.sosu.rest.crown.mapper.SuggestMapper;
+import com.sosu.rest.crown.model.suggest.SuggestCommentDTO;
+import com.sosu.rest.crown.model.suggest.SuggestCommentRequest;
 import com.sosu.rest.crown.model.suggest.SuggestDTO;
 import com.sosu.rest.crown.repo.postgres.LikedSuggestRepository;
 import com.sosu.rest.crown.repo.postgres.SuggestCommentRepository;
 import com.sosu.rest.crown.repo.postgres.SuggestRepository;
 import com.sosu.rest.crown.service.suggest.impl.SuggestServiceImpl;
 import com.sosu.rest.crown.service.user.UserService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -93,17 +94,90 @@ class SuggestServiceTest {
 
     @Test
     void likeSuggestSave() {
-        when(suggestRepository.findById(any())).thenReturn(Optional.of(new Suggest()));
+        when(suggestRepository.existsById(any())).thenReturn(true);
         suggestService.likeSuggest("123", 12L);
         verify(likedSuggestRepository, times(1)).save(any());
     }
 
     @Test
     void likeSuggestDelete() {
-        when(suggestRepository.findById(any())).thenReturn(Optional.of(new Suggest()));
+        when(suggestRepository.existsById(any())).thenReturn(true);
         when(likedSuggestRepository.findBySuggestIdAndUserName(any(), any())).thenReturn(new LikedSuggest());
         suggestService.likeSuggest("123", 12L);
         verify(likedSuggestRepository, times(1)).delete(any());
+    }
+
+    @Test
+    void getSuggestComments() {
+        SuggestCommentDTO suggestCommentDTO = getSuggestCommentDTO();
+        when(suggestRepository.existsById(any())).thenReturn(true);
+        when(suggestCommentRepository.findBySuggestIdOrderByDateDesc(any(), any())).thenReturn(new ArrayList<>());
+        when(suggestMapper.commentEntityListToDtoList(any())).thenReturn(Collections.singletonList(suggestCommentDTO));
+        List<SuggestCommentDTO> suggestCommentDTOS = suggestService.getSuggestComments(1L, 0);
+        SuggestCommentDTO response = Objects.requireNonNull(suggestCommentDTOS).get(0);
+        checkAssertion(suggestCommentDTO, response);
+    }
+
+    @Test
+    void addNewCommentToCommentParent() {
+        SuggestCommentRequest request = new SuggestCommentRequest();
+        request.setParentId(1L);
+        when(suggestCommentRepository.existsById(any())).thenReturn(true);
+        suggestService.addNewCommentToComment(request);
+        verify(suggestCommentRepository, times(1)).save(any());
+    }
+
+    @Test
+    void addNewCommentToComment() {
+        SuggestCommentRequest request = new SuggestCommentRequest();
+        request.setSuggestId(1L);
+        when(suggestRepository.existsById(any())).thenReturn(true);
+        suggestService.addNewCommentToComment(new SuggestCommentRequest());
+        verify(suggestCommentRepository, times(1)).save(any());
+    }
+
+
+    @Test
+    void getCommentsOfComments() {
+        SuggestCommentDTO suggestCommentDTO = getSuggestCommentDTO();
+        when(suggestCommentRepository.existsById(any())).thenReturn(true);
+        when(suggestCommentRepository.findByParentIdOrderByDateDesc(any(), any())).thenReturn(new ArrayList<>());
+        when(suggestMapper.commentEntityListToDtoList(any())).thenReturn(Collections.singletonList(suggestCommentDTO));
+        List<SuggestCommentDTO> suggestCommentDTOS = suggestService.getCommentsOfComments(1L, 0);
+        SuggestCommentDTO response = Objects.requireNonNull(suggestCommentDTOS).get(0);
+        checkAssertion(suggestCommentDTO, response);
+    }
+
+    @Test
+    void getCommentsOfCommentsException() {
+        SoSuException exception = assertThrows(SoSuException.class, () -> suggestService.getCommentsOfComments(12L, 1));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("Suggest comment id is incorrect", exception.getReason());
+        assertEquals("SUGGEST_COMMENT_NOT_FOUND", exception.getCause().getMessage());
+    }
+
+    @NotNull
+    private SuggestCommentDTO getSuggestCommentDTO() {
+        SuggestCommentDTO suggestCommentDTO = new SuggestCommentDTO();
+        suggestCommentDTO.setId(0L);
+        suggestCommentDTO.setComment("123");
+        suggestCommentDTO.setUserName("exampleun");
+        suggestCommentDTO.setDate(LocalDateTime.now());
+        suggestCommentDTO.setLikeCount(1L);
+        suggestCommentDTO.setCommentCount(2L);
+        suggestCommentDTO.setReSuggestCount(3L);
+        return suggestCommentDTO;
+    }
+
+
+    private void checkAssertion(SuggestCommentDTO suggestCommentDTO, SuggestCommentDTO response) {
+        assertEquals(suggestCommentDTO.getUserName(), response.getUserName());
+        assertEquals(suggestCommentDTO.getDate(), response.getDate());
+        assertEquals(suggestCommentDTO.getId(), response.getId());
+        assertEquals(suggestCommentDTO.getComment(), response.getComment());
+        assertEquals(suggestCommentDTO.getLikeCount(), response.getLikeCount());
+        assertEquals(suggestCommentDTO.getReSuggestCount(), response.getReSuggestCount());
+        assertEquals(suggestCommentDTO.getCommentCount(), response.getCommentCount());
     }
 
 }
