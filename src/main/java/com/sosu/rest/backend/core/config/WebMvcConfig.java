@@ -36,7 +36,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/sosu-swagger.html",
-                        "/sosu-swagger"
+                        "/sosu-swagger",
+                        "/actuator/**",
+                        "/actuator",
+                        "/actuator/*.*"
                 ).pathMatcher(new AntPathMatcher());
     }
 
