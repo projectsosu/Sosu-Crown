@@ -23,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SoSuSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private SosuAuthManager authProvider;
+    private SoSuAuthManager authProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

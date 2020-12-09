@@ -6,6 +6,7 @@ package com.sosu.rest.backend.core.security;
  * <p>
  * Copyright - SoSu Backend
  **/
+
 import com.sosu.rest.backend.core.exception.SoSuException;
 import com.sosu.rest.backend.entity.mongo.User;
 import com.sosu.rest.backend.repo.mongo.UserRepository;
@@ -14,12 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SosuAuthManager implements AuthenticationProvider {
+public class SoSuAuthManager implements AuthenticationProvider {
 
     @Autowired
     private UserRepository userRepository;
@@ -28,7 +28,7 @@ public class SosuAuthManager implements AuthenticationProvider {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) {
         User user = userRepository.findByUsernameOrEmail(authentication.getName().toLowerCase(), authentication.getName().toLowerCase());
         if (user == null) {
             throw new SoSuException(HttpStatus.BAD_REQUEST, "User name can not find", "USR_NOT_FOUND");
